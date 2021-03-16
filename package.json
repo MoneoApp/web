@@ -12,7 +12,8 @@
     "dev:apollo": "apollo client:codegen --target typescript --localSchemaFile schema.graphql --outputFlat --watch src/apollo",
     "start": "next start -p $PORT",
     "build": "next build",
-    "prepare": "prisma generate"
+    "prepare": "prisma generate",
+    "test": "tslint --project tsconfig.json"
   },
   "dependencies": {
     "@apollo/client": "^3.3.12",
