@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 
 import { Login } from '../../shared/structs/Login';
 import { IndexMutation, IndexMutationVariables } from '../apollo/IndexMutation';
+import background from '../assets/background.jpg';
+import Logo from '../assets/logo.svg';
 
 const mutation = gql`
   mutation IndexMutation($email: String!, $password: String!) {
@@ -26,7 +28,7 @@ export default function Index() {
       <StyledSidePanel>
 
         <StyledHeader>
-          <StyledLogo src="/logo.png"/>
+          <StyledLogo/>
           <StyledName>
             Moneo
           </StyledName>
@@ -68,7 +70,7 @@ const StyledRoot = styled.div`
 
 const StyledBackground = styled.div`
   flex: 1;
-  background: url("/background.jpg") center;
+  background: url(${background}) center;
   background-size: cover;
 `;
 
@@ -89,9 +91,10 @@ const StyledHeader = styled.div`
   justify-content: flex-end;
 `;
 
-const StyledLogo = styled.img`
+const StyledLogo = styled(Logo)`
   width: 50%;
   padding: 2rem 0;
+  color: white;
 `;
 
 const StyledName = styled.h1`

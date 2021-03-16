@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.2.0",
+    "@svgr/webpack": "^5.5.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "^8.5.1",
     "@types/node": "^14.14.35",
@@ -47,6 +48,7 @@
     "babel-plugin-graphql-tag": "^3.2.0",
     "concurrently": "^6.0.0",
     "cross-env": "^7.0.3",
+    "next-images": "^1.7.0",
     "prisma": "^2.19.0",
     "ts-node-dev": "^1.1.6",
     "tslint": "^6.1.3",
