@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
 export type Context = {
-  db: PrismaClient
+  db: PrismaClient,
+  userId?: string
 };

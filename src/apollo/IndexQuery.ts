@@ -7,6 +7,12 @@
 // GraphQL query operation: IndexQuery
 // ====================================================
 
+export interface IndexQuery_users {
+  __typename: "User";
+  id: string;
+  email: string;
+}
+
 export interface IndexQuery {
-  ok: boolean;
+  users: IndexQuery_users[];
 }

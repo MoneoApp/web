@@ -2,6 +2,21 @@
 ### Do not make changes to this file directly
 
 
+type Authentication {
+  token: String!
+  user: User!
+}
+
+type Mutation {
+  createUser(email: String!, password: String!): Authentication!
+  login(email: String!, password: String!): Authentication!
+}
+
 type Query {
-  ok: Boolean!
+  users: [User!]!
+}
+
+type User {
+  email: String!
+  id: ID!
 }

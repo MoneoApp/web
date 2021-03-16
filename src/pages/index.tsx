@@ -2,7 +2,10 @@ import { gql } from '@apollo/client';
 
 const query = gql`
   query IndexQuery {
-    ok
+    users {
+      id
+      email
+    }
   }
 `;
 

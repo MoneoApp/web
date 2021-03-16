@@ -8,6 +8,39 @@ generator client {
 }
 
 model User {
-  id    String @id @default(cuid())
-  email String @unique
+  id       String @id @default(cuid())
+  email    String @unique
+  password String
+}
+
+model Overlay {
+  id           String        @id @default(cuid())
+  name         String
+  interactions Interaction[]
+}
+
+model Interaction {
+  id        String         @id @default(cuid())
+  x         Float
+  y         Float
+  width     Float
+  height    Float
+  text      String
+  overlay   Overlay        @relation(fields: [overlayId], references: [id])
+  overlayId String
+  blocks    ContentBlock[]
+}
+
+model ContentBlock {
+  id            String           @id @default(cuid())
+  type          ContentBlockType
+  data          Json
+  interaction   Interaction      @relation(fields: [interactionId], references: [id])
+  interactionId String
+}
+
+enum ContentBlockType {
+  TEXT
+  LIST
+  IMAGE
 }
