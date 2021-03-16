@@ -8,11 +8,18 @@ type Authentication {
 }
 
 type Mutation {
+  createOverlay(name: String!): Overlay!
   createUser(email: String!, password: String!): Authentication!
   login(email: String!, password: String!): Authentication!
 }
 
+type Overlay {
+  id: ID!
+  name: String!
+}
+
 type Query {
+  overlays: [Overlay!]!
   users: [User!]!
 }
 
