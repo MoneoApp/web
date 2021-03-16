@@ -1,4 +1,4 @@
-import { ApolloError } from 'apollo-server-micro';
+import { ApolloError, toApolloError } from 'apollo-server-micro';
 import { fieldAuthorizePlugin, makeSchema } from 'nexus';
 import { join } from 'path';
 
@@ -17,7 +17,13 @@ export const schema = makeSchema({
   },
   plugins: [
     fieldAuthorizePlugin({
-      formatError: () => new ApolloError('Unauthorized', 'UNAUTHORIZED')
+      formatError: ({ error }) => {
+        if (error instanceof ApolloError) {
+          return error;
+        }
+
+        return toApolloError(error);
+      }
     })
   ],
   nonNullDefaults: {

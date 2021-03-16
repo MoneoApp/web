@@ -3,7 +3,9 @@ import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { extendType, stringArg } from 'nexus';
 
+import { Login } from '../../../structs/Login';
 import { secret } from '../../constants';
+import { validate } from '../../guards/validate';
 
 export const UserMutation = extendType({
   type: 'Mutation',
@@ -14,6 +16,9 @@ export const UserMutation = extendType({
         email: stringArg(),
         password: stringArg()
       },
+      authorize: (parent, args, { guard }) => guard(
+        validate(args, Login)
+      ),
       resolve: async (parent, { email, password }, { db }) => {
         const hashed = await hash(password, 10);
 
@@ -41,6 +46,9 @@ export const UserMutation = extendType({
         email: stringArg(),
         password: stringArg()
       },
+      authorize: (parent, args, { guard }) => guard(
+        validate(args, Login)
+      ),
       resolve: async (parent, { email, password }, { db }) => {
         const user = await db.user.findUnique({
           where: { email }
