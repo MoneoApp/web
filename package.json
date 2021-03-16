@@ -6,7 +6,7 @@
     "npm": "7.x"
   },
   "scripts": {
-    "dev": "concurrently --raw w: npm:dev:*",
+    "dev": "concurrently --raw npm:dev:*",
     "dev:next": "next dev",
     "dev:nexus": "cross-env REFLECTION=true ts-node-dev --respawn --transpile-only server/schema.ts",
     "dev:apollo": "apollo client:codegen --target typescript --localSchemaFile schema.graphql --outputFlat --watch src/apollo",
