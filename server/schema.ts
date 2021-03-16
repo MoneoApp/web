@@ -1,4 +1,5 @@
-import { makeSchema } from 'nexus';
+import { ApolloError } from 'apollo-server-micro';
+import { fieldAuthorizePlugin, makeSchema } from 'nexus';
 import { join } from 'path';
 
 import { reflection } from './constants';
@@ -14,6 +15,11 @@ export const schema = makeSchema({
     typegen: join(__dirname, '..', 'node_modules', '@types', 'nexus__typegen', 'index.d.ts'),
     schema: join(__dirname, '..', 'schema.graphql')
   },
+  plugins: [
+    fieldAuthorizePlugin({
+      formatError: () => new ApolloError('Unauthorized', 'UNAUTHORIZED')
+    })
+  ],
   nonNullDefaults: {
     input: true,
     output: true

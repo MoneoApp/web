@@ -5,6 +5,7 @@ export const UserQuery = extendType({
   definition: (t) => {
     t.list.field('users', {
       type: 'User',
+      authorize: () => false,
       resolve: (parent, args, { db }) => db.user.findMany()
     });
   }
