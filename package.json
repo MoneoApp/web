@@ -10,7 +10,7 @@
     "dev:next": "next dev",
     "dev:nexus": "cross-env REFLECTION=true ts-node-dev --respawn --transpile-only server/schema.ts",
     "dev:apollo": "apollo client:codegen --target typescript --localSchemaFile schema.graphql --outputFlat --watch src/apollo",
-    "start": "next start",
+    "start": "next start -p $PORT",
     "build": "next build",
     "prepare": "prisma generate"
   },
