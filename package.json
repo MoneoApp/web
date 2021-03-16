@@ -2,6 +2,9 @@
   "name": "moneo",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "npm": "7.x"
+  },
   "scripts": {
     "dev": "concurrently --raw w: npm:dev:*",
     "dev:next": "next dev",
