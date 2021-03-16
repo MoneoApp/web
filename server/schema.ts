@@ -2,6 +2,8 @@ import { ApolloError, toApolloError } from 'apollo-server-micro';
 import { fieldAuthorizePlugin, makeSchema } from 'nexus';
 import { join } from 'path';
 
+import { Errors } from '../shared/constants';
+
 import { reflection } from './constants';
 import * as features from './features';
 import * as models from './models';
@@ -22,7 +24,7 @@ export const schema = makeSchema({
           return error;
         }
 
-        return toApolloError(error);
+        return toApolloError(error, Errors.Unknown);
       }
     })
   ],

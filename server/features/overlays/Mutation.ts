@@ -1,6 +1,6 @@
 import { extendType, stringArg } from 'nexus';
 
-import { CreateOverlay } from '../../../structs/CreateOverlay';
+import { CreateOverlay } from '../../../shared/structs/CreateOverlay';
 import { authorized } from '../../guards/authorized';
 import { validate } from '../../guards/validate';
 

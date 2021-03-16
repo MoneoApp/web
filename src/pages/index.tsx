@@ -2,7 +2,7 @@ import { gql, useMutation } from '@apollo/client';
 import { superstructResolver } from '@hookform/resolvers/superstruct';
 import { useForm } from 'react-hook-form';
 
-import { Login } from '../../structs/Login';
+import { Login } from '../../shared/structs/Login';
 import { IndexMutation, IndexMutationVariables } from '../apollo/IndexMutation';
 
 const mutation = gql`

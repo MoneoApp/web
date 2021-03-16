@@ -1,6 +1,7 @@
-import { UserInputError } from 'apollo-server-micro';
+import { ApolloError } from 'apollo-server-micro';
 import { assert, Struct, StructError } from 'superstruct';
 
+import { Errors } from '../../shared/constants';
 import { Guard } from '../types';
 
 export function validate<T>(args: T, struct: Struct<T>): Guard {
@@ -9,7 +10,7 @@ export function validate<T>(args: T, struct: Struct<T>): Guard {
       assert(args, struct);
     } catch (e) {
       if (e instanceof StructError) {
-        throw new UserInputError('bad user input', {
+        throw new ApolloError('bad user input', Errors.BadUserInput, {
           fields: e.failures().map(({ path, refinement, type }) => ({
             path,
             type: refinement ?? type
