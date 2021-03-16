@@ -1,12 +1,15 @@
 import { gql, useMutation } from '@apollo/client';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { superstructResolver } from '@hookform/resolvers/superstruct';
-import { useForm } from 'react-hook-form';
 
 import { Login } from '../../shared/structs/Login';
 import { IndexMutation, IndexMutationVariables } from '../apollo/IndexMutation';
 import background from '../assets/background.jpg';
 import Logo from '../assets/logo.svg';
+import { Button } from '../components/Button';
+import { Form } from '../components/Form';
+import { Input } from '../components/Input';
+import { breakpoint } from '../utils/breakpoint';
 
 const mutation = gql`
   mutation IndexMutation($email: String!, $password: String!) {
@@ -18,54 +21,33 @@ const mutation = gql`
 
 export default function Index() {
   const [mutate] = useMutation<IndexMutation, IndexMutationVariables>(mutation);
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: superstructResolver(Login)
-  });
 
   return (
     <StyledRoot>
       <StyledBackground/>
-      <StyledSidePanel>
-
+      <StyledSidebar>
         <StyledHeader>
           <StyledLogo/>
-          <StyledName>
+          <StyledTitle>
             Moneo
-          </StyledName>
+          </StyledTitle>
         </StyledHeader>
-
-        <StyledForm onSubmit={handleSubmit((data) => mutate({ variables: data as any }))}>
-          <StyledInputGroups>
-            <StyledLabel>
-              E-mail
-            </StyledLabel>
-            <StyledInput {...register('email')}/>
-            {errors.email && (
-              <StyledError>email not ok</StyledError>
-            )}
-          </StyledInputGroups>
-          <StyledInputGroups>
-            <StyledLabel>
-              Password
-            </StyledLabel>
-            <StyledInput type="password" {...register('password')}/>
-            {errors.password && (
-              <StyledError>password not ok</StyledError>
-            )}
-          </StyledInputGroups>
-          <StyledButton type="submit">
-            Login
-          </StyledButton>
-        </StyledForm>
-      </StyledSidePanel>
+        <Form struct={Login} onSubmit={(variables) => mutate({ variables })}>
+          <StyledForm>
+            <Input name="email" label="E-mail"/>
+            <Input name="password" label="Password" type="password"/>
+            <Button text="Login" type="submit"/>
+          </StyledForm>
+        </Form>
+      </StyledSidebar>
     </StyledRoot>
   );
 }
 
-const StyledRoot = styled.div`
+const StyledRoot = styled.main`
   display: flex;
   height: 100vh;
-  background: #14213D;
+  background: #14213d;
 `;
 
 const StyledBackground = styled.div`
@@ -74,80 +56,40 @@ const StyledBackground = styled.div`
   background-size: cover;
 `;
 
-const StyledSidePanel = styled.div`
+const StyledSidebar = styled.aside`
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  width: 100%;
+  ${breakpoint('tabletLandscape', css`
+    width: 25rem;
+  `)};
 `;
 
-const StyledHeader = styled.div`
+const StyledHeader = styled.header`
   display: flex;
-  flex-direction: column;
-  align-items: center;
   flex: 1;
-  background: #FCA311;
-  border-bottom-left-radius: 30px;
-  border-bottom-right-radius: 30px;
+  flex-direction: column;
   justify-content: flex-end;
+  align-items: center;
+  background: #fca311;
+  border-radius: 0 0 24px 24px;
 `;
 
 const StyledLogo = styled(Logo)`
-  width: 50%;
-  padding: 2rem 0;
+  width: 10rem;
   color: white;
 `;
 
-const StyledName = styled.h1`
+const StyledTitle = styled.h1`
+  padding: 3rem 0;
   color: white;
+  font-size: 1.25rem;
   font-weight: bold;
-  padding-bottom: 3rem;
 `;
 
-const StyledForm = styled.form`
+const StyledForm = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding: 5rem;
-`;
-
-const StyledInputGroups = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 20rem;
-  margin: 0.5rem;
-`;
-
-const StyledLabel = styled.label`
-  color: white;
-  font-weight: bold;
-  text-transform: uppercase;
-  padding: 0.25rem;
-`;
-
-const StyledInput = styled.input`
-  width: 100%;
-  border: 1px solid grey;
-  background: white;
-  padding: 0.5rem;
-  border-radius: 30px;
-`;
-
-const StyledButton = styled.button`
-  padding: 0.5rem 2rem;
-  border-radius: 30px;
-  color: black;
-  background: white;
-  margin: 0.25rem;
-
-  &:hover {
-    background: grey;
-  }
-`;
-
-const StyledError = styled.span`
-  background: red;
-  color: white;
-  border-radius: 30px;
-  padding: 0.25rem 0.5rem;
-  margin: 0.25rem;
+  padding: 3rem;
 `;

@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "concurrently --raw npm:dev:*",
     "dev:next": "next dev",
-    "dev:nexus": "cross-env REFLECTION=true ts-node-dev --respawn --transpile-only server/schema.ts",
+    "dev:nexus": "cross-env REFLECTION=true ts-node-dev --respawn --transpile-only --quiet server/schema.ts",
     "dev:apollo": "apollo client:codegen --target typescript --localSchemaFile schema.graphql --outputFlat --watch src/apollo",
     "build": "next build",
     "prestart": "prisma migrate deploy",
