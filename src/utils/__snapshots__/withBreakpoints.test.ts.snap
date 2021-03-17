@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should insert the correct breakpoints 1`] = `";content:\\"0\\";;;;label:result;;;@media (min-width: 37.5rem){content:\\"37.5\\";;;};label:withBreakpoint;;;;label:result;;;@media (min-width: 56.25rem){content:\\"56.25\\";;;};label:withBreakpoint;;;;label:result;;;@media (min-width: 75rem){content:\\"75\\";;;};label:withBreakpoint;;;;label:result;;;@media (min-width: 93.75rem){content:\\"93.75\\";;;};label:withBreakpoint;;;;label:result;"`;

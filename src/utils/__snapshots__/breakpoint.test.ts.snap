@@ -1,5 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`should insert the correct breakpoint 1`] = `"@media (min-width: 93.75rem){color:#ffba05;label:style;;;};label:breakpoint;"`;
-
-exports[`should skip the breakpoint on mobile 1`] = `"color:#ffba05;label:style;"`;

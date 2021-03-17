@@ -3,13 +3,13 @@ import { css, SerializedStyles } from '@emotion/react';
 import { breakpoints } from '../constants';
 import { Breakpoint } from '../types';
 
-export function breakpoint(br: Breakpoint, style: SerializedStyles) {
-  if (br === 'phone') {
+export function withBreakpoint(breakpoint: Breakpoint, style: SerializedStyles) {
+  if (breakpoint === 'phone') {
     return style;
   }
 
   return css`
-    @media (min-width: ${breakpoints[br]}rem) {
+    @media (min-width: ${breakpoints[breakpoint]}rem) {
       ${style};
     }
   `;

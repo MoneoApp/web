@@ -11,7 +11,7 @@ import { Button } from '../components/forms/Button';
 import { Form } from '../components/forms/Form';
 import { Input } from '../components/forms/Input';
 import { useAuthentication } from '../states/authentication';
-import { breakpoint } from '../utils/breakpoint';
+import { withBreakpoint } from '../utils/withBreakpoint';
 
 const mutation = gql`
   mutation IndexMutation($email: String!, $password: String!) {
@@ -70,7 +70,7 @@ const StyledSidebar = styled.aside`
   flex-direction: column;
   width: 100%;
 
-  ${breakpoint('tabletLandscape', css`
+  ${withBreakpoint('tabletLandscape', css`
     width: 25rem;
   `)};
 `;
