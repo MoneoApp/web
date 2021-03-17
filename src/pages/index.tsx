@@ -6,10 +6,12 @@ import { Login } from '../../shared/structs/Login';
 import { IndexMutation, IndexMutationVariables } from '../apollo/IndexMutation';
 import background from '../assets/background.jpg';
 import Logo from '../assets/logo.svg';
-import { Button } from '../components/Button';
-import { Form } from '../components/Form';
-import { Input } from '../components/Input';
+import { Button } from '../components/forms/Button';
+import { Form } from '../components/forms/Form';
+import { Input } from '../components/forms/Input';
+import { useNotify } from '../hooks/useNotify';
 import { breakpoint } from '../utils/breakpoint';
+import { handleError } from '../utils/handleError';
 
 const mutation = gql`
   mutation IndexMutation($email: String!, $password: String!) {
@@ -20,7 +22,10 @@ const mutation = gql`
 `;
 
 export default function Index() {
-  const [mutate] = useMutation<IndexMutation, IndexMutationVariables>(mutation);
+  const notify = useNotify();
+  const [mutate] = useMutation<IndexMutation, IndexMutationVariables>(mutation, {
+    onError: handleError(notify)
+  });
 
   return (
     <StyledRoot>

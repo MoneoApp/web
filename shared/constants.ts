@@ -1,4 +1,4 @@
-export enum Errors {
+export enum Error {
   Unknown = 'UNKNOWN',
   Unauthorized = 'UNAUTHORIZED',
   EmailInUse = 'EMAIL_IN_USE',

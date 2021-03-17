@@ -2,6 +2,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { setContext } from '@apollo/client/link/context';
 import { css, Global } from '@emotion/react';
+import { Dialoog, DialoogProvider } from 'dialoog';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
@@ -96,7 +97,10 @@ export default function App({ Component, pageProps }: AppProps) {
         `}
       />
       <ApolloProvider client={client}>
-        <Component {...pageProps}/>
+        <DialoogProvider>
+          <Component {...pageProps}/>
+          <Dialoog/>
+        </DialoogProvider>
       </ApolloProvider>
     </>
   );

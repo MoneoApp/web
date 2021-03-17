@@ -3,7 +3,7 @@ import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { extendType, stringArg } from 'nexus';
 
-import { Errors } from '../../../shared/constants';
+import { Error } from '../../../shared/constants';
 import { Login } from '../../../shared/structs/Login';
 import { secret } from '../../constants';
 import { validate } from '../../guards/validate';
@@ -36,7 +36,7 @@ export const UserMutation = extendType({
             user
           };
         } catch {
-          throw new ApolloError('email in use', Errors.EmailInUse);
+          throw new ApolloError('email in use', Error.EmailInUse);
         }
       }
     });
@@ -56,7 +56,7 @@ export const UserMutation = extendType({
         });
 
         if (!user || !await compare(password, user.password)) {
-          throw new ApolloError('authentication failed', Errors.AuthenticationFailed);
+          throw new ApolloError('authentication failed', Error.AuthenticationFailed);
         }
 
         return {

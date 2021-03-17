@@ -44,11 +44,12 @@ const StyledLabel = styled.label`
   position: absolute;
   top: .5rem;
   left: .75rem;
+  color: grey;
   font-size: .75rem;
   font-weight: bold;
   text-transform: uppercase;
-  opacity: .5;
   pointer-events: none;
+  z-index: 1;
 `;
 
 const StyledInput = styled.input`
