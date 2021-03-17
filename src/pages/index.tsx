@@ -1,6 +1,7 @@
 import { gql, useMutation } from '@apollo/client';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
 
 import { Login } from '../../shared/structs/Login';
 import { IndexMutation, IndexMutationVariables } from '../apollo/IndexMutation';
@@ -9,6 +10,7 @@ import Logo from '../assets/logo.svg';
 import { Button } from '../components/forms/Button';
 import { Form } from '../components/forms/Form';
 import { Input } from '../components/forms/Input';
+import { useAuthentication } from '../states/authentication';
 import { breakpoint } from '../utils/breakpoint';
 
 const mutation = gql`
@@ -21,6 +23,8 @@ const mutation = gql`
 
 export default function Index() {
   const [mutate] = useMutation<IndexMutation, IndexMutationVariables>(mutation);
+  const { push } = useRouter();
+  const [, { login }] = useAuthentication();
 
   return (
     <StyledRoot>
@@ -32,7 +36,12 @@ export default function Index() {
             Moneo
           </StyledTitle>
         </StyledHeader>
-        <Form struct={Login} onSubmit={(variables) => mutate({ variables })}>
+        <Form
+          struct={Login}
+          onSubmit={(variables) => mutate({ variables })
+            .then(({ data }) => data && login(data.login.token))
+            .then(() => push('/admin'))}
+        >
           <StyledForm>
             <Input name="email" label="E-mail"/>
             <Input name="password" label="Password" type="password"/>

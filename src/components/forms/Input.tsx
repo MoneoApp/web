@@ -69,7 +69,7 @@ const StyledInput = styled.input`
 
   &:disabled {
     pointer-events: none;
-    opacity: .5;
+    opacity: .75;
   }
 `;
 

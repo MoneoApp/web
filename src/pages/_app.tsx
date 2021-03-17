@@ -7,6 +7,8 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
 
+import { AuthProvider } from '../states/authentication';
+
 const client = new ApolloClient({
   link: setContext((_, { headers }) => {
     const token = localStorage.getItem('token');
@@ -97,10 +99,12 @@ export default function App({ Component, pageProps }: AppProps) {
         `}
       />
       <ApolloProvider client={client}>
-        <DialoogProvider>
-          <Component {...pageProps}/>
-          <Dialoog/>
-        </DialoogProvider>
+        <AuthProvider>
+          <DialoogProvider>
+            <Component {...pageProps}/>
+            <Dialoog/>
+          </DialoogProvider>
+        </AuthProvider>
       </ApolloProvider>
     </>
   );
