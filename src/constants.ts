@@ -1,6 +1,6 @@
 import { Error } from '../shared/constants';
 
-import { Breakpoint } from './types';
+import { Breakpoint, Color, Shade } from './types';
 
 export const breakpoints: Record<Breakpoint, number> = {
   phone: 0,
@@ -8,6 +8,32 @@ export const breakpoints: Record<Breakpoint, number> = {
   tabletLandscape: 56.25,
   laptop: 75,
   desktop: 93.75
+};
+
+export const colors: Record<Color, Partial<Record<Shade, [string, string]>>> = {
+  grey: {
+    0: ['#ffffff', '#1f1f1f'],
+    100: ['#efefef', '#303030'],
+    200: ['#d4d4d4', '#404040'],
+    300: ['#9a9a9a', '#5f5f5f'],
+    400: ['#707070', '#929292'],
+    500: ['#454545', '#efefef']
+  },
+  yellow: {
+    100: ['#ffdd82', '#d89b00'],
+    200: ['#ffba05', '#ffba05'],
+    300: ['#d89b00', '#ffdd82']
+  },
+  green: {
+    100: ['#9eddc2', '#167b4f'],
+    200: ['#27b376', '#27b376'],
+    300: ['#167b4f', '#9eddc2']
+  },
+  red: {
+    100: ['#faa7ae', '#bf212f'],
+    200: ['#e5414f', '#e5414f'],
+    300: ['#bf212f', '#faa7ae']
+  }
 };
 
 export const messages: Record<Error, string> = {

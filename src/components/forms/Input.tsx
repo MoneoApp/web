@@ -37,8 +37,8 @@ const StyledWrapper = styled.div<{ error: boolean }>`
   border-radius: 8px;
 
   ${(props) => props.error && css`
-    background-color: #e21515;
-    box-shadow: 0 0 0 3px #e21515;
+    background-color: var(--red-200);
+    box-shadow: 0 0 0 3px var(--red-200);
   `};
 `;
 
@@ -46,7 +46,7 @@ const StyledLabel = styled.label`
   position: absolute;
   top: .5rem;
   left: .75rem;
-  color: grey;
+  color: var(--grey-300);
   font-size: .75rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -57,13 +57,13 @@ const StyledLabel = styled.label`
 const StyledInput = styled.input`
   width: 100%;
   padding: 1.5rem .75rem .5rem;
-  background-color: white;
+  background-color: var(--grey-100);
   border-radius: inherit;
   outline: none;
   transition: box-shadow .25s ease, opacity .25s ease;
 
   &:focus {
-    box-shadow: 0 0 0 3px #fca311;
+    box-shadow: 0 0 0 3px var(--yellow-200);
     z-index: 1;
   }
 

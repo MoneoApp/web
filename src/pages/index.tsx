@@ -1,5 +1,4 @@
 import { gql, useMutation } from '@apollo/client';
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 
@@ -11,7 +10,6 @@ import { Button } from '../components/forms/Button';
 import { Form } from '../components/forms/Form';
 import { Input } from '../components/forms/Input';
 import { useAuthentication } from '../states/authentication';
-import { withBreakpoint } from '../utils/withBreakpoint';
 
 const mutation = gql`
   mutation IndexMutation($email: String!, $password: String!) {
@@ -28,78 +26,68 @@ export default function Index() {
 
   return (
     <StyledRoot>
-      <StyledBackground/>
-      <StyledSidebar>
-        <StyledHeader>
-          <StyledLogo/>
-          <StyledTitle>
+      <Form
+        struct={Login}
+        onSubmit={(variables) => mutate({ variables })
+          .then(({ data }) => data && login(data.login.token))
+          .then(() => push('/admin'))}
+      >
+        <StyledForm>
+          <StyledBrand>
+            <StyledLogo/>
             Moneo
-          </StyledTitle>
-        </StyledHeader>
-        <Form
-          struct={Login}
-          onSubmit={(variables) => mutate({ variables })
-            .then(({ data }) => data && login(data.login.token))
-            .then(() => push('/admin'))}
-        >
-          <StyledForm>
-            <Input name="email" label="E-mail"/>
-            <Input name="password" label="Password" type="password"/>
-            <Button text="Login" type="submit"/>
-          </StyledForm>
-        </Form>
-      </StyledSidebar>
+          </StyledBrand>
+          <Input name="email" label="E-mail"/>
+          <Input name="password" label="Password" type="password"/>
+          <Button text="Login" type="submit"/>
+        </StyledForm>
+      </Form>
     </StyledRoot>
   );
 }
 
 const StyledRoot = styled.main`
   display: flex;
-  height: 100vh;
-  background-color: #14213d;
-`;
-
-const StyledBackground = styled.div`
-  flex: 1;
-  background: url(${background}) center;
-  background-size: cover;
-`;
-
-const StyledSidebar = styled.aside`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  ${withBreakpoint('tabletLandscape', css`
-    width: 25rem;
-  `)};
-`;
-
-const StyledHeader = styled.header`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: flex-end;
+  position: relative;
+  justify-content: center;
   align-items: center;
-  background-color: #fca311;
-  border-radius: 0 0 24px 24px;
-`;
-
-const StyledLogo = styled(Logo)`
-  width: 10rem;
-  color: white;
-`;
-
-const StyledTitle = styled.h1`
-  padding: 3rem 0;
-  color: white;
-  font-size: 1.25rem;
-  font-weight: bold;
+  height: 100vh;
+  &::before {
+    content: "";
+    position: absolute;
+    top: -16px;
+    left: -16px;
+    width: calc(100% + 32px);
+    height: calc(100% + 32px);
+    background: url(${background}) center;
+    background-size: cover;
+    filter: blur(8px);
+  }
 `;
 
 const StyledForm = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  padding: 3rem;
+  width: 27.5rem;
+  max-width: calc(100vw - 2rem);
+  padding: 1.5rem;
+  background-color: var(--grey-0);
+  border-radius: 16px;
+`;
+
+const StyledBrand = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+`;
+
+const StyledLogo = styled(Logo)`
+  width: 3rem;
+  margin-bottom: .75rem;
 `;

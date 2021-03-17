@@ -8,6 +8,7 @@ import Head from 'next/head';
 import React from 'react';
 
 import { AuthProvider } from '../states/authentication';
+import { generatePalette } from '../utils/generatePalette';
 
 const client = new ApolloClient({
   link: setContext((_, { headers }) => {
@@ -35,6 +36,14 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <Global
         styles={css`
+          :root {
+            ${generatePalette(0)};
+
+            @media (prefers-color-scheme: dark) {
+              ${generatePalette(1)};
+            }
+          }
+
           *, *::before, *::after {
             box-sizing: border-box;
           }
@@ -56,6 +65,8 @@ export default function App({ Component, pageProps }: AppProps) {
           }
 
           body {
+            color: var(--grey-500);
+            background-color: var(--grey-0);
             font-family: "Open Sans", sans-serif;
             overflow-x: hidden;
             overflow-y: scroll;

@@ -15,8 +15,12 @@ export function Button({ text, children }: Props & ComponentPropsWithoutRef<'but
 
 const StyledButton = styled.button`
   padding: .5rem 1rem;
-  background-color: white;
-  border-radius: 1000px;
+  color: white;
+  background-color: var(--yellow-200);
+  border-radius: 8px;
+  font-size: .9rem;
+  font-weight: bold;
+  text-transform: uppercase;
   outline: none;
   transition: box-shadow .25s ease, opacity .25s ease;
 
