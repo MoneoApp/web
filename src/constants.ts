@@ -15,3 +15,10 @@ export const messages: Record<Error, string> = {
   [Error.Unauthorized]: 'Je mag deze actie niet uitvoeren',
   [Error.BadUserInput]: 'De ingevulde gegevens zijn ongeldig'
 };
+
+export const errors: Record<string, string> = {
+  email: 'Ongeldig e-mailadres',
+  password: 'Ongeldig wachtwoord',
+  invalidCredentials: 'Ongeldige inloggegevens',
+  emailInUse: 'E-mailadres al in gebruik'
+};

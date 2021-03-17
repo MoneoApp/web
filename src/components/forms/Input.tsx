@@ -3,15 +3,17 @@ import styled from '@emotion/styled';
 import { ComponentPropsWithoutRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { errors } from '../../constants';
+
 type Props = {
   name: string,
   label: string
 };
 
 export function Input({ name, label, ...props }: Props & ComponentPropsWithoutRef<'input'>) {
-  const { register, formState: { errors, isSubmitting } } = useFormContext();
+  const { register, formState: { errors: e, isSubmitting } } = useFormContext();
 
-  const error = errors[name];
+  const error = e[name];
 
   return (
     <StyledWrapper error={Boolean(error)}>
@@ -21,7 +23,7 @@ export function Input({ name, label, ...props }: Props & ComponentPropsWithoutRe
       <StyledInput {...register(name)} id={name} disabled={isSubmitting} {...props}/>
       {error && (
         <StyledError>
-          error type: {error.type}
+          {errors[error.type] ?? 'Onbekende fout'}
         </StyledError>
       )}
     </StyledWrapper>
