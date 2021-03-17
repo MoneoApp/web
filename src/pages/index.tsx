@@ -60,6 +60,7 @@ const StyledSidebar = styled.aside`
   display: flex;
   flex-direction: column;
   width: 100%;
+
   ${breakpoint('tabletLandscape', css`
     width: 25rem;
   `)};
