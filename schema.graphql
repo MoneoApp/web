@@ -7,6 +7,35 @@ type Authentication {
   user: User!
 }
 
+type ContentBlock {
+  data: JSONObject!
+  id: ID!
+  interaction: Interaction!
+  type: ContentBlockType!
+}
+
+enum ContentBlockType {
+  IMAGE
+  LIST
+  TEXT
+}
+
+type Interaction {
+  blocks: [ContentBlock!]!
+  height: Float!
+  id: ID!
+  overlay: Overlay!
+  text: String!
+  width: Float!
+  x: Float!
+  y: Float!
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
 type Mutation {
   createOverlay(name: String!): Overlay!
   createUser(email: String!, password: String!): User!
@@ -15,6 +44,7 @@ type Mutation {
 
 type Overlay {
   id: ID!
+  interactions: [Interaction!]!
   name: String!
 }
 

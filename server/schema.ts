@@ -1,4 +1,5 @@
 import { ApolloError, toApolloError } from 'apollo-server-micro';
+import { JSONObjectResolver } from 'graphql-scalars';
 import { fieldAuthorizePlugin, makeSchema } from 'nexus';
 import { join } from 'path';
 
@@ -11,7 +12,8 @@ import * as models from './models';
 export const schema = makeSchema({
   types: {
     ...features,
-    ...models
+    ...models,
+    JSONObject: JSONObjectResolver
   },
   outputs: {
     typegen: join(__dirname, '..', 'node_modules', '@types', 'nexus__typegen', 'index.d.ts'),

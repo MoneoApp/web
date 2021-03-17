@@ -27,6 +27,7 @@
     "bcryptjs": "^2.4.3",
     "dakpan": "^2.3.1",
     "dialoog": "^1.0.0",
+    "graphql-scalars": "^1.9.0",
     "jsonwebtoken": "^8.5.1",
     "micro": "^9.3.4",
     "next": "^10.0.9",
