@@ -21,7 +21,7 @@ export function Input({ name, label, ...props }: Props & ComponentPropsWithoutRe
       <StyledInput {...register(name)} id={name} disabled={isSubmitting} {...props}/>
       {error && (
         <StyledError>
-          Invalid {error.type}
+          error type: {error.type}
         </StyledError>
       )}
     </StyledWrapper>

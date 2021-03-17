@@ -1,12 +1,12 @@
-import { ApolloError } from 'apollo-server-micro';
 import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { extendType, stringArg } from 'nexus';
+import { Infer } from 'superstruct';
 
-import { Error } from '../../../shared/constants';
 import { Login } from '../../../shared/structs/Login';
 import { secret } from '../../constants';
 import { validate } from '../../guards/validate';
+import { inputError } from '../../utils/inputError';
 
 export const UserMutation = extendType({
   type: 'Mutation',
@@ -36,7 +36,10 @@ export const UserMutation = extendType({
             user
           };
         } catch {
-          throw new ApolloError('email in use', Error.EmailInUse);
+          throw inputError<Infer<typeof Login>>([{
+            path: 'email',
+            type: 'emailInUse'
+          }]);
         }
       }
     });
@@ -56,7 +59,10 @@ export const UserMutation = extendType({
         });
 
         if (!user || !await compare(password, user.password)) {
-          throw new ApolloError('authentication failed', Error.AuthenticationFailed);
+          throw inputError<Infer<typeof Login>>([{
+            path: 'password',
+            type: 'invalidCredentials'
+          }]);
         }
 
         return {

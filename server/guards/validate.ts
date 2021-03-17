@@ -1,8 +1,8 @@
-import { ApolloError } from 'apollo-server-micro';
+import { Path } from 'react-hook-form';
 import { assert, Struct, StructError } from 'superstruct';
 
-import { Error } from '../../shared/constants';
 import { Guard } from '../types';
+import { inputError } from '../utils/inputError';
 
 export function validate<T>(args: T, struct: Struct<T>): Guard {
   return () => {
@@ -10,12 +10,10 @@ export function validate<T>(args: T, struct: Struct<T>): Guard {
       assert(args, struct);
     } catch (e) {
       if (e instanceof StructError) {
-        throw new ApolloError('bad user input', Error.BadUserInput, {
-          fields: e.failures().map(({ path, refinement, type }) => ({
-            path,
-            type: refinement ?? type
-          }))
-        });
+        throw inputError<T>(e.failures().map(({ path, refinement, type }) => ({
+          path: path.join('.') as Path<T>,
+          type: refinement ?? type
+        })));
       }
 
       throw e;

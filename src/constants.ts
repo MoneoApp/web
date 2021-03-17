@@ -13,7 +13,5 @@ export const breakpoints: Record<Breakpoint, number> = {
 export const messages: Record<Error, string> = {
   [Error.Unknown]: 'Oops, er is iets mis gegaan',
   [Error.Unauthorized]: 'Je mag deze actie niet uitvoeren',
-  [Error.EmailInUse]: 'Het gekozen e-mailadres is al in gebruik',
-  [Error.AuthenticationFailed]: 'De inloggegevens zijn ongeldig',
   [Error.BadUserInput]: 'De ingevulde gegevens zijn ongeldig'
 };
