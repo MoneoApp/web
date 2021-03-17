@@ -1,4 +1,5 @@
 import { ApolloError } from 'apollo-server-micro';
+
 import { Error } from '../../shared/constants';
 
 export async function ensure<T>(promise: Promise<T | null>) {

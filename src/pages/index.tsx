@@ -56,7 +56,7 @@ export default function Index() {
 const StyledRoot = styled.main`
   display: flex;
   height: 100vh;
-  background: #14213d;
+  background-color: #14213d;
 `;
 
 const StyledBackground = styled.div`
@@ -81,7 +81,7 @@ const StyledHeader = styled.header`
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  background: #fca311;
+  background-color: #fca311;
   border-radius: 0 0 24px 24px;
 `;
 
