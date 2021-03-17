@@ -12,7 +12,7 @@ export const UserMutation = extendType({
   type: 'Mutation',
   definition: (t) => {
     t.field('createUser', {
-      type: 'Authentication',
+      type: 'User',
       args: {
         email: stringArg(),
         password: stringArg()
@@ -24,17 +24,12 @@ export const UserMutation = extendType({
         const hashed = await hash(password, 10);
 
         try {
-          const user = await db.user.create({
+          return await db.user.create({
             data: {
               email,
               password: hashed
             }
           });
-
-          return {
-            token: sign(user.id, secret),
-            user
-          };
         } catch {
           throw inputError<Infer<typeof Login>>([{
             path: 'email',

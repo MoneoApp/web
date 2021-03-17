@@ -9,7 +9,7 @@ type Authentication {
 
 type Mutation {
   createOverlay(name: String!): Overlay!
-  createUser(email: String!, password: String!): Authentication!
+  createUser(email: String!, password: String!): User!
   login(email: String!, password: String!): Authentication!
 }
 
