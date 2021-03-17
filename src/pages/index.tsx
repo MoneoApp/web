@@ -9,6 +9,7 @@ import Logo from '../assets/logo.svg';
 import { Button } from '../components/forms/Button';
 import { Form } from '../components/forms/Form';
 import { Input } from '../components/forms/Input';
+import { Empty } from '../components/templates/Empty';
 import { useAuthentication } from '../states/authentication';
 
 const mutation = gql`
@@ -45,6 +46,8 @@ export default function Index() {
     </StyledRoot>
   );
 }
+
+Index.template = Empty;
 
 const StyledRoot = styled.main`
   display: flex;

@@ -5,8 +5,9 @@ import { css, Global } from '@emotion/react';
 import { Dialoog, DialoogProvider } from 'dialoog';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import React from 'react';
+import React, { createElement } from 'react';
 
+import { Sidebar } from '../components/templates/Sidebar';
 import { AuthProvider } from '../states/authentication';
 import { generatePalette } from '../utils/generatePalette';
 
@@ -27,6 +28,8 @@ const client = new ApolloClient({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const template = (Component as any).template ?? Sidebar;
+
   return (
     <>
       <Head>
@@ -112,7 +115,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <ApolloProvider client={client}>
         <AuthProvider>
           <DialoogProvider>
-            <Component {...pageProps}/>
+            {createElement(template, {}, (
+              <Component {...pageProps}/>
+            ))}
             <Dialoog/>
           </DialoogProvider>
         </AuthProvider>
