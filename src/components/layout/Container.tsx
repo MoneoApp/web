@@ -19,6 +19,6 @@ const StyledContainer = styled.div`
   padding: 0 1rem;
 
   ${withBreakpoints(breakpoints, (value) => css`
-    width: calc(${value ? `${value - 1}rem` : '100%'} - 1rem);
+    width: ${value ? `${value - 2}rem` : '100%'};
   `)}
 `;
