@@ -31,7 +31,6 @@ export function Sidebar({ children }: Props) {
       <StyledSidebar>
         <StyledBrand>
           <StyledLogo/>
-          Moneo
         </StyledBrand>
         {items.map(({ href, text }, i) => (
           <SidebarItem key={i} href={href} text={text}/>
@@ -52,7 +51,7 @@ const StyledContainer = styled(Container)`
 `;
 
 const StyledSidebar = styled.aside`
-  flex: 0 0 4rem;
+  flex: 0 0 2.75rem;
   display: flex;
   position: sticky;
   flex-direction: column;
@@ -68,25 +67,54 @@ const StyledBrand = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 10rem;
+  height: 5rem;
   font-weight: bold;
   text-transform: uppercase;
+
+  ${withBreakpoint('tabletLandscape', css`
+    height: 7.5rem;
+  `)};
+
+  ${withBreakpoint('laptop', css`
+    height: 10rem;
+
+    &::after {
+      content: "Moneo";
+    }
+  `)};
 `;
 
 const StyledLogo = styled(Logo)`
-  width: 3rem;
-  margin-right: 1.5rem;
+  width: 2rem;
+
+  ${withBreakpoint('laptop', css`
+    width: 3rem;
+    margin-right: 1.5rem;
+  `)};
 `;
 
 const StyledMain = styled.main`
   flex: 1;
-  padding-left: 3rem;
+  padding-left: 1.5rem;
+
+  ${withBreakpoint('tabletLandscape', css`
+    padding-left: 3rem;
+  `)};
 `;
 
 const StyledHeading = styled.h1`
   display: flex;
   align-items: center;
-  height: 10rem;
-  font-size: 2rem;
+  height: 5rem;
+  font-size: 1.5rem;
   font-weight: bold;
+
+  ${withBreakpoint('tabletLandscape', css`
+    height: 7.5rem;
+  `)};
+
+  ${withBreakpoint('laptop', css`
+    height: 10rem;
+    font-size: 2rem;
+  `)};
 `;
