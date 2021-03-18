@@ -20,5 +20,5 @@ const StyledContainer = styled.div`
 
   ${withBreakpoints(breakpoints, (value) => css`
     width: ${value ? `${value - 2}rem` : '100%'};
-  `)}
+  `)};
 `;

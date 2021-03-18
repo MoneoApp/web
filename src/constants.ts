@@ -20,7 +20,7 @@ export const colors: Record<Color, Partial<Record<Shade, [string, string]>>> = {
     500: ['#454545', '#efefef']
   },
   yellow: {
-    100: ['#ffdd82', '#d89b00'],
+    100: ['#fdecbe', '#906f18'],
     200: ['#ffba05', '#ffba05'],
     300: ['#d89b00', '#ffdd82']
   },
