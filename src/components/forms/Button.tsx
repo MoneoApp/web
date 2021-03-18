@@ -1,19 +1,22 @@
 import styled from '@emotion/styled';
-import { ComponentPropsWithoutRef } from 'react';
+import { ComponentPropsWithoutRef, forwardRef } from 'react';
+
+import { ColorPalette } from '../../types';
+import { withPalette } from '../../utils/withPalette';
 
 type Props = {
-  text: string
+  as?: keyof JSX.IntrinsicElements,
+  text: string,
+  palette?: ColorPalette
 };
 
-export function Button({ text, children }: Props & ComponentPropsWithoutRef<'button'>) {
-  return (
-    <StyledButton title={text}>
-      {children ?? text}
-    </StyledButton>
-  );
-}
+export const Button = forwardRef<HTMLButtonElement, Props & ComponentPropsWithoutRef<'button'>>((props, ref) => (
+  <StyledButton ref={ref} title={props.text} {...props}>
+    {props.children ?? props.text}
+  </StyledButton>
+));
 
-const StyledButton = styled.button`
+const StyledButton = styled.button<Props>`
   padding: .5rem 1rem;
   color: white;
   background-color: var(--yellow-200);
@@ -21,11 +24,12 @@ const StyledButton = styled.button`
   font-size: .9rem;
   font-weight: bold;
   text-transform: uppercase;
+  text-decoration: none;
   outline: none;
-  transition: box-shadow .25s ease, opacity .25s ease;
+  transition: color .25s ease, background-color .25s ease, box-shadow .25s ease, opacity .25s ease;
 
   &:focus {
-    box-shadow: 0 0 0 3px #fca311;
+    box-shadow: 0 0 0 3px var(--yellow-300);
     z-index: 1;
   }
 
@@ -33,4 +37,6 @@ const StyledButton = styled.button`
     pointer-events: none;
     opacity: .75;
   }
+
+  ${(props) => withPalette(props.palette)};
 `;

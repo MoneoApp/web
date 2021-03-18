@@ -6,21 +6,21 @@ import { ReactNode } from 'react';
 import Logo from '../../assets/logo.svg';
 import { withBreakpoint } from '../../utils/withBreakpoint';
 import { Container } from '../layout/Container';
-import { NavigationItem } from '../navigation/NavigationItem';
+import { SidebarItem } from '../navigation/SidebarItem';
 
 type Props = {
   children?: ReactNode
 };
 
 const items = [{
-  title: 'Home',
-  href: '/admin'
+  href: '/admin',
+  text: 'Home'
 }, {
-  title: 'Apparaten',
-  href: '/admin/devices'
+  href: '/admin/devices',
+  text: 'Apparaten'
 }, {
-  title: 'Ondersteuning',
-  href: '/admin/support'
+  href: '/admin/support',
+  text: 'Ondersteuning'
 }];
 
 export function Sidebar({ children }: Props) {
@@ -33,15 +33,13 @@ export function Sidebar({ children }: Props) {
           <StyledLogo/>
           Moneo
         </StyledBrand>
-        {items.map(({ title, href }, i) => (
-          <NavigationItem key={i} href={href}>
-            {title}
-          </NavigationItem>
+        {items.map(({ href, text }, i) => (
+          <SidebarItem key={i} href={href} text={text}/>
         ))}
       </StyledSidebar>
       <StyledMain>
         <StyledHeading>
-          {items.find(({ href }) => pathname === href)?.title ?? 'Onbekende pagina'}
+          {items.find(({ href }) => pathname === href)?.text ?? 'Onbekende pagina'}
         </StyledHeading>
         {children}
       </StyledMain>
@@ -70,7 +68,7 @@ const StyledBrand = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 4rem 0;
+  height: 10rem;
   font-weight: bold;
   text-transform: uppercase;
 `;
@@ -86,7 +84,9 @@ const StyledMain = styled.main`
 `;
 
 const StyledHeading = styled.h1`
-  margin: 4rem 0;
+  display: flex;
+  align-items: center;
+  height: 10rem;
   font-size: 2rem;
   font-weight: bold;
 `;

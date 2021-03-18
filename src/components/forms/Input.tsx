@@ -63,7 +63,7 @@ const StyledInput = styled.input`
   transition: box-shadow .25s ease, opacity .25s ease;
 
   &:focus {
-    box-shadow: 0 0 0 3px var(--yellow-200);
+    box-shadow: 0 0 0 3px var(--yellow-300);
     z-index: 1;
   }
 
