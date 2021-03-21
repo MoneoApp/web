@@ -50,7 +50,7 @@ const StyledNotification = styled.button<{ index: number, open: boolean }>`
   max-width: calc(100% - 2rem);
   height: 3rem;
   padding: 0 1rem;
-  background-color: white;
+  background-color: var(--grey-0);
   border-radius: 8px;
   transition: bottom .25s ease, box-shadow .25s ease;
   animation: ${(props) => props.open ? slideIn : slideOut} .25s ease;
@@ -62,6 +62,6 @@ const StyledNotification = styled.button<{ index: number, open: boolean }>`
   }
 
   &:focus {
-    box-shadow: 0 0 0 3px #fca311;
+    box-shadow: 0 0 0 3px var(--yellow-200);
   }
 `;
