@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should inject the correct css rules 1`] = `"color:var(--grey-500);background-color:var(--grey-0);;label:withPalette;"`;
+
+exports[`should work without arguments 1`] = `undefined`;
