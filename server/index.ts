@@ -5,7 +5,6 @@ import { verify } from 'jsonwebtoken';
 
 import { secret } from './constants';
 import { schema } from './schema';
-import { guard } from './utils/guard';
 
 const db = new PrismaClient({
   log: ['query']
@@ -22,13 +21,9 @@ export const server = new ApolloServer({
     } catch {
     }
 
-    const ctx = {
+    return {
       db,
       userId
     };
-
-    (ctx as any).guard = guard(ctx);
-
-    return ctx;
   }
 });

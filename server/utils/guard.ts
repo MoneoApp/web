@@ -1,9 +1,10 @@
-import { Guard, GuardArgs } from '../types';
+import { Context } from '../context';
+import { Guard } from '../types';
 
-export function guard(args: GuardArgs) {
-  return (...guards: Guard[]) => {
+export function guard(...guards: Guard[]) {
+  return (parent: unknown, args: unknown, ctx: Context) => {
     for (const g of guards) {
-      g(args);
+      g(args, ctx);
     }
 
     return true;

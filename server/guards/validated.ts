@@ -4,14 +4,14 @@ import { assert, Struct, StructError } from 'superstruct';
 import { Guard } from '../types';
 import { inputError } from '../utils/inputError';
 
-export function validate<T>(args: T, struct: Struct<T>): Guard {
-  return () => {
+export function validated(struct: Struct<any>): Guard {
+  return (args) => {
     try {
       assert(args, struct);
     } catch (e) {
       if (e instanceof StructError) {
-        throw inputError<T>(e.failures().map(({ path, refinement, type }) => ({
-          path: path.join('.') as Path<T>,
+        throw inputError(e.failures().map(({ path, refinement, type }) => ({
+          path: path.join('.') as Path<unknown>,
           type: refinement ?? type
         })));
       }

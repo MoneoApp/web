@@ -5,7 +5,8 @@ import { Infer } from 'superstruct';
 
 import { Login } from '../../../shared/structs/Login';
 import { secret } from '../../constants';
-import { validate } from '../../guards/validate';
+import { validated } from '../../guards/validated';
+import { guard } from '../../utils/guard';
 import { inputError } from '../../utils/inputError';
 
 export const UserMutation = extendType({
@@ -17,8 +18,8 @@ export const UserMutation = extendType({
         email: stringArg(),
         password: stringArg()
       },
-      authorize: (parent, args, { guard }) => guard(
-        validate(args, Login)
+      authorize: guard(
+        validated(Login)
       ),
       resolve: async (parent, { email, password }, { db }) => {
         const hashed = await hash(password, 10);
@@ -45,8 +46,8 @@ export const UserMutation = extendType({
         email: stringArg(),
         password: stringArg()
       },
-      authorize: (parent, args, { guard }) => guard(
-        validate(args, Login)
+      authorize: guard(
+        validated(Login)
       ),
       resolve: async (parent, { email, password }, { db }) => {
         const user = await db.user.findUnique({
