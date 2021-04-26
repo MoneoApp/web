@@ -1,4 +1,4 @@
-import { objectType } from 'nexus';
+import { list, objectType } from 'nexus';
 
 import { ensure } from '../utils/ensure';
 
@@ -16,8 +16,8 @@ export const Device = objectType({
       }).user())
     });
 
-    t.list.field('overlays', {
-      type: 'Overlay',
+    t.field('overlays', {
+      type: list('Overlay'),
       resolve: ({ id }, args, { db }) => db.device.findUnique({
         where: { id }
       }).overlays()

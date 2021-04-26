@@ -1,5 +1,5 @@
 import { UserRole } from '@prisma/client';
-import { extendType } from 'nexus';
+import { extendType, list } from 'nexus';
 
 import { authorized } from '../../guards/authorized';
 import { guard } from '../../utils/guard';
@@ -7,8 +7,8 @@ import { guard } from '../../utils/guard';
 export const DeviceQuery = extendType({
   type: 'Query',
   definition: (t) => {
-    t.list.field('devices', {
-      type: 'Device',
+    t.field('devices', {
+      type: list('Device'),
       authorize: guard(
         authorized(UserRole.ADMIN)
       ),

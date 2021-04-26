@@ -1,4 +1,4 @@
-import { extendType } from 'nexus';
+import { extendType, list } from 'nexus';
 
 import { authenticated } from '../../guards/authenticated';
 import { guard } from '../../utils/guard';
@@ -6,8 +6,8 @@ import { guard } from '../../utils/guard';
 export const UserQuery = extendType({
   type: 'Query',
   definition: (t) => {
-    t.list.field('users', {
-      type: 'User',
+    t.field('users', {
+      type: list('User'),
       authorize: guard(
         authenticated()
       ),
