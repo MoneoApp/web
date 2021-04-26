@@ -50,6 +50,7 @@ type Overlay {
 
 type Query {
   overlays: [Overlay!]!
+  user(id: ID!): User
   users: [User!]!
 }
 
