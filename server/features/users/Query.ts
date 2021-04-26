@@ -1,6 +1,6 @@
 import { extendType } from 'nexus';
 
-import { authorized } from '../../guards/authorized';
+import { authenticated } from '../../guards/authenticated';
 import { guard } from '../../utils/guard';
 
 export const UserQuery = extendType({
@@ -9,7 +9,7 @@ export const UserQuery = extendType({
     t.list.field('users', {
       type: 'User',
       authorize: guard(
-        authorized()
+        authenticated()
       ),
       resolve: (parent, args, { db }) => db.user.findMany()
     });

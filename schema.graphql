@@ -56,4 +56,5 @@ type Query {
 type User {
   email: String!
   id: ID!
+  role: String!
 }
