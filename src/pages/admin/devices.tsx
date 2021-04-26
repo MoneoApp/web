@@ -1,3 +1,4 @@
+import { Overview } from '../../components/devices/Overview';
 import { useAuthGuard } from '../../hooks/useAuthGuard';
 
 export default function Devices() {
@@ -6,6 +7,7 @@ export default function Devices() {
   return (
     <div>
       moneo devices
+      <Overview/>
     </div>
   );
 }
