@@ -12,7 +12,12 @@ type Props<T> = {
   values?: DefaultValues<T>
 };
 
-export function Form<T>({ struct, onSubmit, values, ...props }: Props<T> & Omit<ComponentPropsWithoutRef<'form'>, 'onSubmit'>) {
+export function Form<T>({
+  struct,
+  onSubmit,
+  values,
+  ...props
+}: Props<T> & Omit<ComponentPropsWithoutRef<'form'>, 'onSubmit'>) {
   const notify = useNotify();
   const form = useForm({
     resolver: superstructResolver(struct),

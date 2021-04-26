@@ -4,9 +4,9 @@ import { Error } from '../../shared/constants';
 import { Guard } from '../types';
 
 export function authorized(): Guard {
-  return ({ userId }) => {
+  return (args, { userId }) => {
     if (!userId) {
       throw new ApolloError('unauthorized', Error.Unauthorized);
     }
-  }
+  };
 }

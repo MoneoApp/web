@@ -9,7 +9,7 @@ type Props = {
   sizes: Breakpoints<number | [number, number]>
 };
 
-export function Column(props: Props& ComponentPropsWithoutRef<'div'>) {
+export function Column(props: Props & ComponentPropsWithoutRef<'div'>) {
   return (
     <StyledColumn {...props}/>
   );

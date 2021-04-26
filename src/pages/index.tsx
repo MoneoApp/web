@@ -21,18 +21,15 @@ const mutation = gql`
 `;
 
 export default function Index() {
-  const [mutate] = useMutation<IndexMutation, IndexMutationVariables>(mutation);
   const { push } = useRouter();
   const [, { login }] = useAuthentication();
+  const [mutate] = useMutation<IndexMutation, IndexMutationVariables>(mutation, {
+    onCompleted: ({ login: { token } }) => login(token).then(() => push('/admin'))
+  });
 
   return (
     <StyledRoot>
-      <Form
-        struct={Login}
-        onSubmit={(variables) => mutate({ variables })
-          .then(({ data }) => data && login(data.login.token))
-          .then(() => push('/admin'))}
-      >
+      <Form struct={Login} onSubmit={(variables) => mutate({ variables })}>
         <StyledForm>
           <StyledBrand>
             <StyledLogo/>
@@ -56,6 +53,7 @@ const StyledRoot = styled.main`
   align-items: center;
   height: 100vh;
   overflow: hidden;
+
   &::before {
     content: "";
     position: absolute;
