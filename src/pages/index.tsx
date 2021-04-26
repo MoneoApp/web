@@ -16,6 +16,9 @@ const mutation = gql`
   mutation IndexMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
+      user {
+        role
+      }
     }
   }
 `;
@@ -30,7 +33,7 @@ export default function Index() {
       <Form
         struct={Login}
         onSubmit={(variables) => mutate({ variables })
-          .then(({ data }) => data && login(data.login.token))
+          .then(({ data }) => data && login(data.login.token, data.login.user.role))
           .then(() => push('/admin'))}
       >
         <StyledForm>

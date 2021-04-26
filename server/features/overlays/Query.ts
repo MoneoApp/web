@@ -1,6 +1,6 @@
 import { extendType } from 'nexus';
 
-import { authenticated } from '../../guards/authenticated';
+import { authorized } from '../../guards/authorized';
 import { guard } from '../../utils/guard';
 
 export const OverlayQuery = extendType({
@@ -9,7 +9,7 @@ export const OverlayQuery = extendType({
     t.list.field('overlays', {
       type: 'Overlay',
       authorize: guard(
-        authenticated()
+        authorized()
       ),
       resolve: (parent, args, { db }) => db.overlay.findMany()
     });

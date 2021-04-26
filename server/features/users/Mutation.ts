@@ -6,7 +6,6 @@ import { Infer } from 'superstruct';
 
 import { Login } from '../../../shared/structs/Login';
 import { secret } from '../../constants';
-import { authenticated } from '../../guards/authenticated';
 import { authorized } from '../../guards/authorized';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
@@ -22,7 +21,6 @@ export const UserMutation = extendType({
         password: stringArg()
       },
       authorize: guard(
-        authenticated(),
         authorized(UserRole.ADMIN),
         validated(Login)
       ),
@@ -67,7 +65,10 @@ export const UserMutation = extendType({
         }
 
         return {
-          token: sign(user.id, secret),
+          token: sign({
+            id: user.id,
+            role: user.role
+          }, secret),
           user
         };
       }

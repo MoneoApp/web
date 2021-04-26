@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { UserRole } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 
@@ -7,6 +8,7 @@ import Logo from '../../assets/logo.svg';
 import { withBreakpoint } from '../../utils/withBreakpoint';
 import { Container } from '../layout/Container';
 import { SidebarItem } from '../navigation/SidebarItem';
+import { useAuthentication } from '../../states/authentication';
 
 type Props = {
   children?: ReactNode
@@ -21,10 +23,16 @@ const items = [{
 }, {
   href: '/admin/support',
   text: 'Ondersteuning'
+}, {
+  href: '/admin/users',
+  text: 'Gebruikers',
+  role: UserRole.ADMIN
 }];
 
 export function Sidebar({ children }: Props) {
   const { pathname } = useRouter();
+
+  const [{ role }] = useAuthentication();
 
   return (
     <StyledContainer>
@@ -32,7 +40,7 @@ export function Sidebar({ children }: Props) {
         <StyledBrand>
           <StyledLogo/>
         </StyledBrand>
-        {items.map(({ href, text }, i) => (
+        {items.filter((i) => !i.role || i.role === role).map(({ href, text }, i) => (
           <SidebarItem key={i} href={href} text={text}/>
         ))}
       </StyledSidebar>
