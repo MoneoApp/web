@@ -1,3 +1,4 @@
+import { UserRole } from '@prisma/client';
 import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { extendType, stringArg } from 'nexus';
@@ -5,6 +6,8 @@ import { Infer } from 'superstruct';
 
 import { Login } from '../../../shared/structs/Login';
 import { secret } from '../../constants';
+import { authenticated } from '../../guards/authenticated';
+import { authorized } from '../../guards/authorized';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
 import { inputError } from '../../utils/inputError';
@@ -19,6 +22,8 @@ export const UserMutation = extendType({
         password: stringArg()
       },
       authorize: guard(
+        authenticated(),
+        authorized(UserRole.ADMIN),
         validated(Login)
       ),
       resolve: async (parent, { email, password }, { db }) => {
