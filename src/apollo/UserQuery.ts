@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface UserQuery_user {
-  __typename: 'User';
+  __typename: "User";
   id: string;
   email: string;
   role: string;

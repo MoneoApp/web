@@ -8,7 +8,7 @@
 // ====================================================
 
 export interface DeviceQuery_device {
-  __typename: 'Device';
+  __typename: "Device";
   id: string;
   model: string;
   brand: string;
