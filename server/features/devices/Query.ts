@@ -1,4 +1,3 @@
-import { UserRole } from '@prisma/client';
 import { extendType, idArg, list, nullable } from 'nexus';
 
 import { authorized } from '../../guards/authorized';
@@ -10,7 +9,7 @@ export const DeviceQuery = extendType({
     t.field('devices', {
       type: list('Device'),
       authorize: guard(
-        authorized(UserRole.ADMIN)
+        authorized()
       ),
       resolve: (parent, args, { db }) => db.device.findMany()
     });
@@ -21,7 +20,7 @@ export const DeviceQuery = extendType({
         id: idArg()
       },
       authorize: guard(
-        authorized(UserRole.ADMIN)
+        authorized()
       ),
       resolve: (parent, { id }, { db }) => db.device.findUnique({
         where: { id }
