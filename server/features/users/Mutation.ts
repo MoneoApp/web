@@ -41,6 +41,8 @@ export const UserMutation = extendType({
             data: { email }
           });
 
+          // todo(indy): Send email /?invite={id}
+          // tslint:disable-next-line:no-console
           console.log('Invite generated for:', invite.id);
 
           return true;

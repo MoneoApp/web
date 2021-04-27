@@ -42,7 +42,10 @@ export default function Index() {
     onCompleted: ({ login: { token, user: { role } } }) => login(token, role).then(() => push('/admin'))
   });
   const [mutateRegister] = useMutation<RegisterMutation, RegisterMutationVariables>(registerMutation, {
-    onCompleted: () => notify('Succes! Ga naar de home pagina')
+    onCompleted: () => {
+      notify('Registratie succesvol');
+      void push('/')
+    }
   });
 
   return (
@@ -62,7 +65,7 @@ export default function Index() {
             <Input name="email" label="E-mail"/>
           )}
           <Input name="password" label="Wachtwoord" type="password"/>
-          <Button text="Registreren" type="submit"/>
+          <Button text={invite ? 'Registreren' : 'Inloggen'} type="submit"/>
         </StyledForm>
       </Form>
     </StyledRoot>
