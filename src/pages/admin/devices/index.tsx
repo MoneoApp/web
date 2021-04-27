@@ -4,7 +4,11 @@ import Link from 'next/link';
 
 import { DevicesQuery } from '../../../apollo/DevicesQuery';
 import { Overview } from '../../../components/devices/Overview';
+import { Button } from '../../../components/forms/Button';
+import { FieldForm } from '../../../components/forms/FieldForm';
+import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
+import { Row } from '../../../components/layout/Row';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 
 const query = gql`
@@ -23,6 +27,18 @@ export default function Devices() {
 
   return (
     <>
+      <Row spacing={{ phone: 1 }}>
+        <Column sizes={{ phone: 10 }}>
+          <FieldForm name="search" onChange={console.log}>
+            <Input name="search" label="Zoeken"/>
+          </FieldForm>
+        </Column>
+        <Column sizes={{ phone: 2 }}>
+          <Link href="./devices/new" passHref={true}>
+            <StyledButton as="a" text="Nieuw"/>
+          </Link>
+        </Column>
+      </Row>
       {data?.devices && (
         <Overview data={data.devices} keyBy="id" groupBy="brand">
           {(value) => (
@@ -39,6 +55,10 @@ export default function Devices() {
     </>
   );
 }
+
+const StyledButton = styled(Button)`
+  height: calc(100% - 1rem);
+`;
 
 const StyledDevice = styled.a`
   margin: .5rem;

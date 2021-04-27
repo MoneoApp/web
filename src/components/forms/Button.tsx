@@ -17,6 +17,9 @@ export const Button = forwardRef<HTMLButtonElement, Props & ComponentPropsWithou
 ));
 
 const StyledButton = styled.button<Props>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: .5rem 1rem;
   color: white;
   background-color: var(--yellow-200);
@@ -25,6 +28,7 @@ const StyledButton = styled.button<Props>`
   font-weight: bold;
   text-transform: uppercase;
   text-decoration: none;
+  text-align: start;
   outline: none;
   transition: color .25s ease, background-color .25s ease, box-shadow .25s ease, opacity .25s ease;
 

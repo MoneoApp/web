@@ -8,14 +8,14 @@ import { handleError } from '../../utils/handleError';
 
 type Props<T> = {
   struct: Struct<T>,
-  onSubmit: (data: T) => Promise<unknown>,
-  values?: DefaultValues<T>
+  values?: DefaultValues<T>,
+  onSubmit: (data: T) => Promise<unknown>
 };
 
 export function Form<T>({
   struct,
-  onSubmit,
   values,
+  onSubmit,
   ...props
 }: Props<T> & Omit<ComponentPropsWithoutRef<'form'>, 'onSubmit'>) {
   const notify = useNotify();

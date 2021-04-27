@@ -29,8 +29,8 @@ export function SidebarItem({ href, text }: Props) {
 }
 
 const StyledItem = styled(Button)`
+  justify-content: flex-start;
   margin-bottom: 1.5rem;
-  text-align: start;
 
   ${withBreakpoint('laptop', css`
     margin-bottom: 2rem;
