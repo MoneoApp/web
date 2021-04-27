@@ -1,26 +1,30 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ComponentPropsWithoutRef } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 
 import { errors } from '../../constants';
 
 type Props = {
   name: string,
-  label: string
+  label: string,
+  value?: unknown
 };
 
-export function Input({ name, label, ...props }: Props & ComponentPropsWithoutRef<'input'>) {
-  const { register, formState: { errors: e, isSubmitting } } = useFormContext();
+export function Input({ name, label, value, ...props }: Props & ComponentPropsWithoutRef<'input'>) {
+  const { field, formState: { errors: e, isSubmitting } } = useController({
+    name,
+    defaultValue: value ?? ''
+  });
 
   const error = e[name];
 
   return (
-    <StyledWrapper error={Boolean(error)}>
+    <StyledWrapper error={Boolean(error)} hidden={props.type === 'hidden'}>
       <StyledLabel htmlFor={name}>
         {label}
       </StyledLabel>
-      <StyledInput {...register(name)} id={name} disabled={isSubmitting} {...props}/>
+      <StyledInput {...field} id={name} disabled={isSubmitting} {...props}/>
       {error && (
         <StyledError>
           {errors[error.type] ?? 'Onbekende fout'}

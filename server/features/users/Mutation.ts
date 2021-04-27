@@ -1,7 +1,7 @@
 import { UserRole } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 import { compare, hash } from 'bcryptjs';
-import { addDays, isAfter, isBefore } from 'date-fns';
+import { addDays, isAfter } from 'date-fns';
 import { sign } from 'jsonwebtoken';
 import { extendType, idArg, stringArg } from 'nexus';
 import { Infer } from 'superstruct';
