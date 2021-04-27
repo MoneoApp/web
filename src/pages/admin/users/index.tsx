@@ -89,6 +89,7 @@ const StyledAnchor = styled.a`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem;
   padding: .75rem 1rem;
   color: var(--gray-500);
   background-color: var(--gray-200);
