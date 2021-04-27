@@ -40,7 +40,7 @@ const StyledBackdrop = styled.div<{ open: boolean }>`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--grey-300);
+  background-color: var(--gray-300);
   animation: ${(props) => props.open ? fadeIn : fadeOut} .25s ease forwards;
   z-index: 500;
 `;
@@ -52,9 +52,9 @@ const StyledDialog = styled.div<{ open: boolean }>`
   max-width: calc(100vw - 2rem);
   max-height: calc(100vh - 2rem);
   padding: 1.5rem;
-  background-color: var(--grey-0);
+  background-color: var(--gray-0);
   border-radius: 1rem;
-  box-shadow: 0 0 4rem var(--grey-300);
+  box-shadow: 0 0 4rem var(--gray-300);
   overflow-y: auto;
   animation: ${(props) => props.open ? jumpIn : jumpOut} .25s ease forwards;
   z-index: 550;

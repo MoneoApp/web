@@ -7,10 +7,10 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 
 import { CreateUser } from '../../../../shared/structs/CreateUser';
-import { Search } from '../../../../shared/structs/Search';
 import { UsersQuery } from '../../../apollo/UsersQuery';
 import { Dialog } from '../../../components/Dialog';
 import { Button } from '../../../components/forms/Button';
+import { FieldForm } from '../../../components/forms/FieldForm';
 import { Form } from '../../../components/forms/Form';
 import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
@@ -35,7 +35,7 @@ export default function Users() {
     keys: ['email']
   }), [data]);
   const [search, setSearch] = useState('');
-  const results = useMemo(() => search ? fuse.search(search, { limit: 1 }) : data?.users.map((item) => ({
+  const results = useMemo(() => search ? fuse.search(search) : data?.users.map((item) => ({
     item
   })), [fuse, search]);
   const [, { open }] = useDialoog();
@@ -44,12 +44,9 @@ export default function Users() {
     <div>
       <Row spacing={{ phone: 1 }}>
         <Column sizes={{ phone: 10 }}>
-          <Form
-            struct={Search}
-            onSubmit={(e) => Promise.resolve()}
-          >
-            <Input name="search" label="Zoeken" onChange={(e) => setSearch(e.target.value)}/>
-          </Form>
+          <FieldForm name="search" onChange={setSearch}>
+            <Input name="search" label="Zoeken"/>
+          </FieldForm>
         </Column>
         <Column sizes={{ phone: 2 }}>
           <StyledAddButton
@@ -57,10 +54,7 @@ export default function Users() {
             onClick={open.c((props) => (
               <Dialog {...props}>
                 <StyledDialogTitle>Nodig een gebruiker uit</StyledDialogTitle>
-                <Form
-                  struct={CreateUser}
-                  onSubmit={(e) => Promise.resolve()}
-                >
+                <Form struct={CreateUser} onSubmit={console.log}>
                   <StyledFormContent>
                     <Input name="email" label="E-Mail" />
                     <StyledInviteButton text="Nodig uit"/>
@@ -75,14 +69,14 @@ export default function Users() {
         </Column>
       </Row>
       {results?.map(({ item }) => (
-        <Link key={item.id} href={`./users/${item.id}`} passHref={true}>
+        <Link key={item.id} href={`/admin/users/${item.id}`} passHref={true}>
           <StyledAnchor>
             <StyledRow>
               <Column sizes={{ phone: 11 }}>
                 {item.email}
               </Column>
               <Column sizes={{ phone: 1 }}>
-                {'>'}
+                &gt;
               </Column>
             </StyledRow>
           </StyledAnchor>
@@ -134,9 +128,9 @@ const StyledAnchor = styled.a`
 `;
 
 const StyledRow = styled(Row)`
-  background-color: var(--grey-100);
+  background-color: var(--gray-100);
   padding: 1rem;
   margin: 1rem 0;
   border-radius: 8px;
-  color: var(--grey-500);
+  color: var(--gray-500);
 `;

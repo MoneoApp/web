@@ -22,7 +22,7 @@ export function FieldForm({ name, value, onChange, children }: Props) {
   useEffect(() => {
     const v = values[name as any];
 
-    if (v) {
+    if (v !== undefined) {
       changeRef.current?.(v);
     }
   }, [value, values]);

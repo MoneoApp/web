@@ -9,7 +9,7 @@ import { handleError } from '../../utils/handleError';
 type Props<T> = {
   struct: Struct<T>,
   values?: DefaultValues<T>,
-  onSubmit: (data: T) => Promise<unknown>
+  onSubmit: (data: T) => unknown | Promise<unknown>
 };
 
 export function Form<T>({
@@ -27,7 +27,7 @@ export function Form<T>({
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit((data) => onSubmit(data as T).catch(handleError(notify, form)))}
+        onSubmit={form.handleSubmit((data) => Promise.resolve(onSubmit(data as T)).catch(handleError(notify, form)))}
         {...props}
       />
     </FormProvider>
