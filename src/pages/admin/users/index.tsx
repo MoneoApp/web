@@ -17,6 +17,7 @@ import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 import { withBreakpoint } from '../../../utils/withBreakpoint';
+import { useSearch } from '../../../hooks/useSearch';
 
 const query = gql`
   query UsersQuery {
@@ -31,13 +32,7 @@ const query = gql`
 export default function Users() {
   const skip = useAuthGuard();
   const { data } = useQuery<UsersQuery>(query, { skip });
-  const fuse = useMemo(() => new Fuse(data?.users ?? [], {
-    keys: ['email']
-  }), [data]);
-  const [search, setSearch] = useState('');
-  const results = useMemo(() => search ? fuse.search(search) : data?.users.map((item) => ({
-    item
-  })), [fuse, search]);
+  const [results, setSearch] = useSearch(data?.users, ['email']);
   const [, { open }] = useDialoog();
 
   return (
@@ -60,10 +55,10 @@ export default function Users() {
           </StyledButton>
         </Column>
       </Row>
-      {results?.map(({ item }) => (
-        <Link key={item.id} href={`/admin/users/${item.id}`} passHref={true}>
+      {results?.map((user) => (
+        <Link key={user.id} href={`/admin/users/${user.id}`} passHref={true}>
           <StyledAnchor>
-            {item.email}
+            {user.email}
             <FontAwesomeIcon icon={faChevronRight}/>
           </StyledAnchor>
         </Link>

@@ -23,8 +23,8 @@ export default function User() {
   });
 
   return (
-    <>
+    <div>
       {data?.user?.email}
-    </>
+    </div>
   );
 };
