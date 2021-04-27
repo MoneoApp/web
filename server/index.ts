@@ -3,6 +3,8 @@ import { ApolloServer } from 'apollo-server-micro';
 import { IncomingMessage } from 'http';
 import { verify } from 'jsonwebtoken';
 
+import { TokenData } from '../shared/types';
+
 import { secret } from './constants';
 import { schema } from './schema';
 
@@ -13,17 +15,17 @@ const db = new PrismaClient({
 export const server = new ApolloServer({
   schema,
   context: async ({ req }: { req: IncomingMessage }) => {
-    let userId: string | undefined;
+    let user: TokenData | undefined;
     const token = req.headers.authorization?.substr(7);
 
     try {
-      userId = verify(token ?? '', secret) as string;
+      user = verify(token ?? '', secret) as TokenData;
     } catch {
     }
 
     return {
       db,
-      userId
+      user
     };
   }
 });

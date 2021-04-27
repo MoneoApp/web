@@ -16,6 +16,9 @@ const mutation = gql`
   mutation IndexMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
+      user {
+        role
+      }
     }
   }
 `;
@@ -24,7 +27,7 @@ export default function Index() {
   const { push } = useRouter();
   const [, { login }] = useAuthentication();
   const [mutate] = useMutation<IndexMutation, IndexMutationVariables>(mutation, {
-    onCompleted: ({ login: { token } }) => login(token).then(() => push('/admin'))
+    onCompleted: ({ login: { token, user: { role } } }) => login(token, role).then(() => push('/admin'))
   });
 
   return (

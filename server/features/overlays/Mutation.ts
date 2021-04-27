@@ -1,7 +1,7 @@
 import { extendType, idArg, stringArg } from 'nexus';
 
 import { CreateOverlay } from '../../../shared/structs/CreateOverlay';
-import { authenticated } from '../../guards/authenticated';
+import { authorized } from '../../guards/authorized';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
 
@@ -15,7 +15,7 @@ export const OverlayMutation = extendType({
         deviceId: idArg()
       },
       authorize: guard(
-        authenticated(),
+        authorized(),
         validated(CreateOverlay)
       ),
       resolve: (parent, { name, deviceId }, { db }) => db.overlay.create({

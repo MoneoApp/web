@@ -56,6 +56,7 @@ const StyledLabel = styled.label`
 
 const StyledInput = styled.input`
   width: 100%;
+  min-width: 0;
   padding: 1.5rem .75rem .5rem;
   background-color: var(--gray-100);
   border-radius: inherit;
