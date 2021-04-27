@@ -10,27 +10,29 @@ import { Input } from '../forms/Input';
 export function InviteUser(props: DialoogProps) {
   return (
     <Dialog {...props}>
-      <StyledDialogTitle>Nodig een gebruiker uit</StyledDialogTitle>
+      <StyledTitle>
+        Nodig een gebruiker uit
+      </StyledTitle>
       <Form struct={CreateUser} onSubmit={() => {}}>
-        <StyledFormContent>
+        <StyledContent>
           <Input name="email" label="E-Mail"/>
-          <StyledInviteButton text="Nodig uit"/>
-        </StyledFormContent>
+          <StyledButton text="Nodig uit"/>
+        </StyledContent>
       </Form>
     </Dialog>
   );
 }
 
-const StyledDialogTitle = styled.h2`
+const StyledTitle = styled.h2`
   font-weight: bold;
   margin-bottom: .75rem;
 `;
 
-const StyledFormContent = styled.div`
+const StyledContent = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const StyledInviteButton = styled(Button)`
+const StyledButton = styled(Button)`
   align-self: flex-end;
 `;
