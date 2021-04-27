@@ -11,7 +11,7 @@ export const breakpoints: Record<Breakpoint, number> = {
 };
 
 export const colors: Record<Color, Partial<Record<Shade, [string, string]>>> = {
-  grey: {
+  gray: {
     0: ['#ffffff', '#1f1f1f'],
     100: ['#efefef', '#303030'],
     200: ['#d4d4d4', '#404040'],

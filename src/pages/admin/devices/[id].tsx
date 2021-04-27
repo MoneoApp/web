@@ -1,30 +1,30 @@
 import { gql, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 
-import { UserQuery, UserQueryVariables } from '../../../apollo/UserQuery';
+import { DeviceQuery, DeviceQueryVariables } from '../../../apollo/DeviceQuery';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 
 const query = gql`
-  query UserQuery($id: ID!) {
-    user(id: $id) {
+  query DeviceQuery($id: ID!) {
+    device(id: $id) {
       id
-      email
-      role
+      model
+      brand
     }
   }
 `;
 
-export default function User() {
+export default function Device() {
   const skip = useAuthGuard();
   const { query: { id } } = useRouter();
-  const { data } = useQuery<UserQuery, UserQueryVariables>(query, {
+  const { data } = useQuery<DeviceQuery, DeviceQueryVariables>(query, {
     skip: skip || typeof id !== 'string',
     variables: { id: id as string }
   });
 
   return (
     <div>
-      {data?.user?.email}
+      {data?.device?.model}
     </div>
   );
-};
+}

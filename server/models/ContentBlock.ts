@@ -14,6 +14,6 @@ export const ContentBlock = objectType({
       resolve: ({ id }, args, { db }) => ensure(db.contentBlock.findUnique({
         where: { id }
       }).interaction())
-    })
+    });
   }
 });

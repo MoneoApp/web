@@ -23,5 +23,5 @@ it('should cancel the previous timeout after a change', () => {
   jest.runAllTimers();
 
   expect(clearTimeout).toHaveBeenCalledTimes(1);
-  expect(fn).toHaveBeenCalledTimes(1)
+  expect(fn).toHaveBeenCalledTimes(1);
 });

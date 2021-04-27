@@ -1,13 +1,12 @@
 import { gql, useQuery } from '@apollo/client';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { faChevronRight, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useDialoog } from 'dialoog';
 import Link from 'next/link';
 
-import { UsersQuery } from '../../../apollo/UsersQuery';
-import { InviteUser } from '../../../components/dialogs/InviteUser';
+import { DevicesQuery } from '../../../apollo/DevicesQuery';
+import { Overview } from '../../../components/devices/Overview';
 import { Button } from '../../../components/forms/Button';
 import { FieldForm } from '../../../components/forms/FieldForm';
 import { Input } from '../../../components/forms/Input';
@@ -18,20 +17,19 @@ import { useSearch } from '../../../hooks/useSearch';
 import { withBreakpoint } from '../../../utils/withBreakpoint';
 
 const query = gql`
-  query UsersQuery {
-    users {
+  query DevicesQuery {
+    devices {
       id
-      email
-      role
+      model
+      brand
     }
   }
 `;
 
-export default function Users() {
+export default function Devices() {
   const skip = useAuthGuard();
-  const { data } = useQuery<UsersQuery>(query, { skip });
-  const [results, setSearch] = useSearch(data?.users, ['email']);
-  const [, { open }] = useDialoog();
+  const { data } = useQuery<DevicesQuery>(query, { skip });
+  const [results, setSearch] = useSearch(data?.devices, ['model', 'brand']);
 
   return (
     <>
@@ -42,25 +40,29 @@ export default function Users() {
           </FieldForm>
         </Column>
         <Column sizes={{ phone: 3 }}>
-          <StyledButton
-            text="Uitnodigen"
-            onClick={open.c((props) => (
-              <InviteUser {...props}/>
-            ))}
-          >
-            <StyledButtonText>Uitnodigen</StyledButtonText>
-            <FontAwesomeIcon icon={faPlus}/>
-          </StyledButton>
+          <Link href="/admin/devices/new" passHref={true}>
+            <StyledButton as="a" text="Nieuw">
+              <StyledButtonText>
+                Nieuw
+              </StyledButtonText>
+              <FontAwesomeIcon icon={faPlus}/>
+            </StyledButton>
+          </Link>
         </Column>
       </Row>
-      {results?.map((user) => (
-        <Link key={user.id} href={`/admin/users/${user.id}`} passHref={true}>
-          <StyledAnchor>
-            {user.email}
-            <FontAwesomeIcon icon={faChevronRight}/>
-          </StyledAnchor>
-        </Link>
-      ))}
+      {results && (
+        <Overview data={results} keyBy="id" groupBy="brand">
+          {(value) => (
+            <Column sizes={{ phone: 3 }}>
+              <Link href={`/admin/devices/${value.id}`} passHref={true}>
+                <StyledDevice>
+                  {value.model}
+                </StyledDevice>
+              </Link>
+            </Column>
+          )}
+        </Overview>
+      )}
     </>
   );
 }
@@ -78,25 +80,18 @@ const StyledButtonText = styled.span`
   `)};
 `;
 
-const StyledAnchor = styled.a`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding: .75rem 1rem;
+const StyledDevice = styled.a`
+  margin: .5rem;
+  padding: 1rem;
   color: var(--gray-500);
-  background-color: var(--gray-200);
+  background-color: var(--gray-300);
   border-radius: 8px;
-  text-decoration: none;
   outline: none;
+  text-decoration: none;
   transition: box-shadow .25s ease;
 
   &:focus {
     box-shadow: 0 0 0 3px var(--yellow-300);
     z-index: 1;
-  }
-
-  &:hover {
-    cursor: pointer;
   }
 `;

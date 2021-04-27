@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { faLifeRing, faMobileAlt, faTachometerAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { UserRole } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
@@ -16,16 +17,20 @@ type Props = {
 
 const items = [{
   href: '/admin',
-  text: 'Home'
+  text: 'Home',
+  icon: faTachometerAlt
 }, {
   href: '/admin/devices',
-  text: 'Apparaten'
+  text: 'Apparaten',
+  icon: faMobileAlt
 }, {
   href: '/admin/support',
-  text: 'Ondersteuning'
+  text: 'Ondersteuning',
+  icon: faLifeRing
 }, {
   href: '/admin/users',
   text: 'Gebruikers',
+  icon: faUser,
   role: UserRole.ADMIN
 }];
 
@@ -40,8 +45,8 @@ export function Sidebar({ children }: Props) {
         <StyledBrand>
           <StyledLogo/>
         </StyledBrand>
-        {items.filter((i) => !i.role || i.role === role).map(({ href, text }, i) => (
-          <SidebarItem key={i} href={href} text={text}/>
+        {items.filter((i) => !i.role || i.role === role).map(({ href, text, icon }, i) => (
+          <SidebarItem key={i} href={href} text={text} icon={icon}/>
         ))}
       </StyledSidebar>
       <StyledMain>

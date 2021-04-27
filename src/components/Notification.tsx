@@ -50,7 +50,7 @@ const StyledNotification = styled.button<{ index: number, open: boolean }>`
   max-width: calc(100% - 2rem);
   height: 3rem;
   padding: 0 1rem;
-  background-color: var(--grey-0);
+  background-color: var(--gray-0);
   border-radius: 8px;
   transition: bottom .25s ease, box-shadow .25s ease;
   animation: ${(props) => props.open ? slideIn : slideOut} .25s ease;

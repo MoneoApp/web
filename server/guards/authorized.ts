@@ -9,5 +9,5 @@ export function authorized(role?: UserRole): Guard {
     if (role ? user?.role !== role : !user) {
       throw new ApolloError('unauthorized', Error.Unauthorized);
     }
-  }
+  };
 }

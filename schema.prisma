@@ -12,6 +12,7 @@ model User {
   email    String   @unique
   password String
   role     UserRole @default(USER)
+  devices  Device[]
 }
 
 enum UserRole {
@@ -19,9 +20,22 @@ enum UserRole {
   ADMIN
 }
 
+model Device {
+  id       String    @id @default(cuid())
+  model    String
+  brand    String
+  image    String
+  anchor   String?
+  userId   String
+  user     User      @relation(fields: [userId], references: [id])
+  overlays Overlay[]
+}
+
 model Overlay {
   id           String        @id @default(cuid())
   name         String
+  deviceId     String
+  device       Device        @relation(fields: [deviceId], references: [id])
   interactions Interaction[]
 }
 
