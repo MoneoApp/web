@@ -24,8 +24,7 @@ export default function User() {
 
   return (
     <>
-      <h1>Hey user</h1>
-      <h2>{data?.user?.email}</h2>
+      {data?.user?.email}
     </>
-  )
+  );
 };

@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Fragment, ReactNode, useMemo, useState } from 'react';
 
 import { groupData } from '../../utils/groupData';
@@ -23,6 +25,7 @@ export function Overview<T>({ data, keyBy, groupBy, children }: Props<T>) {
         <StyledValue key={group} open={open === group}>
           <StyledGroup onClick={() => setOpen(open === group ? undefined : group)}>
             {group}
+            <StyledIcon icon={faChevronRight} open={open === group}/>
           </StyledGroup>
           <Hideable hidden={open !== group}>
             <StyledItems>
@@ -45,6 +48,9 @@ const StyledValue = styled.div<{ open: boolean }>`
 `;
 
 const StyledGroup = styled.button`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   margin-bottom: 1rem;
   padding: .75rem 1rem;
@@ -59,6 +65,11 @@ const StyledGroup = styled.button`
     box-shadow: 0 0 0 3px var(--yellow-300);
     z-index: 1;
   }
+`;
+
+const StyledIcon = styled(FontAwesomeIcon)<{ open: boolean }>`
+  transform: ${(props) => props.open ? 'rotateZ(90deg)' : 'none'};
+  transition: transform .25s ease;
 `;
 
 const StyledItems = styled(Row)`

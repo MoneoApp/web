@@ -19,9 +19,7 @@ export default function Device() {
   const { query: { id } } = useRouter();
   const { data } = useQuery<DeviceQuery, DeviceQueryVariables>(query, {
     skip: skip || typeof id !== 'string',
-    variables: {
-      id: id as string
-    }
+    variables: { id: id as string }
   });
 
   return (

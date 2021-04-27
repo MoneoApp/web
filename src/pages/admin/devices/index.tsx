@@ -1,8 +1,9 @@
 import { gql, useQuery } from '@apollo/client';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import Fuse from 'fuse.js';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
 
 import { DevicesQuery } from '../../../apollo/DevicesQuery';
 import { Overview } from '../../../components/devices/Overview';
@@ -12,6 +13,8 @@ import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
+import { useSearch } from '../../../hooks/useSearch';
+import { withBreakpoint } from '../../../utils/withBreakpoint';
 
 const query = gql`
   query DevicesQuery {
@@ -26,24 +29,24 @@ const query = gql`
 export default function Devices() {
   const skip = useAuthGuard();
   const { data } = useQuery<DevicesQuery>(query, { skip });
-  const fuse = useMemo(() => new Fuse(data?.devices ?? [], {
-    keys: ['model', 'brand'],
-    shouldSort: false
-  }), [data]);
-  const [search, setSearch] = useState('');
-  const results = useMemo(() => !search ? data?.devices : fuse.search(search).map(({ item }) => item), [fuse, search]);
+  const [results, setSearch] = useSearch(data?.devices, ['model', 'brand']);
 
   return (
     <>
       <Row spacing={{ phone: 1 }}>
-        <Column sizes={{ phone: 10 }}>
+        <Column sizes={{ phone: 9 }}>
           <FieldForm name="search" onChange={setSearch}>
             <Input name="search" label="Zoeken"/>
           </FieldForm>
         </Column>
-        <Column sizes={{ phone: 2 }}>
+        <Column sizes={{ phone: 3 }}>
           <Link href="/admin/devices/new" passHref={true}>
-            <StyledButton as="a" text="Nieuw"/>
+            <StyledButton as="a" text="Nieuw">
+              <StyledButtonText>
+                Nieuw
+              </StyledButtonText>
+              <FontAwesomeIcon icon={faPlus}/>
+            </StyledButton>
           </Link>
         </Column>
       </Row>
@@ -66,6 +69,15 @@ export default function Devices() {
 
 const StyledButton = styled(Button)`
   height: calc(100% - 1rem);
+`;
+
+const StyledButtonText = styled.span`
+  display: none;
+  margin-right: .5rem;
+
+  ${withBreakpoint('tabletLandscape', css`
+    display: inline-block;
+  `)};
 `;
 
 const StyledDevice = styled.a`

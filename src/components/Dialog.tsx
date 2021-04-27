@@ -3,7 +3,14 @@ import styled from '@emotion/styled';
 import { DialoogProps } from 'dialoog';
 import { ComponentPropsWithoutRef } from 'react';
 
-export function Dialog({ open, close, remove, index, children, ...props }: DialoogProps & ComponentPropsWithoutRef<'div'>) {
+export function Dialog({
+  open,
+  close,
+  remove,
+  index,
+  children,
+  ...props
+}: DialoogProps & ComponentPropsWithoutRef<'div'>) {
   return (
     <>
       <StyledBackdrop open={open} onClick={close}/>
@@ -15,23 +22,43 @@ export function Dialog({ open, close, remove, index, children, ...props }: Dialo
 }
 
 const fadeIn = keyframes`
-  from { opacity: 0; }
-  to { opacity: .25; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: .25;
+  }
 `;
 
 const fadeOut = keyframes`
-  from { opacity: .25; }
-  to { opacity: 0; }
+  from {
+    opacity: .25;
+  }
+  to {
+    opacity: 0;
+  }
 `;
 
 const jumpIn = keyframes`
-  from { opacity: 0; transform: translate(-50%, -50%) scale(.95); }
-  to { opacity: 1; transform: translate(-50%, -50%); }
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 `;
 
 const jumpOut = keyframes`
-  from { opacity: 1; transform: translate(-50%, -50%); }
-  to { opacity: 0; transform: translate(-50%, -50%) scale(.95); }
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(.95);
+  }
 `;
 
 const StyledBackdrop = styled.div<{ open: boolean }>`
