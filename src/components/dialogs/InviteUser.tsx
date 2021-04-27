@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { DialoogProps } from 'dialoog';
 
-import { CreateUser } from '../../../shared/structs/CreateUser';
+import { InviteUser as InviteUserStruct } from '../../../shared/structs/InviteUser';
 import { Dialog } from '../Dialog';
 import { Button } from '../forms/Button';
 import { Form } from '../forms/Form';
@@ -13,7 +13,7 @@ export function InviteUser(props: DialoogProps) {
       <StyledTitle>
         Nodig een gebruiker uit
       </StyledTitle>
-      <Form struct={CreateUser} onSubmit={() => {}}>
+      <Form struct={InviteUserStruct} onSubmit={() => {}}>
         <StyledContent>
           <Input name="email" label="E-Mail"/>
           <StyledButton text="Nodig uit"/>

@@ -20,6 +20,12 @@ enum UserRole {
   ADMIN
 }
 
+model Invite {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
 model Device {
   id       String    @id @default(cuid())
   model    String
