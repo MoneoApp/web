@@ -22,7 +22,7 @@ const StyledColumn = styled.div<Props>`
 
   ${(props) => withBreakpoints(props.sizes, (value) => {
     const [size, order] = typeof value === 'number' ? [value, 0] : value;
-    const width = 100 / 12 * size;
+    const width = Math.floor(100 / 12 * size);
 
     return width ? css`
       display: flex;
