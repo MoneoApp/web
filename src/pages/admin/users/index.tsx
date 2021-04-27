@@ -1,17 +1,22 @@
 import { gql, useQuery } from '@apollo/client';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { useDialoog } from 'dialoog';
 import Fuse from 'fuse.js';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 
+import { CreateUser } from '../../../../shared/structs/CreateUser';
 import { Search } from '../../../../shared/structs/Search';
 import { UsersQuery } from '../../../apollo/UsersQuery';
+import { Dialog } from '../../../components/Dialog';
 import { Button } from '../../../components/forms/Button';
 import { Form } from '../../../components/forms/Form';
 import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
+import { withBreakpoint } from '../../../utils/withBreakpoint';
 
 const query = gql`
   query UsersQuery {
@@ -33,25 +38,42 @@ export default function Users() {
   const results = useMemo(() => search ? fuse.search(search, { limit: 1 }) : data?.users.map((item) => ({
     item
   })), [fuse, search]);
+  const [, { open }] = useDialoog();
 
   return (
     <div>
-      <Form
-        struct={Search}
-        onSubmit={(e) => Promise.resolve()}
-      >
-        <Row>
-          <Column sizes={{ phone: 10 }}>
+      <Row spacing={{ phone: 1 }}>
+        <Column sizes={{ phone: 10 }}>
+          <Form
+            struct={Search}
+            onSubmit={(e) => Promise.resolve()}
+          >
             <Input name="search" label="Zoeken" onChange={(e) => setSearch(e.target.value)}/>
-          </Column>
-          <Column sizes={{ phone: 2 }}>
-            <StyledButton text="Nieuw">
-              <span>Nieuw</span>
-              <StyledIcon>+</StyledIcon>
-            </StyledButton>
-          </Column>
-        </Row>
-      </Form>
+          </Form>
+        </Column>
+        <Column sizes={{ phone: 2 }}>
+          <StyledAddButton
+            text="Uitnodigen"
+            onClick={open.c((props) => (
+              <Dialog {...props}>
+                <StyledDialogTitle>Nodig een gebruiker uit</StyledDialogTitle>
+                <Form
+                  struct={CreateUser}
+                  onSubmit={(e) => Promise.resolve()}
+                >
+                  <StyledFormContent>
+                    <Input name="email" label="E-Mail" />
+                    <StyledInviteButton text="Nodig uit"/>
+                  </StyledFormContent>
+                </Form>
+              </Dialog>
+            ))}
+          >
+            <StyledButtonText>Uitnodigen</StyledButtonText>
+            +
+          </StyledAddButton>
+        </Column>
+      </Row>
       {results?.map(({ item }) => (
         <Link key={item.id} href={`./users/${item.id}`} passHref={true}>
           <StyledAnchor>
@@ -70,14 +92,30 @@ export default function Users() {
   );
 }
 
-const StyledButton = styled(Button)`
-  height: 100%;
-  margin-left: 0.25rem;
-  margin-bottom: 1rem;
+const StyledAddButton = styled(Button)`
+  height: calc(100% - 1rem);
 `;
 
-const StyledIcon = styled.span`
-  margin-left: 0.5rem;
+const StyledDialogTitle = styled.h2`
+  font-weight: bold;
+  margin-bottom: .75rem;
+`;
+
+const StyledFormContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledInviteButton = styled(Button)`
+  align-self: flex-end;
+`;
+
+const StyledButtonText = styled.span`
+  display: none;
+
+  ${withBreakpoint('laptop', css`
+    display: inline-block;
+  `)};
 `;
 
 const StyledAnchor = styled.a`

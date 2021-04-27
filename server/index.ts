@@ -3,9 +3,10 @@ import { ApolloServer } from 'apollo-server-micro';
 import { IncomingMessage } from 'http';
 import { verify } from 'jsonwebtoken';
 
+import { TokenData } from '../shared/types';
+
 import { secret } from './constants';
 import { schema } from './schema';
-import { TokenData } from '../shared/types';
 
 const db = new PrismaClient({
   log: ['query']

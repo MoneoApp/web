@@ -5,10 +5,10 @@ import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 
 import Logo from '../../assets/logo.svg';
+import { useAuthentication } from '../../states/authentication';
 import { withBreakpoint } from '../../utils/withBreakpoint';
 import { Container } from '../layout/Container';
 import { SidebarItem } from '../navigation/SidebarItem';
-import { useAuthentication } from '../../states/authentication';
 
 type Props = {
   children?: ReactNode
