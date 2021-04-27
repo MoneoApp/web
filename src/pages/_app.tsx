@@ -68,8 +68,8 @@ export default function App({ Component, pageProps }: AppProps) {
           }
 
           body {
-            color: var(--grey-500);
-            background-color: var(--grey-0);
+            color: var(--gray-500);
+            background-color: var(--gray-0);
             font-family: "Open Sans", sans-serif;
             overflow-x: hidden;
             overflow-y: scroll;

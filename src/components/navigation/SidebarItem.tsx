@@ -16,7 +16,7 @@ export function SidebarItem({ href, text }: Props) {
 
   return (
     <Link href={href} passHref={true}>
-      <StyledItem as="a" text={text} palette={['grey-500', pathname === href ? 'yellow-100' : 'grey-0']}>
+      <StyledItem as="a" text={text} palette={['gray-500', pathname === href ? 'yellow-100' : 'gray-0']}>
         <StyledText>
           {text}
         </StyledText>

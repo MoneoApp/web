@@ -75,7 +75,7 @@ const StyledForm = styled.div`
   width: 27.5rem;
   max-width: calc(100vw - 2rem);
   padding: 1.5rem;
-  background-color: var(--grey-0);
+  background-color: var(--gray-0);
   border-radius: 16px;
 `;
 

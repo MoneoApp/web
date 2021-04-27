@@ -46,7 +46,7 @@ const StyledLabel = styled.label`
   position: absolute;
   top: .5rem;
   left: .75rem;
-  color: var(--grey-300);
+  color: var(--gray-300);
   font-size: .75rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -57,7 +57,7 @@ const StyledLabel = styled.label`
 const StyledInput = styled.input`
   width: 100%;
   padding: 1.5rem .75rem .5rem;
-  background-color: var(--grey-100);
+  background-color: var(--gray-100);
   border-radius: inherit;
   outline: none;
   transition: box-shadow .25s ease, opacity .25s ease;
