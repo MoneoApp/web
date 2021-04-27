@@ -4,9 +4,7 @@ import styled from '@emotion/styled';
 import { faChevronRight, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDialoog } from 'dialoog';
-import Fuse from 'fuse.js';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
 
 import { UsersQuery } from '../../../apollo/UsersQuery';
 import { InviteUser } from '../../../components/dialogs/InviteUser';
@@ -16,8 +14,8 @@ import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
-import { withBreakpoint } from '../../../utils/withBreakpoint';
 import { useSearch } from '../../../hooks/useSearch';
+import { withBreakpoint } from '../../../utils/withBreakpoint';
 
 const query = gql`
   query UsersQuery {
