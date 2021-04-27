@@ -59,6 +59,7 @@ type Overlay {
 }
 
 type Query {
+  device(id: ID!): Device
   devices: [Device!]!
   overlays: [Overlay!]!
   users: [User!]!

@@ -1,5 +1,6 @@
 import { gql, useQuery } from '@apollo/client';
 import styled from '@emotion/styled';
+import Link from 'next/link';
 
 import { DevicesQuery } from '../../../apollo/DevicesQuery';
 import { Overview } from '../../../components/devices/Overview';
@@ -26,9 +27,11 @@ export default function Devices() {
         <Overview data={data.devices} keyBy="id" groupBy="brand">
           {(value) => (
             <Column sizes={{ phone: 3 }}>
-              <StyledDevice>
-                {value.model}
-              </StyledDevice>
+              <Link href={`./devices/${value.id}`} passHref={true}>
+                <StyledDevice>
+                  {value.model}
+                </StyledDevice>
+              </Link>
             </Column>
           )}
         </Overview>
@@ -37,12 +40,14 @@ export default function Devices() {
   );
 }
 
-const StyledDevice = styled.button`
+const StyledDevice = styled.a`
   margin: .5rem;
   padding: 1rem;
+  color: var(--gray-500);
   background-color: var(--gray-300);
   border-radius: 8px;
   outline: none;
+  text-decoration: none;
   transition: box-shadow .25s ease;
 
   &:focus {
@@ -50,5 +55,3 @@ const StyledDevice = styled.button`
     z-index: 1;
   }
 `;
-
-
