@@ -13,6 +13,7 @@ import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
 import { Table } from '../../../components/users/Table';
+import { roles } from '../../../constants';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 import { useSearch } from '../../../hooks/useSearch';
 import { withBreakpoint } from '../../../utils/withBreakpoint';
@@ -65,7 +66,8 @@ export default function Users() {
             email: { title: 'E-mail' },
             role: {
               title: 'Rol',
-              size: '7.5rem'
+              size: '7.5rem',
+              render: (value) => roles[value]
             },
             devices: {
               title: 'Apparaten',

@@ -48,3 +48,8 @@ export const errors: Record<string, string> = {
   invalidCredentials: 'Ongeldige inloggegevens',
   emailInUse: 'E-mailadres al in gebruik'
 };
+
+export const roles: Record<string, string> = {
+  USER: 'Gebruiker',
+  ADMIN: 'Beheerder'
+};

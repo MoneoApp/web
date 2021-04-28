@@ -72,6 +72,7 @@ const StyledColumns = styled.div`
 const StyledColumn = styled.div<{ size?: string, extra: boolean }>`
   flex-grow: ${(props) => props.size ? 0 : 1};
   flex-basis: ${(props) => props.size ? props.size : 'auto'};
+  overflow: hidden;
 
   ${(props) => props.extra && css`
     display: none;

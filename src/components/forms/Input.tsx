@@ -1,16 +1,23 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ComponentPropsWithoutRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { errors } from '../../constants';
 
-type Props = {
+type Props<T> = {
+  as?: T,
   name: string,
   label: string
 };
 
-export function Input({ name, label, ...props }: Props & ComponentPropsWithoutRef<'input'>) {
+export function Input<T extends keyof JSX.IntrinsicElements = 'input'>({
+  name,
+  label,
+  ...props
+}: Props<T> & ComponentPropsWithoutRef<T>) {
   const { register, formState: { errors: e, isSubmitting } } = useFormContext();
 
   const error = e[name];
@@ -21,6 +28,9 @@ export function Input({ name, label, ...props }: Props & ComponentPropsWithoutRe
         {label}
       </StyledLabel>
       <StyledInput {...register(name)} id={name} disabled={isSubmitting} {...props}/>
+      {props.as === 'select' && (
+        <StyledIcon icon={faChevronDown}/>
+      )}
       {error && (
         <StyledError>
           {errors[error.type] ?? 'Onbekende fout'}
@@ -72,6 +82,14 @@ const StyledInput = styled.input`
     pointer-events: none;
     opacity: .75;
   }
+`;
+
+const StyledIcon = styled(FontAwesomeIcon)`
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
 `;
 
 const StyledError = styled.div`
