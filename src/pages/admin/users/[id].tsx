@@ -2,6 +2,7 @@ import { gql, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 
 import { UserQuery, UserQueryVariables } from '../../../apollo/UserQuery';
+import { Heading } from '../../../components/navigation/Heading';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 
 const query = gql`
@@ -23,8 +24,9 @@ export default function User() {
   });
 
   return (
-    <div>
+    <>
+      <Heading text="Gebruiker"/>
       {data?.user?.email}
-    </div>
+    </>
   );
 };
