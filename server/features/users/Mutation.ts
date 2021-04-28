@@ -1,9 +1,11 @@
 import { UserRole } from '@prisma/client';
+import { ApolloError } from 'apollo-server-micro';
 import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import { extendType, stringArg } from 'nexus';
+import { extendType, idArg, stringArg } from 'nexus';
 import { Infer } from 'superstruct';
 
+import { DeleteUser } from '../../../shared/structs/DeleteUser';
 import { Login } from '../../../shared/structs/Login';
 import { secret } from '../../constants';
 import { authorized } from '../../guards/authorized';
@@ -38,6 +40,53 @@ export const UserMutation = extendType({
           throw inputError<Infer<typeof Login>>([{
             path: 'email',
             type: 'emailInUse'
+          }]);
+        }
+      }
+    });
+
+    t.field('deleteUser', {
+      type: 'User',
+      args: {
+        id: idArg()
+      },
+      authorize: guard(
+        authorized(UserRole.ADMIN),
+        validated(DeleteUser)
+      ),
+      resolve: async (parent, { id }, { db }) => {
+        try {
+          const user = await db.user.findUnique({
+            where: { id }
+          });
+
+          if (!user) {
+            throw new ApolloError('');
+          }
+
+          await db.$transaction([
+            db.contentBlock.deleteMany({
+              where: { interaction: { overlay: { device: { user }}}}
+            }),
+            db.interaction.deleteMany({
+              where: { overlay: { device: { user }}}
+            }),
+            db.overlay.deleteMany({
+              where: { device: { user }}
+            }),
+            db.device.deleteMany({
+              where: { user }
+            }),
+            db.user.delete({
+              where: { id }
+            })
+          ]);
+
+          return user;
+        } catch {
+          throw inputError<Infer<typeof DeleteUser>>([{
+            path: 'id',
+            type: 'userNotFound'
           }]);
         }
       }

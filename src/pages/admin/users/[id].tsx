@@ -7,9 +7,9 @@ import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
 import { Heading } from '../../../components/navigation/Heading';
+import { Table } from '../../../components/users/Table';
 import { roles } from '../../../constants';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
-import { Table } from '../../../components/users/Table';
 
 const query = gql`
   query UserQuery($id: ID!) {
