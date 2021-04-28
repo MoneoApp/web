@@ -4,6 +4,7 @@ import { compare, hash } from 'bcryptjs';
 import { addDays, isAfter } from 'date-fns';
 import { sign } from 'jsonwebtoken';
 import { extendType, idArg, stringArg } from 'nexus';
+import { createTransport }  from 'nodemailer';
 import { Infer } from 'superstruct';
 
 import { Error } from '../../../shared/constants';
@@ -41,9 +42,22 @@ export const UserMutation = extendType({
             data: { email }
           });
 
-          // todo(indy): Send email /?invite={id}
-          // tslint:disable-next-line:no-console
-          console.log('Invite generated for:', invite.id);
+          const transporter = createTransport({
+            host: process.env.SMTP_HOST,
+            port: 587,
+            secure: false,
+            auth: {
+              user: process.env.SMTP_USERNAME,
+              pass: process.env.SMTP_PASSWORD
+            }
+          });
+
+          await transporter.sendMail({
+            from: `"Moneo App" <${process.env.SMTP_USERNAME}>`,
+            to: email,
+            subject: 'Uitnodiging Moneo',
+            html: `U bent uitgenodigd voor Moneo. Klik <a href="${process.env.PUBLIC_URL}/?invite=${invite.id}">hier</a> om te registreren`
+          });
 
           return true;
         } catch {
