@@ -1,11 +1,9 @@
 import { UserRole } from '@prisma/client';
-import { ApolloError } from 'apollo-server-micro';
 import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import { extendType, idArg, stringArg } from 'nexus';
+import { extendType, idArg, nullable, stringArg } from 'nexus';
 import { Infer } from 'superstruct';
 
-import { DeleteUser } from '../../../shared/structs/DeleteUser';
 import { Login } from '../../../shared/structs/Login';
 import { secret } from '../../constants';
 import { authorized } from '../../guards/authorized';
@@ -46,49 +44,33 @@ export const UserMutation = extendType({
     });
 
     t.field('deleteUser', {
-      type: 'User',
+      type: nullable('User'),
       args: {
         id: idArg()
       },
       authorize: guard(
-        authorized(UserRole.ADMIN),
-        validated(DeleteUser)
+        authorized(UserRole.ADMIN)
       ),
       resolve: async (parent, { id }, { db }) => {
-        try {
-          const user = await db.user.findUnique({
+        const transaction = await db.$transaction([
+          db.contentBlock.deleteMany({
+            where: { interaction: { overlay: { device: { user: { id } }}}}
+          }),
+          db.interaction.deleteMany({
+            where: { overlay: { device: { user: { id } }}}
+          }),
+          db.overlay.deleteMany({
+            where: { device: { user: { id } }}
+          }),
+          db.device.deleteMany({
+            where: { user: { id } }
+          }),
+          db.user.delete({
             where: { id }
-          });
+          })
+        ]);
 
-          if (!user) {
-            throw new ApolloError('');
-          }
-
-          await db.$transaction([
-            db.contentBlock.deleteMany({
-              where: { interaction: { overlay: { device: { user }}}}
-            }),
-            db.interaction.deleteMany({
-              where: { overlay: { device: { user }}}
-            }),
-            db.overlay.deleteMany({
-              where: { device: { user }}
-            }),
-            db.device.deleteMany({
-              where: { user }
-            }),
-            db.user.delete({
-              where: { id }
-            })
-          ]);
-
-          return user;
-        } catch {
-          throw inputError<Infer<typeof DeleteUser>>([{
-            path: 'id',
-            type: 'userNotFound'
-          }]);
-        }
+        return transaction[4];
       }
     });
 
