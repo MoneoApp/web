@@ -47,8 +47,8 @@ scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publicati
 type Mutation {
   createDevice(brand: String!, model: String!): Device!
   createOverlay(deviceId: ID!, name: String!): Overlay!
-  createUser(email: String!, password: String!): User!
-  deleteUser(id: ID!): User
+  createUser(inviteId: ID!, password: String!): User!
+  inviteUser(email: String!): Boolean!
   login(email: String!, password: String!): Authentication!
   updateUser(email: String!, id: ID!, role: UserRole!): User
 }

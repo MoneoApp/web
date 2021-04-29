@@ -56,7 +56,7 @@ const StyledNotification = styled.button<{ index: number, open: boolean }>`
   transition: bottom .25s ease, box-shadow .25s ease;
   animation: ${(props) => props.open ? slideIn : slideOut} .25s ease;
   outline: none;
-  z-index: 150;
+  z-index: 550;
 
   &:hover {
     cursor: pointer;

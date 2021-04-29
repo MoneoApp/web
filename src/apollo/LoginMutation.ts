@@ -6,25 +6,25 @@
 import { UserRole } from "./globalTypes";
 
 // ====================================================
-// GraphQL mutation operation: IndexMutation
+// GraphQL mutation operation: LoginMutation
 // ====================================================
 
-export interface IndexMutation_login_user {
+export interface LoginMutation_login_user {
   __typename: "User";
   role: UserRole;
 }
 
-export interface IndexMutation_login {
+export interface LoginMutation_login {
   __typename: "Authentication";
   token: string;
-  user: IndexMutation_login_user;
+  user: LoginMutation_login_user;
 }
 
-export interface IndexMutation {
-  login: IndexMutation_login;
+export interface LoginMutation {
+  login: LoginMutation_login;
 }
 
-export interface IndexMutationVariables {
+export interface LoginMutationVariables {
   email: string;
   password: string;
 }

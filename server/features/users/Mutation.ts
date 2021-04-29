@@ -1,9 +1,15 @@
 import { UserRole } from '@prisma/client';
+import { ApolloError } from 'apollo-server-micro';
 import { compare, hash } from 'bcryptjs';
+import { addDays, isAfter } from 'date-fns';
 import { sign } from 'jsonwebtoken';
-import { extendType, nullable } from 'nexus';
+import { extendType, idArg, stringArg } from 'nexus';
+import { createTransport }  from 'nodemailer';
 import { Infer } from 'superstruct';
 
+import { Error } from '../../../shared/constants';
+import { CreateUser } from '../../../shared/structs/CreateUser';
+import { InviteUser } from '../../../shared/structs/InviteUser';
 import { Login } from '../../../shared/structs/Login';
 import { UpdateUser } from '../../../shared/structs/UpdateUser';
 import { secret } from '../../constants';
@@ -17,32 +23,89 @@ import { current } from '../../guards/current';
 export const UserMutation = extendType({
   type: 'Mutation',
   definition: (t) => {
-    t.field('createUser', {
-      type: 'User',
+    t.boolean('inviteUser', {
       args: {
-        email: 'String',
-        password: 'String'
+        email: stringArg()
       },
       authorize: guard(
         authorized(UserRole.ADMIN),
-        validated(Login)
+        validated(InviteUser)
       ),
-      resolve: async (parent, { email, password }, { db }) => {
-        const hashed = await hash(password, 10);
-
+      resolve: async (parent, { email }, { db }) => {
         try {
-          return await db.user.create({
-            data: {
-              email,
-              password: hashed
+          const count = await db.user.count({
+            where: { email }
+          });
+
+          if (count) {
+            throw new ApolloError('');
+          }
+
+          const invite = await db.invite.create({
+            data: { email }
+          });
+
+          const transporter = createTransport({
+            host: process.env.SMTP_HOST,
+            port: 587,
+            secure: false,
+            auth: {
+              user: process.env.SMTP_USERNAME,
+              pass: process.env.SMTP_PASSWORD
             }
           });
+
+          await transporter.sendMail({
+            from: `"Moneo App" <${process.env.SMTP_USERNAME}>`,
+            to: email,
+            subject: 'Uitnodiging Moneo',
+            html: `U bent uitgenodigd voor Moneo. Klik <a href="${process.env.PUBLIC_URL}/?invite=${invite.id}">hier</a> om te registreren`
+          });
+
+          return true;
         } catch {
-          throw inputError<Infer<typeof Login>>([{
+          throw inputError<Infer<typeof InviteUser>>([{
             path: 'email',
             type: 'emailInUse'
           }]);
         }
+      }
+    });
+
+    t.field('createUser', {
+      type: 'User',
+      args: {
+        inviteId: idArg(),
+        password: stringArg()
+      },
+      authorize: guard(
+        validated(CreateUser)
+      ),
+      resolve: async (parent, { inviteId, password }, { db }) => {
+        const invite = await db.invite.findUnique({
+          where: { id: inviteId }
+        });
+
+        if (!invite) {
+          throw new ApolloError('invalid invite', Error.InvalidInvite);
+        }
+
+        await db.invite.delete({
+          where: { id: inviteId }
+        });
+
+        if (isAfter(Date.now(), addDays(invite.createdAt, 1))) {
+          throw new ApolloError('invalid invite', Error.InvalidInvite);
+        }
+
+        const hashed = await hash(password, 10);
+
+        return await db.user.create({
+          data: {
+            email: invite.email,
+            password: hashed
+          }
+        });
       }
     });
 

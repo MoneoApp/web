@@ -1,5 +1,5 @@
 import { superstructResolver } from '@hookform/resolvers/superstruct';
-import { ComponentPropsWithoutRef } from 'react';
+import { ComponentPropsWithoutRef, useEffect } from 'react';
 import { DefaultValues, FormProvider, useForm } from 'react-hook-form';
 import { Struct } from 'superstruct';
 
@@ -23,6 +23,10 @@ export function Form<T>({
     resolver: struct && superstructResolver(struct),
     defaultValues: values
   });
+
+  useEffect(() => {
+    form.reset(values);
+  }, [JSON.stringify(values)]);
 
   return (
     <FormProvider {...form}>

@@ -2,18 +2,21 @@ import { gql, useMutation } from '@apollo/client';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 
+import { CreateUser } from '../../shared/structs/CreateUser';
 import { Login } from '../../shared/structs/Login';
-import { IndexMutation, IndexMutationVariables } from '../apollo/IndexMutation';
+import { LoginMutation, LoginMutationVariables } from '../apollo/LoginMutation';
+import { RegisterMutation, RegisterMutationVariables } from '../apollo/RegisterMutation';
 import background from '../assets/background.jpg';
 import Logo from '../assets/logo.svg';
 import { Button } from '../components/forms/Button';
 import { Form } from '../components/forms/Form';
 import { Input } from '../components/forms/Input';
 import { Empty } from '../components/templates/Empty';
+import { useNotify } from '../hooks/useNotify';
 import { useAuthentication } from '../states/authentication';
 
-const mutation = gql`
-  mutation IndexMutation($email: String!, $password: String!) {
+const loginMutation = gql`
+  mutation LoginMutation($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       token
       user {
@@ -23,24 +26,47 @@ const mutation = gql`
   }
 `;
 
+const registerMutation = gql`
+  mutation RegisterMutation($inviteId: ID!, $password: String!) {
+    createUser(inviteId: $inviteId, password: $password) {
+      id
+    }
+  }
+`;
+
 export default function Index() {
-  const { push } = useRouter();
+  const notify = useNotify();
+  const { push, query: { invite } } = useRouter();
   const [, { login }] = useAuthentication();
-  const [mutate] = useMutation<IndexMutation, IndexMutationVariables>(mutation, {
+  const [mutateLogin] = useMutation<LoginMutation, LoginMutationVariables>(loginMutation, {
     onCompleted: ({ login: { token, user: { role } } }) => login(token, role).then(() => push('/admin'))
+  });
+  const [mutateRegister] = useMutation<RegisterMutation, RegisterMutationVariables>(registerMutation, {
+    onCompleted: () => {
+      notify('Registratie succesvol');
+      void push('/');
+    }
   });
 
   return (
     <StyledRoot>
-      <Form struct={Login} onSubmit={(variables) => mutate({ variables })}>
+      <Form<any>
+        struct={invite ? CreateUser : Login}
+        values={invite ? {
+          inviteId: invite
+        } : undefined}
+        onSubmit={(variables) => invite ? mutateRegister({ variables }) : mutateLogin({ variables })}
+      >
         <StyledForm>
           <StyledBrand>
             <StyledLogo/>
             Moneo
           </StyledBrand>
-          <Input name="email" label="E-mail"/>
-          <Input name="password" label="Password" type="password"/>
-          <Button text="Login"/>
+          {!invite && (
+            <Input name="email" label="E-mail"/>
+          )}
+          <Input name="password" label="Wachtwoord" type="password"/>
+          <Button text={invite ? 'Registreren' : 'Inloggen'}/>
         </StyledForm>
       </Form>
     </StyledRoot>
