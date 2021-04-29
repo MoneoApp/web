@@ -117,7 +117,7 @@ export const UserMutation = extendType({
         role: 'UserRole'
       },
       authorize: guard(
-        or(current(), authorized(UserRole.ADMIN)),
+        authorized(UserRole.ADMIN),
         validated(UpdateUser)
       ),
       resolve: (parent, { id, email, role }, { db }) => db.user.update({
@@ -135,7 +135,7 @@ export const UserMutation = extendType({
         id: 'ID'
       },
       authorize: guard(
-        authorized(UserRole.ADMIN)
+        or(current(), authorized(UserRole.ADMIN))
       ),
       resolve: async (parent, { id }, { db }) => {
         const transaction = await db.$transaction([
