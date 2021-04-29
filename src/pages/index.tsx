@@ -50,37 +50,25 @@ export default function Index() {
 
   return (
     <StyledRoot>
-      {invite ? (
-        <Form
-          struct={CreateUser}
-          onSubmit={(variables) => mutateRegister({ variables })}
-        >
-          <StyledForm>
-            <StyledBrand>
-              <StyledLogo/>
-              Moneo
-            </StyledBrand>
-            <Input name="inviteId" label="Invite" value={invite}/>
-            <Input name="password" label="Wachtwoord" type="password"/>
-            <Button text="Registreren" type="submit"/>
-          </StyledForm>
-        </Form>
-      ) : (
-        <Form
-          struct={Login}
-          onSubmit={(variables) => mutateLogin({ variables })}
-        >
-          <StyledForm>
-            <StyledBrand>
-              <StyledLogo/>
-              Moneo
-            </StyledBrand>
+      <Form<any>
+        struct={invite ? CreateUser : Login}
+        values={invite ? {
+          inviteId: invite
+        } : undefined}
+        onSubmit={(variables) => invite ? mutateRegister({ variables }) : mutateLogin({ variables })}
+      >
+        <StyledForm>
+          <StyledBrand>
+            <StyledLogo/>
+            Moneo
+          </StyledBrand>
+          {!invite && (
             <Input name="email" label="E-mail"/>
-            <Input name="password" label="Wachtwoord" type="password"/>
-            <Button text="Inloggen" type="submit"/>
-          </StyledForm>
-        </Form>
-      )}
+          )}
+          <Input name="password" label="Wachtwoord" type="password"/>
+          <Button text={invite ? 'Registreren' : 'Inloggen'} type="submit"/>
+        </StyledForm>
+      </Form>
     </StyledRoot>
   );
 }
