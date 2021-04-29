@@ -30,7 +30,7 @@ export function InviteUser(props: DialoogProps) {
       <StyledTitle>
         Nodig een gebruiker uit
       </StyledTitle>
-      <Form struct={InviteUserStruct} onSubmit={({ email }) => mutate({ variables: { email } })}>
+      <Form struct={InviteUserStruct} onSubmit={(variables) => mutate({ variables })}>
         <StyledContent>
           <Input name="email" label="E-Mail"/>
           <StyledButton text="Nodig uit"/>
