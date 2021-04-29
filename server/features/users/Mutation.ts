@@ -4,7 +4,7 @@ import { compare, hash } from 'bcryptjs';
 import { addDays, isAfter } from 'date-fns';
 import { sign } from 'jsonwebtoken';
 import { extendType, nullable } from 'nexus';
-import { createTransport }  from 'nodemailer';
+import { createTransport } from 'nodemailer';
 import { Infer } from 'superstruct';
 
 import { Error } from '../../../shared/constants';
