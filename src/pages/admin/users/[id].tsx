@@ -1,9 +1,12 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import styled from '@emotion/styled';
+import { useDialoog } from 'dialoog';
 import { useRouter } from 'next/router';
 
+import { DeleteUserMutation, DeleteUserMutationVariables } from '../../../apollo/DeleteUserMutation';
 import { UserMutation, UserMutationVariables } from '../../../apollo/UserMutation';
 import { UserQuery, UserQueryVariables } from '../../../apollo/UserQuery';
+import { Confirm } from '../../../components/dialogs/Confirm';
 import { Button } from '../../../components/forms/Button';
 import { Form } from '../../../components/forms/Form';
 import { Input } from '../../../components/forms/Input';
@@ -30,7 +33,7 @@ const query = gql`
   }
 `;
 
-const mutation = gql`
+const updateMutation = gql`
   mutation UserMutation($id: ID!, $email: String!, $role: UserRole!) {
     updateUser(id: $id, email: $email, role: $role) {
       id
@@ -40,16 +43,33 @@ const mutation = gql`
   }
 `;
 
+const deleteMutation = gql`
+  mutation DeleteUserMutation($id: ID!) {
+    deleteUser(id: $id) {
+      id
+    }
+  }
+`;
+
 export default function User() {
   const skip = useAuthGuard();
-  const { query: { id } } = useRouter();
+  const { push, query: { id } } = useRouter();
+  const [, { open }] = useDialoog();
   const notify = useNotify();
   const { data } = useQuery<UserQuery, UserQueryVariables>(query, {
     skip: skip || typeof id !== 'string',
     variables: { id: id as string }
   });
-  const [mutate] = useMutation<UserMutation, UserMutationVariables>(mutation, {
+  const [mutateUpdate] = useMutation<UserMutation, UserMutationVariables>(updateMutation, {
     onCompleted: () => notify('Successvol gebruiker bijgewerkt')
+  });
+  const [mutateDelete] = useMutation<DeleteUserMutation, DeleteUserMutationVariables>(deleteMutation, {
+    onCompleted: () => push('/admin/users').then(() => notify('Successvol gebruiker verwijderd')),
+    update: (cache) => cache.modify({
+      fields: {
+        users: (users: any[], { readField }) => users.filter((user) => readField('id', user) !== id)
+      }
+    })
   });
 
   return (
@@ -65,7 +85,7 @@ export default function User() {
                   email: data.user.email,
                   role: data.user.role
                 }}
-                onSubmit={(variables) => mutate({ variables })}
+                onSubmit={(variables) => mutateUpdate({ variables })}
               >
                 <Input name="email" label="E-mail"/>
                 <Input as="select" name="role" label="Rol">
@@ -76,6 +96,20 @@ export default function User() {
                   ))}
                 </Input>
                 <StyledActions>
+                  <Button
+                    text="Verwijder"
+                    type="button"
+                    palette={['red-200', 'gray-0']}
+                    onClick={open.c((props) => (
+                      <Confirm
+                        text="Weet je zeker dat je deze gebruiker wil verwijderen?"
+                        onConfirm={() => mutateDelete({
+                          variables: { id: id as string }
+                        })}
+                        {...props}
+                      />
+                    ))}
+                  />
                   <Button text="Opslaan"/>
                 </StyledActions>
               </Form>
@@ -103,4 +137,8 @@ const StyledActions = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1rem;
+
+  & > *:not(:last-child) {
+    margin-right: 1rem;
+  }
 `;
