@@ -5,7 +5,10 @@ export const User = objectType({
   definition: (t) => {
     t.id('id');
     t.string('email');
-    t.string('role');
+
+    t.field('role', {
+      type: 'UserRole'
+    });
 
     t.field('devices', {
       type: list('Device'),

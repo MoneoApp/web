@@ -1,4 +1,4 @@
-import { extendType, idArg, list, nullable } from 'nexus';
+import { extendType, list, nullable } from 'nexus';
 
 import { authorized } from '../../guards/authorized';
 import { guard } from '../../utils/guard';
@@ -17,7 +17,7 @@ export const DeviceQuery = extendType({
     t.field('device', {
       type: nullable('Device'),
       args: {
-        id: idArg()
+        id: 'ID'
       },
       authorize: guard(
         authorized()

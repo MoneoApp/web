@@ -1,4 +1,4 @@
-import { extendType, idArg, stringArg } from 'nexus';
+import { extendType } from 'nexus';
 
 import { CreateOverlay } from '../../../shared/structs/CreateOverlay';
 import { authorized } from '../../guards/authorized';
@@ -11,8 +11,8 @@ export const OverlayMutation = extendType({
     t.field('createOverlay', {
       type: 'Overlay',
       args: {
-        name: stringArg(),
-        deviceId: idArg()
+        name: 'String',
+        deviceId: 'ID'
       },
       authorize: guard(
         authorized(),

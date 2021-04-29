@@ -50,6 +50,7 @@ type Mutation {
   createUser(email: String!, password: String!): User!
   deleteUser(id: ID!): User
   login(email: String!, password: String!): Authentication!
+  updateUser(email: String!, id: ID!, role: UserRole!): User
 }
 
 type Overlay {
@@ -71,5 +72,10 @@ type User {
   devices: [Device!]!
   email: String!
   id: ID!
-  role: String!
+  role: UserRole!
+}
+
+enum UserRole {
+  ADMIN
+  USER
 }

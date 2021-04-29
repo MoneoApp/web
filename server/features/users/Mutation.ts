@@ -1,10 +1,11 @@
 import { UserRole } from '@prisma/client';
 import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import { extendType, idArg, nullable, stringArg } from 'nexus';
+import { extendType, nullable } from 'nexus';
 import { Infer } from 'superstruct';
 
 import { Login } from '../../../shared/structs/Login';
+import { UpdateUser } from '../../../shared/structs/UpdateUser';
 import { secret } from '../../constants';
 import { authorized } from '../../guards/authorized';
 import { validated } from '../../guards/validated';
@@ -17,8 +18,8 @@ export const UserMutation = extendType({
     t.field('createUser', {
       type: 'User',
       args: {
-        email: stringArg(),
-        password: stringArg()
+        email: 'String',
+        password: 'String'
       },
       authorize: guard(
         authorized(UserRole.ADMIN),
@@ -43,10 +44,30 @@ export const UserMutation = extendType({
       }
     });
 
+    t.field('updateUser', {
+      type: nullable('User'),
+      args: {
+        id: 'ID',
+        email: 'String',
+        role: 'UserRole'
+      },
+      authorize: guard(
+        authorized(UserRole.ADMIN),
+        validated(UpdateUser)
+      ),
+      resolve: (parent, { id, email, role }, { db }) => db.user.update({
+        where: { id },
+        data: {
+          email,
+          role
+        }
+      })
+    });
+
     t.field('deleteUser', {
       type: nullable('User'),
       args: {
-        id: idArg()
+        id: 'ID'
       },
       authorize: guard(
         authorized(UserRole.ADMIN)
@@ -54,13 +75,13 @@ export const UserMutation = extendType({
       resolve: async (parent, { id }, { db }) => {
         const transaction = await db.$transaction([
           db.contentBlock.deleteMany({
-            where: { interaction: { overlay: { device: { user: { id } }}}}
+            where: { interaction: { overlay: { device: { user: { id } } } } }
           }),
           db.interaction.deleteMany({
-            where: { overlay: { device: { user: { id } }}}
+            where: { overlay: { device: { user: { id } } } }
           }),
           db.overlay.deleteMany({
-            where: { device: { user: { id } }}
+            where: { device: { user: { id } } }
           }),
           db.device.deleteMany({
             where: { user: { id } }
@@ -77,8 +98,8 @@ export const UserMutation = extendType({
     t.field('login', {
       type: 'Authentication',
       args: {
-        email: stringArg(),
-        password: stringArg()
+        email: 'String',
+        password: 'String'
       },
       authorize: guard(
         validated(Login)

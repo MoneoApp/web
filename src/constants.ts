@@ -1,5 +1,6 @@
 import { Error } from '../shared/constants';
 
+import { UserRole } from './apollo/globalTypes';
 import { Breakpoint, Color, Shade } from './types';
 
 export const breakpoints: Record<Breakpoint, number> = {
@@ -49,7 +50,7 @@ export const errors: Record<string, string> = {
   emailInUse: 'E-mailadres al in gebruik'
 };
 
-export const roles: Record<string, string> = {
+export const roles: Record<UserRole, string> = {
   USER: 'Gebruiker',
   ADMIN: 'Beheerder'
 };

@@ -3,13 +3,15 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { UserRole } from "./globalTypes";
+
 // ====================================================
 // GraphQL mutation operation: IndexMutation
 // ====================================================
 
 export interface IndexMutation_login_user {
   __typename: "User";
-  role: string;
+  role: UserRole;
 }
 
 export interface IndexMutation_login {
