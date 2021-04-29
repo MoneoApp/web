@@ -11,6 +11,8 @@ import { authorized } from '../../guards/authorized';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
 import { inputError } from '../../utils/inputError';
+import { or } from '../../guards/or';
+import { current } from '../../guards/current';
 
 export const UserMutation = extendType({
   type: 'Mutation',
@@ -52,7 +54,7 @@ export const UserMutation = extendType({
         role: 'UserRole'
       },
       authorize: guard(
-        authorized(UserRole.ADMIN),
+        or(current(), authorized(UserRole.ADMIN)),
         validated(UpdateUser)
       ),
       resolve: (parent, { id, email, role }, { db }) => db.user.update({

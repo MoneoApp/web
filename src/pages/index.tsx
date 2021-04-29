@@ -40,7 +40,7 @@ export default function Index() {
           </StyledBrand>
           <Input name="email" label="E-mail"/>
           <Input name="password" label="Password" type="password"/>
-          <Button text="Login" type="submit"/>
+          <Button text="Login"/>
         </StyledForm>
       </Form>
     </StyledRoot>
