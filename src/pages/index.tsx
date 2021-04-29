@@ -35,7 +35,7 @@ const registerMutation = gql`
 `;
 
 export default function Index() {
-  const notify = useNotify()
+  const notify = useNotify();
   const { push, query: { invite } } = useRouter();
   const [, { login }] = useAuthentication();
   const [mutateLogin] = useMutation<LoginMutation, LoginMutationVariables>(loginMutation, {
@@ -44,30 +44,43 @@ export default function Index() {
   const [mutateRegister] = useMutation<RegisterMutation, RegisterMutationVariables>(registerMutation, {
     onCompleted: () => {
       notify('Registratie succesvol');
-      void push('/')
+      void push('/');
     }
   });
 
   return (
     <StyledRoot>
-      <Form<any>
-        struct={invite ? CreateUser : Login}
-        onSubmit={(variables) => invite ? mutateRegister({ variables }) : mutateLogin({ variables })}
-      >
-        <StyledForm>
-          <StyledBrand>
-            <StyledLogo/>
-            Moneo
-          </StyledBrand>
-          {invite ? (
-            <Input name="inviteId" label="Invite" type="hidden" value={invite}/>
-          ) : (
+      {invite ? (
+        <Form
+          struct={CreateUser}
+          onSubmit={(variables) => mutateRegister({ variables })}
+        >
+          <StyledForm>
+            <StyledBrand>
+              <StyledLogo/>
+              Moneo
+            </StyledBrand>
+            <Input name="inviteId" label="Invite" value={invite}/>
+            <Input name="password" label="Wachtwoord" type="password"/>
+            <Button text="Registreren" type="submit"/>
+          </StyledForm>
+        </Form>
+      ) : (
+        <Form
+          struct={Login}
+          onSubmit={(variables) => mutateLogin({ variables })}
+        >
+          <StyledForm>
+            <StyledBrand>
+              <StyledLogo/>
+              Moneo
+            </StyledBrand>
             <Input name="email" label="E-mail"/>
-          )}
-          <Input name="password" label="Wachtwoord" type="password"/>
-          <Button text={invite ? 'Registreren' : 'Inloggen'} type="submit"/>
-        </StyledForm>
-      </Form>
+            <Input name="password" label="Wachtwoord" type="password"/>
+            <Button text="Inloggen" type="submit"/>
+          </StyledForm>
+        </Form>
+      )}
     </StyledRoot>
   );
 }
