@@ -3,7 +3,7 @@ import { ApolloError } from 'apollo-server-micro';
 import { compare, hash } from 'bcryptjs';
 import { addDays, isAfter } from 'date-fns';
 import { sign } from 'jsonwebtoken';
-import { extendType, idArg, stringArg } from 'nexus';
+import { extendType, nullable } from 'nexus';
 import { createTransport }  from 'nodemailer';
 import { Infer } from 'superstruct';
 
@@ -14,18 +14,18 @@ import { Login } from '../../../shared/structs/Login';
 import { UpdateUser } from '../../../shared/structs/UpdateUser';
 import { secret } from '../../constants';
 import { authorized } from '../../guards/authorized';
+import { current } from '../../guards/current';
+import { or } from '../../guards/or';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
 import { inputError } from '../../utils/inputError';
-import { or } from '../../guards/or';
-import { current } from '../../guards/current';
 
 export const UserMutation = extendType({
   type: 'Mutation',
   definition: (t) => {
     t.boolean('inviteUser', {
       args: {
-        email: stringArg()
+        email: 'String'
       },
       authorize: guard(
         authorized(UserRole.ADMIN),
@@ -75,8 +75,8 @@ export const UserMutation = extendType({
     t.field('createUser', {
       type: 'User',
       args: {
-        inviteId: idArg(),
-        password: stringArg()
+        inviteId: 'ID',
+        password: 'String'
       },
       authorize: guard(
         validated(CreateUser)
