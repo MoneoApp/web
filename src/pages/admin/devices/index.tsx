@@ -12,6 +12,7 @@ import { FieldForm } from '../../../components/forms/FieldForm';
 import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
+import { Spinner } from '../../../components/Spinner';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 import { useSearch } from '../../../hooks/useSearch';
 import { withBreakpoint } from '../../../utils/withBreakpoint';
@@ -50,7 +51,7 @@ export default function Devices() {
           </Link>
         </Column>
       </Row>
-      {results && (
+      {results ? (
         <Overview data={results} keyBy="id" groupBy="brand">
           {(value) => (
             <Column sizes={{ phone: 3 }}>
@@ -62,6 +63,8 @@ export default function Devices() {
             </Column>
           )}
         </Overview>
+      ) : (
+        <Spinner/>
       )}
     </>
   );

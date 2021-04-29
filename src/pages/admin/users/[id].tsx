@@ -13,6 +13,7 @@ import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
 import { Heading } from '../../../components/navigation/Heading';
+import { Spinner } from '../../../components/Spinner';
 import { Table } from '../../../components/users/Table';
 import { roles } from '../../../constants';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
@@ -75,7 +76,7 @@ export default function User() {
   return (
     <>
       <Heading text="Gebruiker"/>
-      {data?.user && (
+      {data?.user ? (
         <>
           <Row>
             <Column sizes={{ phone: 12, laptop: 6 }}>
@@ -128,6 +129,8 @@ export default function User() {
             }}
           />
         </>
+      ) : (
+        <Spinner/>
       )}
     </>
   );
