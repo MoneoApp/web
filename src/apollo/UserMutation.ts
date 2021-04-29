@@ -6,28 +6,22 @@
 import { UserRole } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: UserQuery
+// GraphQL mutation operation: UserMutation
 // ====================================================
 
-export interface UserQuery_user_devices {
-  __typename: "Device";
-  id: string;
-  model: string;
-  brand: string;
-}
-
-export interface UserQuery_user {
+export interface UserMutation_updateUser {
   __typename: "User";
   id: string;
   email: string;
   role: UserRole;
-  devices: UserQuery_user_devices[];
 }
 
-export interface UserQuery {
-  user: UserQuery_user | null;
+export interface UserMutation {
+  updateUser: UserMutation_updateUser | null;
 }
 
-export interface UserQueryVariables {
+export interface UserMutationVariables {
   id: string;
+  email: string;
+  role: UserRole;
 }

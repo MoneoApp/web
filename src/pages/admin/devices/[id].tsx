@@ -2,6 +2,7 @@ import { gql, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 
 import { DeviceQuery, DeviceQueryVariables } from '../../../apollo/DeviceQuery';
+import { Heading } from '../../../components/navigation/Heading';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 
 const query = gql`
@@ -23,8 +24,9 @@ export default function Device() {
   });
 
   return (
-    <div>
+    <>
+      <Heading text="Apparaat"/>
       {data?.device?.model}
-    </div>
+    </>
   );
 }

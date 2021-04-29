@@ -66,7 +66,7 @@ export default function Index() {
             <Input name="email" label="E-mail"/>
           )}
           <Input name="password" label="Wachtwoord" type="password"/>
-          <Button text={invite ? 'Registreren' : 'Inloggen'} type="submit"/>
+          <Button text={invite ? 'Registreren' : 'Inloggen'}/>
         </StyledForm>
       </Form>
     </StyledRoot>

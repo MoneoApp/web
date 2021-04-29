@@ -3,16 +3,19 @@ import { ApolloError } from 'apollo-server-micro';
 import { compare, hash } from 'bcryptjs';
 import { addDays, isAfter } from 'date-fns';
 import { sign } from 'jsonwebtoken';
-import { extendType, idArg, stringArg } from 'nexus';
-import { createTransport }  from 'nodemailer';
+import { extendType, nullable } from 'nexus';
+import { createTransport } from 'nodemailer';
 import { Infer } from 'superstruct';
 
 import { Error } from '../../../shared/constants';
 import { CreateUser } from '../../../shared/structs/CreateUser';
 import { InviteUser } from '../../../shared/structs/InviteUser';
 import { Login } from '../../../shared/structs/Login';
+import { UpdateUser } from '../../../shared/structs/UpdateUser';
 import { secret } from '../../constants';
 import { authorized } from '../../guards/authorized';
+import { current } from '../../guards/current';
+import { or } from '../../guards/or';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
 import { inputError } from '../../utils/inputError';
@@ -22,7 +25,7 @@ export const UserMutation = extendType({
   definition: (t) => {
     t.boolean('inviteUser', {
       args: {
-        email: stringArg()
+        email: 'String'
       },
       authorize: guard(
         authorized(UserRole.ADMIN),
@@ -72,8 +75,8 @@ export const UserMutation = extendType({
     t.field('createUser', {
       type: 'User',
       args: {
-        inviteId: idArg(),
-        password: stringArg()
+        inviteId: 'ID',
+        password: 'String'
       },
       authorize: guard(
         validated(CreateUser)
@@ -106,11 +109,62 @@ export const UserMutation = extendType({
       }
     });
 
+    t.field('updateUser', {
+      type: nullable('User'),
+      args: {
+        id: 'ID',
+        email: 'String',
+        role: 'UserRole'
+      },
+      authorize: guard(
+        authorized(UserRole.ADMIN),
+        validated(UpdateUser)
+      ),
+      resolve: (parent, { id, email, role }, { db }) => db.user.update({
+        where: { id },
+        data: {
+          email,
+          role
+        }
+      })
+    });
+
+    t.field('deleteUser', {
+      type: nullable('User'),
+      args: {
+        id: 'ID'
+      },
+      authorize: guard(
+        or(current(), authorized(UserRole.ADMIN))
+      ),
+      resolve: async (parent, { id }, { db }) => {
+        const transaction = await db.$transaction([
+          db.contentBlock.deleteMany({
+            where: { interaction: { overlay: { device: { user: { id } } } } }
+          }),
+          db.interaction.deleteMany({
+            where: { overlay: { device: { user: { id } } } }
+          }),
+          db.overlay.deleteMany({
+            where: { device: { user: { id } } }
+          }),
+          db.device.deleteMany({
+            where: { user: { id } }
+          }),
+          db.user.delete({
+            where: { id }
+          })
+        ]);
+
+        return transaction[4];
+      }
+    });
+
     t.field('login', {
       type: 'Authentication',
       args: {
-        email: stringArg(),
-        password: stringArg()
+        email: 'String',
+        password: 'String'
       },
       authorize: guard(
         validated(Login)

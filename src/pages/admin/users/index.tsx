@@ -1,10 +1,9 @@
 import { gql, useQuery } from '@apollo/client';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { faChevronRight, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDialoog } from 'dialoog';
-import Link from 'next/link';
 
 import { UsersQuery } from '../../../apollo/UsersQuery';
 import { InviteUser } from '../../../components/dialogs/InviteUser';
@@ -13,6 +12,8 @@ import { FieldForm } from '../../../components/forms/FieldForm';
 import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
+import { Table } from '../../../components/users/Table';
+import { roles } from '../../../constants';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 import { useSearch } from '../../../hooks/useSearch';
 import { withBreakpoint } from '../../../utils/withBreakpoint';
@@ -23,6 +24,9 @@ const query = gql`
       id
       email
       role
+      devices {
+        id
+      }
     }
   }
 `;
@@ -53,14 +57,26 @@ export default function Users() {
           </StyledButton>
         </Column>
       </Row>
-      {results?.map((user) => (
-        <Link key={user.id} href={`/admin/users/${user.id}`} passHref={true}>
-          <StyledAnchor>
-            {user.email}
-            <FontAwesomeIcon icon={faChevronRight}/>
-          </StyledAnchor>
-        </Link>
-      ))}
+      {results && (
+        <Table
+          data={results}
+          keyBy="id"
+          href={(value) => `/admin/users/${value.id}`}
+          columns={{
+            email: { title: 'E-mail' },
+            role: {
+              title: 'Rol',
+              size: '7.5rem',
+              render: (value) => roles[value]
+            },
+            devices: {
+              title: 'Apparaten',
+              size: '7.5rem',
+              render: (value) => value.length
+            }
+          }}
+        />
+      )}
     </>
   );
 }
@@ -76,27 +92,4 @@ const StyledButtonText = styled.span`
   ${withBreakpoint('tabletLandscape', css`
     display: inline-block;
   `)};
-`;
-
-const StyledAnchor = styled.a`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding: .75rem 1rem;
-  color: var(--gray-500);
-  background-color: var(--gray-200);
-  border-radius: 8px;
-  text-decoration: none;
-  outline: none;
-  transition: box-shadow .25s ease;
-
-  &:focus {
-    box-shadow: 0 0 0 3px var(--yellow-300);
-    z-index: 1;
-  }
-
-  &:hover {
-    cursor: pointer;
-  }
 `;

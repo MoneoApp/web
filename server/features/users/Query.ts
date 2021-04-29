@@ -1,5 +1,5 @@
 import { UserRole } from '@prisma/client';
-import { extendType, idArg, list, nullable } from 'nexus';
+import { extendType, list, nullable } from 'nexus';
 
 import { authorized } from '../../guards/authorized';
 import { guard } from '../../utils/guard';
@@ -18,7 +18,7 @@ export const UserQuery = extendType({
     t.field('user', {
       type: nullable('User'),
       args: {
-        id: idArg()
+        id: 'ID'
       },
       authorize: guard(
         authorized(UserRole.ADMIN)

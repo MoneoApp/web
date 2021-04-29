@@ -1,5 +1,4 @@
-import { UserRole } from '@prisma/client';
-import { extendType, stringArg } from 'nexus';
+import { extendType } from 'nexus';
 
 import { CreateDevice } from '../../../shared/structs/CreateDevice';
 import { authorized } from '../../guards/authorized';
@@ -12,19 +11,19 @@ export const DeviceMutation = extendType({
     t.field('createDevice', {
       type: 'Device',
       args: {
-        model: stringArg(),
-        brand: stringArg()
+        model: 'String',
+        brand: 'String'
       },
       authorize: guard(
-        authorized(UserRole.ADMIN),
+        authorized(),
         validated(CreateDevice)
       ),
-      resolve: (parent, { model, brand }, { db, userId }) => db.device.create({
+      resolve: (parent, { model, brand }, { db, user }) => db.device.create({
         data: {
           brand,
           model,
           image: 'unknown',
-          userId: userId!
+          userId: user!.id
         }
       })
     });
