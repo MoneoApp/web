@@ -39,7 +39,8 @@ export const colors: Record<Color, Partial<Record<Shade, [string, string]>>> = {
 export const messages: Record<Error, string> = {
   [Error.Unknown]: 'Oops, er is iets mis gegaan',
   [Error.Unauthorized]: 'Je mag deze actie niet uitvoeren',
-  [Error.BadUserInput]: 'De ingevulde gegevens zijn ongeldig'
+  [Error.BadUserInput]: 'De ingevulde gegevens zijn ongeldig',
+  [Error.InvalidInvite]: 'De uitnodiging is ongeldig'
 };
 
 export const errors: Record<string, string> = {

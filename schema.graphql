@@ -47,7 +47,8 @@ scalar JSONObject
 type Mutation {
   createDevice(brand: String!, model: String!): Device!
   createOverlay(deviceId: ID!, name: String!): Overlay!
-  createUser(email: String!, password: String!): User!
+  createUser(inviteId: ID!, password: String!): User!
+  inviteUser(email: String!): Boolean!
   login(email: String!, password: String!): Authentication!
 }
 

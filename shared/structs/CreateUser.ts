@@ -1,7 +1,8 @@
-import { object } from 'superstruct';
+import { object, string } from 'superstruct';
 
-import { Email } from './types/Email';
+import { Password } from './types/Password';
 
 export const CreateUser = object({
-  email: Email
+  inviteId: string(),
+  password: Password
 });
