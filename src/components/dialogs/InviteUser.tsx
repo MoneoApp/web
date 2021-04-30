@@ -20,7 +20,7 @@ export function InviteUser(props: DialoogProps) {
   const notify = useNotify();
   const [mutate] = useMutation<InviteUserMutation, InviteUserMutationVariables>(mutation, {
     onCompleted: () => {
-      notify('Goed gedaan man');
+      notify('Succesvol gebruiker uitgenodigd');
       setTimeout(props.close);
     }
   });

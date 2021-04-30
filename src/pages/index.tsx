@@ -43,7 +43,7 @@ export default function Index() {
   });
   const [mutateRegister] = useMutation<RegisterMutation, RegisterMutationVariables>(registerMutation, {
     onCompleted: () => {
-      notify('Registratie succesvol');
+      notify('Succesvol geregistreerd');
       void push('/');
     }
   });
