@@ -25,6 +25,7 @@ const StyledHideable = styled.div<{ hide: boolean }>`
   overflow: hidden;
   transform: none;
   transition: height .25s ease, opacity .25s ease, transform .25s ease, visibility;
+
   ${(props) => props.hide && css`
     opacity: 0;
     transform: scale(.95);

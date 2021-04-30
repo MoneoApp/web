@@ -6,4 +6,4 @@ export const UserRole = enumType({
     'USER',
     'ADMIN'
   ]
-})
+});
