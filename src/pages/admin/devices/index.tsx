@@ -64,7 +64,7 @@ export default function Devices() {
           )}
         </Overview>
       ) : (
-        <Spinner/>
+        <Spinner text="Apparaten ophalen..."/>
       )}
     </>
   );

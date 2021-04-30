@@ -78,7 +78,7 @@ export default function Users() {
           }}
         />
       ) : (
-        <Spinner/>
+        <Spinner text="Gebruikers ophalen..."/>
       )}
     </>
   );

@@ -130,7 +130,7 @@ export default function User() {
           />
         </>
       ) : (
-        <Spinner/>
+        <Spinner text="Gebruiker ophalen..."/>
       )}
     </>
   );
