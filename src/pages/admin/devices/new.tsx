@@ -1,6 +1,8 @@
 import { faEye, faQrcode } from '@fortawesome/free-solid-svg-icons';
 
+import { CreateDevice } from '../../../../shared/structs/CreateDevice';
 import { BigRadio } from '../../../components/forms/BigRadio';
+import { Button } from '../../../components/forms/Button';
 import { FileInput } from '../../../components/forms/FileInput';
 import { Form } from '../../../components/forms/Form';
 import { Input } from '../../../components/forms/Input';
@@ -14,7 +16,7 @@ export default function NewDevice() {
       <Heading text="Nieuw apparaat"/>
       <Row>
         <Column sizes={{ phone: 12, laptop: 6 }}>
-          <Form onSubmit={console.log}>
+          <Form struct={CreateDevice} onSubmit={console.log}>
             <Input name="model" label="Model"/>
             <Input name="brand" label="Merk"/>
             <FileInput name="image"/>
@@ -33,6 +35,7 @@ export default function NewDevice() {
                 color: 'green-100'
               }]}
             />
+            <Button text="Aanmaken"/>
           </Form>
         </Column>
       </Row>

@@ -5,6 +5,7 @@ import { Fragment } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { ColorShade } from '../../types';
+import { errors } from '../../constants';
 
 type Props = {
   name: string,
@@ -18,12 +19,19 @@ type Props = {
 };
 
 export function BigRadio({ name, label, options }: Props) {
-  const { register } = useFormContext();
+  const { register, formState: { errors: e, isSubmitting } } = useFormContext();
+
+  const error = e[name];
 
   return (
     <>
       <StyledTitle>
         {label}
+        {error && (
+          <StyledError>
+            {errors[error.type] ?? 'Onbekende fout'}
+          </StyledError>
+        )}
       </StyledTitle>
       {options.map((option, i) => (
         <Fragment key={option.value}>
@@ -33,6 +41,7 @@ export function BigRadio({ name, label, options }: Props) {
               id={option.value}
               value={option.value}
               shade={option.color}
+              disabled={isSubmitting}
               {...register(name)}
             />
             <StyledLabel htmlFor={option.value}>
@@ -55,6 +64,13 @@ export function BigRadio({ name, label, options }: Props) {
 
 const StyledTitle = styled.div`
   margin: 0 0 1rem .75rem;
+`;
+
+const StyledError = styled.span`
+  margin-left: .75rem;
+  padding: .25rem .5rem;
+  background-color: var(--red-200);
+  border-radius: 4px;
 `;
 
 const StyledWrapper = styled.div`
