@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Fragment } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { ColorShade } from '../../types';
 import { errors } from '../../constants';
+import { ColorShade } from '../../types';
 
 type Props = {
   name: string,
