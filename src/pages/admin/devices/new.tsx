@@ -1,4 +1,5 @@
 import { gql, useMutation } from '@apollo/client';
+import styled from '@emotion/styled';
 import { faEye, faQrcode } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 
@@ -14,7 +15,6 @@ import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
 import { Heading } from '../../../components/navigation/Heading';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
-import styled from '@emotion/styled';
 
 const mutation = gql`
   mutation NewDeviceMutation($model: String!, $brand: String!, $type: DeviceType!) {
