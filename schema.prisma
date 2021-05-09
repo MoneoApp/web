@@ -27,14 +27,19 @@ model Invite {
 }
 
 model Device {
-  id       String    @id @default(cuid())
+  id       String     @id @default(cuid())
   model    String
   brand    String
   image    String
-  anchor   String?
+  type     DeviceType @default(STATIC)
   userId   String
-  user     User      @relation(fields: [userId], references: [id])
+  user     User       @relation(fields: [userId], references: [id])
   overlays Overlay[]
+}
+
+enum DeviceType {
+  STATIC
+  DYNAMIC
 }
 
 model Overlay {

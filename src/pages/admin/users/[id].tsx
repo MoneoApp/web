@@ -68,7 +68,7 @@ export default function User() {
     onCompleted: () => push('/admin/users').then(() => notify('Successvol gebruiker verwijderd')),
     update: (cache) => cache.modify({
       fields: {
-        users: (users: any[], { readField }) => users.filter((user) => readField('id', user) !== id)
+        users: (users: any[] = [], { readField }) => users.filter((user) => readField('id', user) !== id)
       }
     })
   });

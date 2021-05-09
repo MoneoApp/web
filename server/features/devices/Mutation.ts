@@ -12,17 +12,19 @@ export const DeviceMutation = extendType({
       type: 'Device',
       args: {
         model: 'String',
-        brand: 'String'
+        brand: 'String',
+        type: 'DeviceType'
       },
       authorize: guard(
         authorized(),
         validated(CreateDevice)
       ),
-      resolve: (parent, { model, brand }, { db, user }) => db.device.create({
+      resolve: (parent, { model, brand, type }, { db, user }) => db.device.create({
         data: {
-          brand,
           model,
+          brand,
           image: 'unknown',
+          type,
           userId: user!.id
         }
       })
