@@ -14,6 +14,7 @@ import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
 import { Heading } from '../../../components/navigation/Heading';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
+import styled from '@emotion/styled';
 
 const mutation = gql`
   mutation NewDeviceMutation($model: String!, $brand: String!, $type: DeviceType!) {
@@ -74,10 +75,18 @@ export default function NewDevice() {
                 color: 'green-100'
               }]}
             />
-            <Button text="Aanmaken"/>
+            <StyledActions>
+              <Button text="Aanmaken"/>
+            </StyledActions>
           </Form>
         </Column>
       </Row>
     </>
   );
 }
+
+const StyledActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+`;
