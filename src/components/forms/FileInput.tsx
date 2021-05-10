@@ -67,7 +67,7 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
         {...props}
       />
       <StyledHint over={over} preview={preview !== undefined}>
-        Drop a file or click here
+        Sleep hier een bestand of klik om er een te selecteren
       </StyledHint>
     </StyledDrop>
   );
