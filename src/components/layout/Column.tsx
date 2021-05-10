@@ -9,7 +9,7 @@ type Props = {
   sizes: Breakpoints<number | [number, number]>
 };
 
-export function Column(props: Props& ComponentPropsWithoutRef<'div'>) {
+export function Column(props: Props & ComponentPropsWithoutRef<'div'>) {
   return (
     <StyledColumn {...props}/>
   );
@@ -22,7 +22,7 @@ const StyledColumn = styled.div<Props>`
 
   ${(props) => withBreakpoints(props.sizes, (value) => {
     const [size, order] = typeof value === 'number' ? [value, 0] : value;
-    const width = 100 / 12 * size;
+    const width = Math.floor(100 / 12 * size);
 
     return width ? css`
       display: flex;

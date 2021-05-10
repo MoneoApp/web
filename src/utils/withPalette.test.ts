@@ -5,5 +5,5 @@ it('should work without arguments', () => {
 });
 
 it('should inject the correct css rules', () => {
-  expect(withPalette(['grey-500', 'grey-0'])?.styles).toMatchSnapshot();
+  expect(withPalette(['gray-500', 'gray-0'])?.styles).toMatchSnapshot();
 });

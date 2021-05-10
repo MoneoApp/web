@@ -1,5 +1,6 @@
 import { Error } from '../shared/constants';
 
+import { UserRole } from './apollo/globalTypes';
 import { Breakpoint, Color, Shade } from './types';
 
 export const breakpoints: Record<Breakpoint, number> = {
@@ -11,7 +12,7 @@ export const breakpoints: Record<Breakpoint, number> = {
 };
 
 export const colors: Record<Color, Partial<Record<Shade, [string, string]>>> = {
-  grey: {
+  gray: {
     0: ['#ffffff', '#1f1f1f'],
     100: ['#efefef', '#303030'],
     200: ['#d4d4d4', '#404040'],
@@ -39,12 +40,19 @@ export const colors: Record<Color, Partial<Record<Shade, [string, string]>>> = {
 export const messages: Record<Error, string> = {
   [Error.Unknown]: 'Oops, er is iets mis gegaan',
   [Error.Unauthorized]: 'Je mag deze actie niet uitvoeren',
-  [Error.BadUserInput]: 'De ingevulde gegevens zijn ongeldig'
+  [Error.BadUserInput]: 'De ingevulde gegevens zijn ongeldig',
+  [Error.InvalidInvite]: 'De uitnodiging is ongeldig'
 };
 
 export const errors: Record<string, string> = {
+  string: 'Ongeldige invoer',
   email: 'Ongeldig e-mailadres',
   password: 'Ongeldig wachtwoord',
   invalidCredentials: 'Ongeldige inloggegevens',
   emailInUse: 'E-mailadres al in gebruik'
+};
+
+export const roles: Record<UserRole, string> = {
+  USER: 'Gebruiker',
+  ADMIN: 'Beheerder'
 };

@@ -1,4 +1,3 @@
 import { Context } from './context';
 
-export type Guard = (args: GuardArgs) => void;
-export type GuardArgs = Omit<Context, 'guard'>;
+export type Guard = (args: unknown, ctx: Context) => void | Promise<void>;

@@ -1,9 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
-import { guard } from './utils/guard';
+import { TokenData } from '../shared/types';
 
 export type Context = {
   db: PrismaClient,
-  userId?: string,
-  guard: ReturnType<typeof guard>
+  user?: TokenData
 };

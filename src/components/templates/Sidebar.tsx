@@ -1,11 +1,15 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { faLifeRing, faMobileAlt, faTachometerAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { UserRole } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 
 import Logo from '../../assets/logo.svg';
+import { useAuthentication } from '../../states/authentication';
 import { withBreakpoint } from '../../utils/withBreakpoint';
 import { Container } from '../layout/Container';
+import { Heading } from '../navigation/Heading';
 import { SidebarItem } from '../navigation/SidebarItem';
 
 type Props = {
@@ -14,17 +18,28 @@ type Props = {
 
 const items = [{
   href: '/admin',
-  text: 'Home'
+  text: 'Home',
+  icon: faTachometerAlt
 }, {
   href: '/admin/devices',
-  text: 'Apparaten'
+  text: 'Apparaten',
+  icon: faMobileAlt
 }, {
   href: '/admin/support',
-  text: 'Ondersteuning'
+  text: 'Ondersteuning',
+  icon: faLifeRing
+}, {
+  href: '/admin/users',
+  text: 'Gebruikers',
+  icon: faUser,
+  role: UserRole.ADMIN
 }];
 
 export function Sidebar({ children }: Props) {
   const { pathname } = useRouter();
+  const [{ role }] = useAuthentication();
+
+  const current = items.find(({ href }) => pathname === href)?.text;
 
   return (
     <StyledContainer>
@@ -32,14 +47,14 @@ export function Sidebar({ children }: Props) {
         <StyledBrand>
           <StyledLogo/>
         </StyledBrand>
-        {items.map(({ href, text }, i) => (
-          <SidebarItem key={i} href={href} text={text}/>
+        {items.filter((i) => !i.role || i.role === role).map(({ href, text, icon }) => (
+          <SidebarItem key={href} href={href} text={text} icon={icon}/>
         ))}
       </StyledSidebar>
       <StyledMain>
-        <StyledHeading>
-          {items.find(({ href }) => pathname === href)?.text ?? 'Onbekende pagina'}
-        </StyledHeading>
+        {current && (
+          <Heading text={current}/>
+        )}
         {children}
       </StyledMain>
     </StyledContainer>
@@ -99,22 +114,5 @@ const StyledMain = styled.main`
 
   ${withBreakpoint('tabletLandscape', css`
     padding-left: 3rem;
-  `)};
-`;
-
-const StyledHeading = styled.h1`
-  display: flex;
-  align-items: center;
-  height: 5rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-
-  ${withBreakpoint('tabletLandscape', css`
-    height: 7.5rem;
-  `)};
-
-  ${withBreakpoint('laptop', css`
-    height: 10rem;
-    font-size: 2rem;
   `)};
 `;

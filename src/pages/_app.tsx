@@ -2,6 +2,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { setContext } from '@apollo/client/link/context';
 import { css, Global } from '@emotion/react';
+import { config, dom } from '@fortawesome/fontawesome-svg-core';
 import { Dialoog, DialoogProvider } from 'dialoog';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -27,6 +28,8 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+config.autoAddCss = false;
+
 export default function App({ Component, pageProps }: AppProps) {
   const template = (Component as any).template ?? Sidebar;
 
@@ -39,6 +42,8 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <Global
         styles={css`
+          ${dom.css()};
+
           :root {
             ${generatePalette(0)};
 
@@ -68,8 +73,8 @@ export default function App({ Component, pageProps }: AppProps) {
           }
 
           body {
-            color: var(--grey-500);
-            background-color: var(--grey-0);
+            color: var(--gray-500);
+            background-color: var(--gray-0);
             font-family: "Open Sans", sans-serif;
             overflow-x: hidden;
             overflow-y: scroll;

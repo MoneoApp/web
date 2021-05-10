@@ -1,4 +1,4 @@
-import { objectType } from 'nexus';
+import { list, objectType } from 'nexus';
 
 import { ensure } from '../utils/ensure';
 
@@ -19,8 +19,8 @@ export const Interaction = objectType({
       }).overlay())
     });
 
-    t.list.field('blocks', {
-      type: 'ContentBlock',
+    t.field('blocks', {
+      type: list('ContentBlock'),
       resolve: ({ id }, args, { db }) => db.interaction.findUnique({
         where: { id }
       }).blocks()

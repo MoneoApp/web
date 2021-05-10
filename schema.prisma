@@ -8,14 +8,45 @@ generator client {
 }
 
 model User {
-  id       String @id @default(cuid())
-  email    String @unique
+  id       String   @id @default(cuid())
+  email    String   @unique
   password String
+  role     UserRole @default(USER)
+  devices  Device[]
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model Invite {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Device {
+  id       String     @id @default(cuid())
+  model    String
+  brand    String
+  image    String
+  type     DeviceType @default(STATIC)
+  userId   String
+  user     User       @relation(fields: [userId], references: [id])
+  overlays Overlay[]
+}
+
+enum DeviceType {
+  STATIC
+  DYNAMIC
 }
 
 model Overlay {
   id           String        @id @default(cuid())
   name         String
+  deviceId     String
+  device       Device        @relation(fields: [deviceId], references: [id])
   interactions Interaction[]
 }
 
