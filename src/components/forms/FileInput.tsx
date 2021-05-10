@@ -35,6 +35,7 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
 
   return (
     <StyledDrop
+      type="button"
       over={over}
       preview={preview}
       onDragOver={(event) => {
