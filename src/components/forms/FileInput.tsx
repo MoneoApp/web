@@ -5,7 +5,8 @@ import { ComponentPropsWithoutRef, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 type Props = {
-  name: string
+  name: string,
+  label: string
 };
 
 export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
@@ -54,21 +55,26 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
       }}
       onClick={() => ref.current?.click()}
     >
+      <StyledLabel htmlFor={props.name}>
+        {props.label}
+      </StyledLabel>
       <StyledInput
         ref={ref}
         type="file"
+        id={props.name}
         readOnly={isSubmitting}
         onChange={(event) => setFile(event.target.files)}
         {...props}
       />
-      <StyledLabel over={over} preview={preview !== undefined}>
+      <StyledHint over={over} preview={preview !== undefined}>
         Drop a file or click here
-      </StyledLabel>
+      </StyledHint>
     </StyledDrop>
   );
 }
 
 const StyledDrop = styled.button<{ over: boolean, preview?: string }>`
+  position: relative;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -99,11 +105,23 @@ const StyledDrop = styled.button<{ over: boolean, preview?: string }>`
   `};
 `;
 
+const StyledLabel = styled.label`
+  position: absolute;
+  top: .5rem;
+  left: .75rem;
+  color: var(--gray-300);
+  font-size: .75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 1;
+`;
+
 const StyledInput = styled.input`
   display: none;
 `;
 
-const StyledLabel = styled.span<{ over: boolean, preview: boolean }>`
+const StyledHint = styled.span<{ over: boolean, preview: boolean }>`
   padding: .75rem 1rem;
   color: var(--gray-300);
   background-color: var(--gray-100);

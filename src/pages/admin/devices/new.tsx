@@ -59,7 +59,7 @@ export default function NewDevice() {
           >
             <Input name="model" label="Model"/>
             <Input name="brand" label="Merk"/>
-            <FileInput name="image"/>
+            <FileInput name="image" label="Productafbeelding" accept="image/*"/>
             <BigRadio
               name="type"
               label="Detectietype"
