@@ -45,6 +45,7 @@ export const messages: Record<Error, string> = {
 };
 
 export const errors: Record<string, string> = {
+  string: 'Ongeldige invoer',
   email: 'Ongeldig e-mailadres',
   password: 'Ongeldig wachtwoord',
   invalidCredentials: 'Ongeldige inloggegevens',

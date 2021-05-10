@@ -12,6 +12,7 @@ import { FieldForm } from '../../../components/forms/FieldForm';
 import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
+import { Spinner } from '../../../components/Spinner';
 import { Table } from '../../../components/users/Table';
 import { roles } from '../../../constants';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
@@ -57,7 +58,7 @@ export default function Users() {
           </StyledButton>
         </Column>
       </Row>
-      {results && (
+      {results ? (
         <Table
           data={results}
           keyBy="id"
@@ -76,6 +77,8 @@ export default function Users() {
             }
           }}
         />
+      ) : (
+        <Spinner text="Gebruikers ophalen..."/>
       )}
     </>
   );

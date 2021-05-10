@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import { DeviceQuery, DeviceQueryVariables } from '../../../apollo/DeviceQuery';
 import { Heading } from '../../../components/navigation/Heading';
+import { Spinner } from '../../../components/Spinner';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 
 const query = gql`
@@ -26,7 +27,13 @@ export default function Device() {
   return (
     <>
       <Heading text="Apparaat"/>
-      {data?.device?.model}
+      {data?.device ? (
+        <div>
+          {data.device.model}
+        </div>
+      ) : (
+        <Spinner text="Apparaat ophalen..."/>
+      )}
     </>
   );
 }
