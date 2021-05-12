@@ -23,5 +23,6 @@ export interface NewDeviceMutation {
 export interface NewDeviceMutationVariables {
   model: string;
   brand: string;
+  image: any;
   type: DeviceType;
 }

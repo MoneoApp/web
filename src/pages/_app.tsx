@@ -1,8 +1,8 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
-import { BatchHttpLink } from '@apollo/client/link/batch-http';
 import { setContext } from '@apollo/client/link/context';
 import { css, Global } from '@emotion/react';
 import { config, dom } from '@fortawesome/fontawesome-svg-core';
+import { createUploadLink } from 'apollo-upload-client';
 import { Dialoog, DialoogProvider } from 'dialoog';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -22,7 +22,7 @@ const client = new ApolloClient({
         authorization: token ? `Bearer ${token}` : ''
       }
     };
-  }).concat(new BatchHttpLink({
+  }).concat(createUploadLink({
     uri: '/api'
   })),
   cache: new InMemoryCache()

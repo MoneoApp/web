@@ -12,7 +12,8 @@
     "start": "next start",
     "prepare": "prisma generate",
     "test": "tslint --project tsconfig.json && jest",
-    "migrate": "prisma migrate dev"
+    "migrate": "prisma migrate dev",
+    "preinstall": "npx npm-force-resolutions"
   },
   "dependencies": {
     "@apollo/client": "^3.3.16",
@@ -24,15 +25,18 @@
     "@hookform/resolvers": "^2.4.0",
     "@prisma/client": "^2.22.1",
     "apollo-server-micro": "^2.24.0",
+    "apollo-upload-client": "^14.1.3",
     "bcryptjs": "^2.4.3",
     "csshake": "^1.5.3",
     "dakpan": "^2.3.1",
     "date-fns": "^2.21.3",
     "dialoog": "^1.0.0",
+    "file-type": "^16.4.0",
     "fuse.js": "^6.4.6",
     "graphql-scalars": "^1.9.3",
     "jsonwebtoken": "^8.5.1",
     "micro": "^9.3.4",
+    "nanoid": "^3.1.23",
     "next": "^10.2.0",
     "nexus": "^1.0.0",
     "nodemailer": "^6.6.0",
@@ -49,6 +53,7 @@
     "@svgr/webpack": "^5.5.0",
     "@testing-library/react": "^11.2.6",
     "@testing-library/react-hooks": "^5.1.2",
+    "@types/apollo-upload-client": "^14.1.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/jest": "^26.0.23",
     "@types/jsonwebtoken": "^8.5.1",
@@ -67,6 +72,9 @@
     "tslint": "^6.1.3",
     "tslint-react": "^5.0.0",
     "typescript": "^4.2.4"
+  },
+  "resolutions": {
+    "fs-capacitor": "^6.2.0"
   },
   "jest": {
     "snapshotSerializers": [
