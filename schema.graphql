@@ -23,6 +23,7 @@ enum ContentBlockType {
 type Device {
   brand: String!
   id: ID!
+  image: String!
   model: String!
   overlays: [Overlay!]!
   user: User!

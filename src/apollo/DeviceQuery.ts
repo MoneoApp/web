@@ -24,6 +24,7 @@ export interface DeviceQuery_device {
   id: string;
   model: string;
   brand: string;
+  image: string;
   overlays: DeviceQuery_device_overlays[];
 }
 

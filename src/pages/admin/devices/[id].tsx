@@ -13,6 +13,7 @@ import { DeviceQuery, DeviceQueryVariables } from '../../../apollo/DeviceQuery';
 import { Confirm } from '../../../components/dialogs/Confirm';
 import { Button } from '../../../components/forms/Button';
 import { FieldForm } from '../../../components/forms/FieldForm';
+import { FileInput } from '../../../components/forms/FileInput';
 import { Form } from '../../../components/forms/Form';
 import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
@@ -31,6 +32,7 @@ const query = gql`
       id
       model
       brand
+      image
       overlays {
         id
         name
@@ -93,12 +95,14 @@ export default function Device() {
                 values={{
                   id: data.device.id,
                   model: data.device.model,
-                  brand: data.device.brand
+                  brand: data.device.brand,
+                  image: data.device.image
                 }}
                 onSubmit={(variables) => mutateUpdate({ variables })}
               >
                 <Input name="model" label="Model"/>
                 <Input name="brand" label="Merk"/>
+                <FileInput name="image" label="Productafbeelding" accept="image/*"/>
                 <StyledActions>
                   <Button
                     text="Verwijder"
