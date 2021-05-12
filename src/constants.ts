@@ -42,7 +42,7 @@ export const messages: Record<Error, string> = {
   [Error.Unauthorized]: 'Je mag deze actie niet uitvoeren',
   [Error.BadUserInput]: 'De ingevulde gegevens zijn ongeldig',
   [Error.InvalidInvite]: 'De uitnodiging is ongeldig',
-  [Error.InvalidFileType]: 'Ongeldige bestandstype'
+  [Error.InvalidFileType]: 'Ongeldig bestandstype'
 };
 
 export const errors: Record<string, string> = {
