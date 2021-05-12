@@ -4,8 +4,6 @@ import { extendType, nullable } from 'nexus';
 import { CreateDevice } from '../../../shared/structs/CreateDevice';
 import { UpdateDevice } from '../../../shared/structs/UpdateDevice';
 import { authorized } from '../../guards/authorized';
-import { current } from '../../guards/current';
-import { or } from '../../guards/or';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
 import { storeImage } from '../../utils/storeImage';
@@ -49,10 +47,10 @@ export const DeviceMutation = extendType({
         image: nullable('Upload')
       },
       authorize: guard(
-        or(current(), authorized(UserRole.ADMIN)),
+        authorized(),
         validated(UpdateDevice)
       ),
-      resolve: async (parent, { id, model, brand, image }, { db }) => {
+      resolve: async (parent, { id, model, brand, image }, { db, user }) => {
         const fileName = image ? await storeImage(image) : undefined;
 
         return await db.device.update({
@@ -72,7 +70,7 @@ export const DeviceMutation = extendType({
         id: 'ID'
       },
       authorize: guard(
-        or(current(), authorized(UserRole.ADMIN))
+        authorized(UserRole.ADMIN)
       ),
       resolve: async (parent, { id }, { db, user }) => {
         const transaction = await db.$transaction([

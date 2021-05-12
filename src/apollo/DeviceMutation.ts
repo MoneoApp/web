@@ -12,6 +12,7 @@ export interface DeviceMutation_updateDevice {
   id: string;
   model: string;
   brand: string;
+  image: string;
 }
 
 export interface DeviceMutation {
@@ -22,4 +23,5 @@ export interface DeviceMutationVariables {
   id: string;
   model: string;
   brand: string;
+  image?: any | null;
 }
