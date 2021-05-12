@@ -1,6 +1,10 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDialoog } from 'dialoog';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { DeleteDeviceMutation, DeleteDeviceMutationVariables } from '../../../apollo/DeleteDeviceMutation';
@@ -8,14 +12,18 @@ import { DeviceMutation, DeviceMutationVariables } from '../../../apollo/DeviceM
 import { DeviceQuery, DeviceQueryVariables } from '../../../apollo/DeviceQuery';
 import { Confirm } from '../../../components/dialogs/Confirm';
 import { Button } from '../../../components/forms/Button';
+import { FieldForm } from '../../../components/forms/FieldForm';
 import { Form } from '../../../components/forms/Form';
 import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
 import { Heading } from '../../../components/navigation/Heading';
 import { Spinner } from '../../../components/Spinner';
+import { Table } from '../../../components/users/Table';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 import { useNotify } from '../../../hooks/useNotify';
+import { useSearch } from '../../../hooks/useSearch';
+import { withBreakpoint } from '../../../utils/withBreakpoint';
 
 const query = gql`
   query DeviceQuery($id: ID!) {
@@ -23,6 +31,13 @@ const query = gql`
       id
       model
       brand
+      overlays {
+        id
+        name
+        interactions {
+          id
+        }
+      }
     }
   }
 `;
@@ -65,6 +80,7 @@ export default function Device() {
       }
     })
   });
+  const [results, setSearch] = useSearch(data?.device?.overlays, ['name']);
 
   return (
     <>
@@ -103,6 +119,36 @@ export default function Device() {
               </Form>
             </Column>
           </Row>
+          <Row spacing={{ phone: 1 }}>
+            <Column sizes={{ phone: 9 }}>
+              <FieldForm name="search" onChange={setSearch}>
+                <Input name="search" label="Zoeken"/>
+              </FieldForm>
+            </Column>
+            <Column sizes={{ phone: 3 }}>
+              <Link href="/admin/overlays/new" passHref={true}>
+                <StyledButton as="a" text="Nieuw">
+                  <StyledButtonText>
+                    Nieuw
+                  </StyledButtonText>
+                  <FontAwesomeIcon icon={faPlus}/>
+                </StyledButton>
+              </Link>
+            </Column>
+          </Row>
+          <Table
+            data={results ?? []}
+            keyBy="id"
+            href={(value) => `/admin/overlays/${value.id}`}
+            columns={{
+              name: { title: 'Naam' },
+              interactions: {
+                title: 'Stappen',
+                size: '7.5rem',
+                render: (value) => value.length
+              }
+            }}
+          />
         </>
       ) : (
         <Spinner text="Apparaat ophalen..."/>
@@ -121,3 +167,15 @@ const StyledActions = styled.div`
   }
 `;
 
+const StyledButton = styled(Button)`
+  height: calc(100% - 1rem);
+`;
+
+const StyledButtonText = styled.span`
+  display: none;
+  margin-right: .5rem;
+
+  ${withBreakpoint('tabletLandscape', css`
+    display: inline-block;
+  `)};
+`;

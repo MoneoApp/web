@@ -71,6 +71,7 @@ type Overlay {
 type Query {
   device(id: ID!): Device
   devices: [Device!]!
+  overlay(id: ID!): Overlay
   overlays: [Overlay!]!
   user(id: ID!): User
   users: [User!]!

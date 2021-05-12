@@ -7,11 +7,24 @@
 // GraphQL query operation: DeviceQuery
 // ====================================================
 
+export interface DeviceQuery_device_overlays_interactions {
+  __typename: "Interaction";
+  id: string;
+}
+
+export interface DeviceQuery_device_overlays {
+  __typename: "Overlay";
+  id: string;
+  name: string;
+  interactions: DeviceQuery_device_overlays_interactions[];
+}
+
 export interface DeviceQuery_device {
   __typename: "Device";
   id: string;
   model: string;
   brand: string;
+  overlays: DeviceQuery_device_overlays[];
 }
 
 export interface DeviceQuery {
