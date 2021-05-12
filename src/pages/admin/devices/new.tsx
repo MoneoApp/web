@@ -17,8 +17,8 @@ import { Heading } from '../../../components/navigation/Heading';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 
 const mutation = gql`
-  mutation NewDeviceMutation($model: String!, $brand: String!, $type: DeviceType!) {
-    createDevice(model: $model, brand: $brand, type: $type) {
+  mutation NewDeviceMutation($model: String!, $brand: String!, $image: Upload!, $type: DeviceType!) {
+    createDevice(model: $model, brand: $brand, image: $image, type: $type) {
       id
       model
       brand
@@ -49,10 +49,11 @@ export default function NewDevice() {
         <Column sizes={{ phone: 12, laptop: 6 }}>
           <Form
             struct={CreateDevice}
-            onSubmit={({ model, brand, type }) => mutate({
+            onSubmit={({ model, brand, image, type }) => mutate({
               variables: {
                 model,
                 brand,
+                image,
                 type: type as DeviceType
               }
             })}

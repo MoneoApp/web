@@ -41,7 +41,8 @@ export const messages: Record<Error, string> = {
   [Error.Unknown]: 'Oops, er is iets mis gegaan',
   [Error.Unauthorized]: 'Je mag deze actie niet uitvoeren',
   [Error.BadUserInput]: 'De ingevulde gegevens zijn ongeldig',
-  [Error.InvalidInvite]: 'De uitnodiging is ongeldig'
+  [Error.InvalidInvite]: 'De uitnodiging is ongeldig',
+  [Error.InvalidFileType]: 'Ongeldige bestandstype'
 };
 
 export const errors: Record<string, string> = {
