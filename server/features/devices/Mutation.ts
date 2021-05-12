@@ -1,5 +1,5 @@
 import { UserRole } from '@prisma/client';
-import { extendType } from 'nexus';
+import { extendType, nullable } from 'nexus';
 
 import { CreateDevice } from '../../../shared/structs/CreateDevice';
 import { UpdateDevice } from '../../../shared/structs/UpdateDevice';
@@ -35,7 +35,7 @@ export const DeviceMutation = extendType({
     });
 
     t.field('updateDevice', {
-      type: 'Device',
+      type: nullable('Device'),
       args: {
         id: 'ID',
         model: 'String',
@@ -52,6 +52,34 @@ export const DeviceMutation = extendType({
           brand
         }
       })
+    });
+
+    t.field('deleteDevice', {
+      type: nullable('Device'),
+      args: {
+        id: 'ID'
+      },
+      authorize: guard(
+        or(current(), authorized(UserRole.ADMIN))
+      ),
+      resolve: async (parent, { id }, { db, user }) => {
+        const transaction = await db.$transaction([
+          db.contentBlock.deleteMany({
+            where: { interaction: { overlay: { device: { id } } } }
+          }),
+          db.interaction.deleteMany({
+            where: { overlay: { device: { id } } }
+          }),
+          db.overlay.deleteMany({
+            where: { device: { id } }
+          }),
+          db.device.delete({
+            where: { id }
+          })
+        ]);
+
+        return transaction[3];
+      }
     });
   }
 });

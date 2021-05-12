@@ -53,10 +53,11 @@ type Mutation {
   createDevice(brand: String!, model: String!, type: DeviceType!): Device!
   createOverlay(deviceId: ID!, name: String!): Overlay!
   createUser(inviteId: ID!, password: String!): User!
+  deleteDevice(id: ID!): Device
   deleteUser(id: ID!): User
   inviteUser(email: String!): Boolean!
   login(email: String!, password: String!): Authentication!
-  updateDevice(brand: String!, id: ID!, model: String!): Device!
+  updateDevice(brand: String!, id: ID!, model: String!): Device
   updateUser(email: String!, id: ID!, role: UserRole!): User
 }
 
