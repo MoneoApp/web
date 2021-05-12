@@ -7,6 +7,7 @@ import { useDialoog } from 'dialoog';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { UpdateDevice } from '../../../../shared/structs/UpdateDevice';
 import { DeleteDeviceMutation, DeleteDeviceMutationVariables } from '../../../apollo/DeleteDeviceMutation';
 import { DeviceMutation, DeviceMutationVariables } from '../../../apollo/DeviceMutation';
 import { DeviceQuery, DeviceQueryVariables } from '../../../apollo/DeviceQuery';
@@ -24,6 +25,7 @@ import { Table } from '../../../components/users/Table';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 import { useNotify } from '../../../hooks/useNotify';
 import { useSearch } from '../../../hooks/useSearch';
+import { getUploadUrl } from '../../../utils/getUploadUrl';
 import { withBreakpoint } from '../../../utils/withBreakpoint';
 
 const query = gql`
@@ -45,11 +47,12 @@ const query = gql`
 `;
 
 const updateMutation = gql`
-  mutation DeviceMutation($id: ID!, $model: String!, $brand: String!) {
-    updateDevice(id: $id, model: $model, brand: $brand) {
+  mutation DeviceMutation($id: ID!, $model: String!, $brand: String!, $image: Upload) {
+    updateDevice(id: $id, model: $model, brand: $brand, image: $image) {
       id
       model
       brand
+      image
     }
   }
 `;
@@ -92,17 +95,22 @@ export default function Device() {
           <Row>
             <Column sizes={{ phone: 12, laptop: 6 }}>
               <Form
+                struct={UpdateDevice}
                 values={{
                   id: data.device.id,
                   model: data.device.model,
-                  brand: data.device.brand,
-                  image: data.device.image
+                  brand: data.device.brand
                 }}
                 onSubmit={(variables) => mutateUpdate({ variables })}
               >
                 <Input name="model" label="Model"/>
                 <Input name="brand" label="Merk"/>
-                <FileInput name="image" label="Productafbeelding" accept="image/*"/>
+                <FileInput
+                  name="image"
+                  label="Productafbeelding"
+                  accept="image/*"
+                  default={getUploadUrl(data.device.image)}
+                />
                 <StyledActions>
                   <Button
                     text="Verwijder"

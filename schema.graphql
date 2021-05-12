@@ -58,7 +58,7 @@ type Mutation {
   deleteUser(id: ID!): User
   inviteUser(email: String!): Boolean!
   login(email: String!, password: String!): Authentication!
-  updateDevice(brand: String!, id: ID!, model: String!): Device
+  updateDevice(brand: String!, id: ID!, image: Upload, model: String!): Device
   updateUser(email: String!, id: ID!, role: UserRole!): User
 }
 

@@ -6,7 +6,8 @@ import { useFormContext } from 'react-hook-form';
 
 type Props = {
   name: string,
-  label: string
+  label: string,
+  default?: string
 };
 
 export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
@@ -38,7 +39,7 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
     <StyledDrop
       type="button"
       over={over}
-      preview={preview}
+      preview={preview ?? props.default}
       onDragOver={(event) => {
         event.preventDefault();
         setOver(event.dataTransfer.types.some((t) => t === 'Files'));
