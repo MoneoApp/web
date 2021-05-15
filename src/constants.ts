@@ -1,7 +1,11 @@
+import { ComponentType } from 'react';
+
 import { Error } from '../shared/constants';
 
 import { UserRole } from './apollo/globalTypes';
-import { Breakpoint, Color, Shade } from './types';
+import { SquareShape } from './components/editor/shapes/SquareShape';
+import { Breakpoint, Color, Shade, ShapeConfig } from './types';
+import { CircleShape } from './components/editor/shapes/CircleShape';
 
 export const breakpoints: Record<Breakpoint, number> = {
   phone: 0,
@@ -56,4 +60,14 @@ export const errors: Record<string, string> = {
 export const roles: Record<UserRole, string> = {
   USER: 'Gebruiker',
   ADMIN: 'Beheerder'
+};
+
+export enum InteractionType {
+  SQUARE = 'SQUARE',
+  CIRCLE = 'CIRCLE'
+}
+
+export const shapes: Record<InteractionType, ComponentType<ShapeConfig>> = {
+  [InteractionType.SQUARE]: SquareShape,
+  [InteractionType.CIRCLE]: CircleShape
 };

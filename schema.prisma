@@ -52,14 +52,21 @@ model Overlay {
 
 model Interaction {
   id        String         @id @default(cuid())
+  type      InteractionType
   x         Float
   y         Float
   width     Float
   height    Float
-  text      String
+  rotation  Float
+  title     String
   overlay   Overlay        @relation(fields: [overlayId], references: [id])
   overlayId String
   blocks    ContentBlock[]
+}
+
+enum InteractionType {
+  SQUARE
+  CIRCLE
 }
 
 model ContentBlock {

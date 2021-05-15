@@ -1,3 +1,4 @@
+import { Editor } from '../../../components/editor/Editor';
 import { Heading } from '../../../components/navigation/Heading';
 
 export default function NewOverlay() {
@@ -5,6 +6,7 @@ export default function NewOverlay() {
     <>
       <Heading text="Nieuwe handleiding"/>
       <h1>Nieuwe handleiding</h1>
+      <Editor/>
     </>
   )
 }

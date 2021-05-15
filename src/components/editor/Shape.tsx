@@ -1,0 +1,82 @@
+import Konva from 'konva';
+import React, { ComponentType, createElement, useEffect, useRef } from 'react';
+import { Group, Transformer } from 'react-konva';
+
+import { shapes } from '../../constants';
+import { ShapeConfig } from '../../types';
+
+type Props = {
+  config: ShapeConfig,
+  setConfig: (box: ShapeConfig) => void,
+  selected: boolean,
+  setSelected: () => void
+};
+
+export function Shape({ config, setConfig, selected, setSelected }: Props) {
+  const ref = useRef<Konva.Group>(null);
+  const transformerRef = useRef<Konva.Transformer>(null);
+
+  useEffect(() => {
+    if (selected && ref.current && transformerRef.current) {
+      transformerRef.current.moveToTop();
+      transformerRef.current.nodes([ref.current]);
+    }
+  }, [selected]);
+
+  return (
+    <>
+      <Group
+        ref={ref}
+        x={config.x}
+        y={config.y}
+        rotation={config.rotation}
+        draggable={true}
+        onMouseDown={setSelected}
+        onTransform={({ target }) => {
+          const stage = target.getStage();
+
+          if (!stage) {
+            return;
+          }
+
+          const { width, height } = target.getChildren()[0].size();
+          const scale = target.scale();
+          const position = target.position();
+
+          const size = {
+            width: width * scale.x,
+            height: height * scale.y
+          };
+
+          target.scale({ x: 1, y: 1 });
+
+          setConfig({
+            ...config,
+            ...position,
+            ...size,
+            rotation: target.rotation()
+          });
+        }}
+        onDragMove={({ target }) => {
+          const position = target.position();
+
+          setConfig({
+            ...config,
+            ...position
+          });
+        }}
+      >
+        {createElement(shapes[config.type] as ComponentType<ShapeConfig>, config)}
+      </Group>
+      {selected && (
+        <Transformer
+          ref={transformerRef}
+          keepRatio={false}
+          rotateAnchorOffset={32}
+          rotationSnaps={[0, 45, 90, 135, 180, 225, 270, 315]}
+          enabledAnchors={['bottom-right']}
+        />
+      )}
+    </>
+  );
+}

@@ -17,7 +17,7 @@ const query = gql`
   }
 `;
 
-export default function Device() {
+export default function Overlay() {
   const skip = useAuthGuard();
   const { query: { id } } = useRouter();
   const { data } = useQuery<OverlayQuery, OverlayQueryVariables>(query, {
@@ -37,7 +37,7 @@ export default function Device() {
           </Row>
         </>
       ) : (
-        <Spinner text="Apparaat ophalen..."/>
+        <Spinner text="Handleiding ophalen..."/>
       )}
     </>
   );
