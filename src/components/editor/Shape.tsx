@@ -9,10 +9,11 @@ type Props = {
   config: ShapeConfig,
   setConfig: (box: ShapeConfig) => void,
   selected: boolean,
-  setSelected: () => void
+  setSelected: () => void,
+  openSettings: () => void
 };
 
-export function Shape({ config, setConfig, selected, setSelected }: Props) {
+export function Shape({ config, setConfig, selected, setSelected, openSettings }: Props) {
   const ref = useRef<Konva.Group>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
@@ -65,6 +66,7 @@ export function Shape({ config, setConfig, selected, setSelected }: Props) {
             ...position
           });
         }}
+        onDblClick={openSettings}
       >
         {createElement(shapes[config.type] as ComponentType<ShapeConfig>, config)}
       </Group>

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useDialoog } from 'dialoog';
 import Konva from 'konva';
 import dynamic from 'next/dynamic';
 import { useRef, useState } from 'react';
@@ -13,6 +14,7 @@ import { Button } from '../forms/Button';
 
 import { Shape } from './Shape';
 import { Toolbox } from './Toolbox';
+import { ShapeSettings } from '../dialogs/ShapeSettings';
 
 type Props = {
   image: string
@@ -24,6 +26,7 @@ function EditorInternal({ image }: Props) {
   const [wrapperRef, rect] = useResizeObserver();
   const [shapes, setShapes] = useState<ShapeConfig[]>([]);
   const [selected, setSelected] = useState<string>();
+  const [, { open }] = useDialoog();
 
   const isBackground = (e: Konva.KonvaEventObject<any>) => e.target === e.target.getStage() || e.target.getLayer()?.name() === 'background';
 
@@ -68,25 +71,6 @@ function EditorInternal({ image }: Props) {
           height={rect.height}
           draggable={true}
           onClick={(e) => isBackground(e) && setSelected(undefined)}
-          onDblClick={(e) => {
-            const pos = getPointerPosition(e.target);
-
-            if (!pos || !isBackground(e)) {
-              return;
-            }
-
-            const type = InteractionType.CIRCLE;
-
-            setShapes([...shapes, {
-              id: `${type}-${Date.now()}`,
-              type,
-              x: pos.x,
-              y: pos.y,
-              width: 32,
-              height: 32,
-              rotation: 0
-            }]);
-          }}
           onWheel={(e) => {
             const stage = e.target.getStage();
             const oldScale = stage?.scaleX();
@@ -128,6 +112,9 @@ function EditorInternal({ image }: Props) {
                   setConfig={setConfig}
                   selected={selected === config.id}
                   setSelected={() => setSelected(config.id)}
+                  openSettings={() => open((props) => (
+                    <ShapeSettings shape={config} {...props}/>
+                  ))}
                 />
               );
             })}
