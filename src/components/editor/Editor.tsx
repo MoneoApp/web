@@ -10,11 +10,11 @@ import { InteractionType } from '../../constants';
 import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { ShapeConfig } from '../../types';
 import { getPointerPosition } from '../../utils/getPointerPosition';
+import { ShapeSettings } from '../dialogs/ShapeSettings';
 import { Button } from '../forms/Button';
 
 import { Shape } from './Shape';
 import { Toolbox } from './Toolbox';
-import { ShapeSettings } from '../dialogs/ShapeSettings';
 
 type Props = {
   image: string
