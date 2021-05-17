@@ -20,6 +20,7 @@ function EditorInternal() {
         <Stage
           width={rect.width}
           height={rect.height}
+          draggable={true}
           onClick={(e) => e.target === e.target.getStage() && setSelected(undefined)}
           onDblClick={({ target }) => {
             const stage = target.getStage();
@@ -65,7 +66,7 @@ function EditorInternal() {
 
 const StyledWrapper = styled.div`
   height: 32rem;
-  background-color: yellow;
+  background-color: var(--gray-100);
 `;
 
 export const Editor = dynamic(() => Promise.resolve(EditorInternal), {

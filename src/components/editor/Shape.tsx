@@ -75,6 +75,23 @@ export function Shape({ config, setConfig, selected, setSelected }: Props) {
           rotateAnchorOffset={32}
           rotationSnaps={[0, 45, 90, 135, 180, 225, 270, 315]}
           enabledAnchors={['bottom-right']}
+          anchorStrokeWidth={0}
+          borderStroke="#707070"
+          anchorFill="#ffba05"
+          boundBoxFunc={(previous, next) => {
+            const moved = previous.x !== next.x || previous.y !== next.y;
+            const rotated = previous.rotation !== next.rotation;
+
+            if (moved && !rotated) {
+              return previous;
+            }
+
+            return {
+              ...next,
+              width: Math.max(16, next.width),
+              height: Math.max(16, next.height)
+            };
+          }}
         />
       )}
     </>
