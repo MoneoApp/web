@@ -81,7 +81,8 @@ function EditorInternal({ image }: Props) {
             }
 
             const scaleBy = 1.05;
-            const newScale = e.evt.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
+            const scrolledScale = e.evt.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
+            const newScale = Math.max(0.5, Math.min(scrolledScale, 2.5));
             const mousePointTo = {
               x: (pointer.x - stage.x()) / oldScale,
               y: (pointer.y - stage.y()) / oldScale
