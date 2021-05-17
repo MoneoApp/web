@@ -22,7 +22,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
-    "@hookform/resolvers": "^2.5.0",
+    "@hookform/resolvers": "^2.5.1",
     "@prisma/client": "^2.22.1",
     "apollo-server-micro": "^2.24.0",
     "apollo-upload-client": "^15.0.0",
@@ -47,6 +47,7 @@
     "react-hook-form": "^7.6.0",
     "react-konva": "^17.0.2-0",
     "superstruct": "^0.15.2",
+    "use-image": "^1.0.7",
     "validator": "^13.6.0"
   },
   "devDependencies": {

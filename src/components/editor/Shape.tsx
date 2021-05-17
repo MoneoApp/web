@@ -77,6 +77,7 @@ export function Shape({ config, setConfig, selected, setSelected }: Props) {
           enabledAnchors={['bottom-right']}
           anchorStrokeWidth={0}
           borderStroke="#707070"
+          ignoreStroke={true}
           anchorFill="#ffba05"
           boundBoxFunc={(previous, next) => {
             const moved = previous.x !== next.x || previous.y !== next.y;
