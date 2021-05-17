@@ -1,3 +1,4 @@
+import { faCircle, faSquare, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { ComponentType } from 'react';
 
 import { Error } from '../shared/constants';
@@ -70,4 +71,9 @@ export enum InteractionType {
 export const shapes: Record<InteractionType, ComponentType<ShapeConfig>> = {
   [InteractionType.SQUARE]: SquareShape,
   [InteractionType.CIRCLE]: CircleShape
+};
+
+export const shapeIcons: Record<InteractionType, IconDefinition> = {
+  [InteractionType.SQUARE]: faSquare,
+  [InteractionType.CIRCLE]: faCircle
 };

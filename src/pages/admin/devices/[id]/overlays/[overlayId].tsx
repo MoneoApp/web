@@ -1,12 +1,12 @@
 import { gql, useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 
-import { OverlayQuery, OverlayQueryVariables } from '../../../apollo/OverlayQuery';
-import { Column } from '../../../components/layout/Column';
-import { Row } from '../../../components/layout/Row';
-import { Heading } from '../../../components/navigation/Heading';
-import { Spinner } from '../../../components/Spinner';
-import { useAuthGuard } from '../../../hooks/useAuthGuard';
+import { OverlayQuery, OverlayQueryVariables } from '../../../../../apollo/OverlayQuery';
+import { Column } from '../../../../../components/layout/Column';
+import { Row } from '../../../../../components/layout/Row';
+import { Heading } from '../../../../../components/navigation/Heading';
+import { Spinner } from '../../../../../components/Spinner';
+import { useAuthGuard } from '../../../../../hooks/useAuthGuard';
 
 const query = gql`
   query OverlayQuery($id: ID!) {

@@ -1,5 +1,5 @@
-import { Editor } from '../../../components/editor/Editor';
-import { Heading } from '../../../components/navigation/Heading';
+import { Editor } from '../../../../../components/editor/Editor';
+import { Heading } from '../../../../../components/navigation/Heading';
 
 export default function NewOverlay() {
   return (

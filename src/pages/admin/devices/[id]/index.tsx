@@ -7,26 +7,26 @@ import { useDialoog } from 'dialoog';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { UpdateDevice } from '../../../../shared/structs/UpdateDevice';
-import { DeleteDeviceMutation, DeleteDeviceMutationVariables } from '../../../apollo/DeleteDeviceMutation';
-import { DeviceMutation, DeviceMutationVariables } from '../../../apollo/DeviceMutation';
-import { DeviceQuery, DeviceQueryVariables } from '../../../apollo/DeviceQuery';
-import { Confirm } from '../../../components/dialogs/Confirm';
-import { Button } from '../../../components/forms/Button';
-import { FieldForm } from '../../../components/forms/FieldForm';
-import { FileInput } from '../../../components/forms/FileInput';
-import { Form } from '../../../components/forms/Form';
-import { Input } from '../../../components/forms/Input';
-import { Column } from '../../../components/layout/Column';
-import { Row } from '../../../components/layout/Row';
-import { Heading } from '../../../components/navigation/Heading';
-import { Spinner } from '../../../components/Spinner';
-import { Table } from '../../../components/users/Table';
-import { useAuthGuard } from '../../../hooks/useAuthGuard';
-import { useNotify } from '../../../hooks/useNotify';
-import { useSearch } from '../../../hooks/useSearch';
-import { getUploadUrl } from '../../../utils/getUploadUrl';
-import { withBreakpoint } from '../../../utils/withBreakpoint';
+import { UpdateDevice } from '../../../../../shared/structs/UpdateDevice';
+import { DeleteDeviceMutation, DeleteDeviceMutationVariables } from '../../../../apollo/DeleteDeviceMutation';
+import { DeviceMutation, DeviceMutationVariables } from '../../../../apollo/DeviceMutation';
+import { DeviceQuery, DeviceQueryVariables } from '../../../../apollo/DeviceQuery';
+import { Confirm } from '../../../../components/dialogs/Confirm';
+import { Button } from '../../../../components/forms/Button';
+import { FieldForm } from '../../../../components/forms/FieldForm';
+import { FileInput } from '../../../../components/forms/FileInput';
+import { Form } from '../../../../components/forms/Form';
+import { Input } from '../../../../components/forms/Input';
+import { Column } from '../../../../components/layout/Column';
+import { Row } from '../../../../components/layout/Row';
+import { Heading } from '../../../../components/navigation/Heading';
+import { Spinner } from '../../../../components/Spinner';
+import { Table } from '../../../../components/users/Table';
+import { useAuthGuard } from '../../../../hooks/useAuthGuard';
+import { useNotify } from '../../../../hooks/useNotify';
+import { useSearch } from '../../../../hooks/useSearch';
+import { getUploadUrl } from '../../../../utils/getUploadUrl';
+import { withBreakpoint } from '../../../../utils/withBreakpoint';
 
 const query = gql`
   query DeviceQuery($id: ID!) {
@@ -138,7 +138,7 @@ export default function Device() {
               </FieldForm>
             </Column>
             <Column sizes={{ phone: 3 }}>
-              <Link href="/admin/overlays/new" passHref={true}>
+              <Link href={`/admin/devices/${id}/overlays/new`} passHref={true}>
                 <StyledButton as="a" text="Nieuw">
                   <StyledButtonText>
                     Nieuw
@@ -151,7 +151,7 @@ export default function Device() {
           <Table
             data={results ?? []}
             keyBy="id"
-            href={(value) => `/admin/overlays/${value.id}`}
+            href={(value) => `/admin/devices/${id}/overlays/${value.id}`}
             columns={{
               name: { title: 'Naam' },
               interactions: {

@@ -74,7 +74,7 @@ export function Shape({ config, setConfig, selected, setSelected }: Props) {
           keepRatio={false}
           rotateAnchorOffset={32}
           rotationSnaps={[0, 45, 90, 135, 180, 225, 270, 315]}
-          enabledAnchors={['bottom-right']}
+          enabledAnchors={['middle-right', 'bottom-right', 'bottom-center']}
           anchorStrokeWidth={0}
           borderStroke="#707070"
           ignoreStroke={true}

@@ -9,6 +9,8 @@ export function CircleShape({ width, height }: ShapeConfig) {
       opacity={.5}
       width={width}
       height={height}
+      stroke="white"
+      strokeWidth={1}
       cornerRadius={Math.max(width, height)}
     />
   )

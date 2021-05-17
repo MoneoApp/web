@@ -9,8 +9,8 @@ export function SquareShape({ width, height }: ShapeConfig) {
       opacity={.5}
       width={width}
       height={height}
-      strokeWidth={1}
       stroke="white"
+      strokeWidth={1}
     />
   )
 }
