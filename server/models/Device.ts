@@ -17,11 +17,18 @@ export const Device = objectType({
       }).user())
     });
 
-    t.field('overlays', {
-      type: list('Overlay'),
+    t.field('interactions', {
+      type: list('Interaction'),
       resolve: ({ id }, args, { db }) => db.device.findUnique({
         where: { id }
-      }).overlays()
+      }).interactions()
+    });
+
+    t.field('manuals', {
+      type: list('Manual'),
+      resolve: ({ id }, args, { db }) => db.device.findUnique({
+        where: { id }
+      }).manuals()
     });
   }
 });

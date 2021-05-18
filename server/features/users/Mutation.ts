@@ -139,13 +139,13 @@ export const UserMutation = extendType({
       ),
       resolve: async (parent, { id }, { db }) => {
         const transaction = await db.$transaction([
-          db.contentBlock.deleteMany({
-            where: { interaction: { overlay: { device: { user: { id } } } } }
+          db.manualStep.deleteMany({
+            where: { manual: { device: { user: { id } } } }
+          }),
+          db.manual.deleteMany({
+            where: { device: { user: { id } } }
           }),
           db.interaction.deleteMany({
-            where: { overlay: { device: { user: { id } } } }
-          }),
-          db.overlay.deleteMany({
             where: { device: { user: { id } } }
           }),
           db.device.deleteMany({

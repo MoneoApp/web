@@ -27,14 +27,15 @@ model Invite {
 }
 
 model Device {
-  id       String     @id @default(cuid())
-  model    String
-  brand    String
-  image    String
-  type     DeviceType @default(STATIC)
-  userId   String
-  user     User       @relation(fields: [userId], references: [id])
-  overlays Overlay[]
+  id           String        @id @default(cuid())
+  model        String
+  brand        String
+  image        String
+  type         DeviceType    @default(STATIC)
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  interactions Interaction[]
+  manuals      Manual[]
 }
 
 enum DeviceType {
@@ -42,26 +43,19 @@ enum DeviceType {
   DYNAMIC
 }
 
-model Overlay {
-  id           String        @id @default(cuid())
-  name         String
-  deviceId     String
-  device       Device        @relation(fields: [deviceId], references: [id])
-  interactions Interaction[]
-}
-
 model Interaction {
-  id        String         @id @default(cuid())
-  type      InteractionType
-  x         Float
-  y         Float
-  width     Float
-  height    Float
-  rotation  Float
-  title     String
-  overlay   Overlay        @relation(fields: [overlayId], references: [id])
-  overlayId String
-  blocks    ContentBlock[]
+  id          String          @id @default(cuid())
+  type        InteractionType
+  x           Float
+  y           Float
+  width       Float
+  height      Float
+  rotation    Float
+  title       String
+  description String
+  deviceId    String
+  device      Device          @relation(fields: [deviceId], references: [id])
+  steps       ManualStep[]
 }
 
 enum InteractionType {
@@ -69,16 +63,18 @@ enum InteractionType {
   CIRCLE
 }
 
-model ContentBlock {
-  id            String           @id @default(cuid())
-  type          ContentBlockType
-  data          Json
-  interaction   Interaction      @relation(fields: [interactionId], references: [id])
-  interactionId String
+model Manual {
+  id       String       @id @default(cuid())
+  title    String
+  steps    ManualStep[]
+  deviceId String
+  device   Device       @relation(fields: [deviceId], references: [id])
 }
 
-enum ContentBlockType {
-  TEXT
-  LIST
-  IMAGE
+model ManualStep {
+  id           String        @id @default(cuid())
+  text         String
+  manualId     String
+  manual       Manual        @relation(fields: [manualId], references: [id])
+  interactions Interaction[]
 }

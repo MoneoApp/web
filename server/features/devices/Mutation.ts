@@ -74,13 +74,13 @@ export const DeviceMutation = extendType({
       ),
       resolve: async (parent, { id }, { db, user }) => {
         const transaction = await db.$transaction([
-          db.contentBlock.deleteMany({
-            where: { interaction: { overlay: { device: { id } } } }
+          db.manualStep.deleteMany({
+            where: { manual: { device: { id } } }
+          }),
+          db.manual.deleteMany({
+            where: { device: { id } }
           }),
           db.interaction.deleteMany({
-            where: { overlay: { device: { id } } }
-          }),
-          db.overlay.deleteMany({
             where: { device: { id } }
           }),
           db.device.delete({
