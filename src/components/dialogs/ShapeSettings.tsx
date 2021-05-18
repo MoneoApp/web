@@ -11,12 +11,13 @@ import { Input } from '../forms/Input';
 type Props = {
   shape: ShapeConfig,
   onDelete: () => void
+  onCreate: ({title, description}: { title: string, description: string }) => void
 };
 
-export function ShapeSettings({ shape, onDelete, ...props }: Props & DialoogProps) {
+export function ShapeSettings({ shape, onDelete, onCreate, ...props }: Props & DialoogProps) {
   return (
     <Dialog strict={true} {...props}>
-      <Form struct={CreateInteraction} onSubmit={console.log}>
+      <Form struct={CreateInteraction} onSubmit={onCreate}>
         <Input name="title" label="Titel"/>
         <Input name="description" label="Beschrijving"/>
         <StyledActions>
