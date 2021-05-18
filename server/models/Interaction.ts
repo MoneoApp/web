@@ -6,6 +6,7 @@ export const Interaction = objectType({
   name: 'Interaction',
   definition: (t) => {
     t.id('id');
+    t.field('type', { type: 'InteractionType' });
     t.float('x');
     t.float('y');
     t.float('width');

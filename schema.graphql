@@ -28,9 +28,15 @@ type Interaction {
   height: Float!
   id: ID!
   title: String!
+  type: InteractionType!
   width: Float!
   x: Float!
   y: Float!
+}
+
+enum InteractionType {
+  CIRCLE
+  SQUARE
 }
 
 """
