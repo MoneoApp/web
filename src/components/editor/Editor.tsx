@@ -6,7 +6,7 @@ import { useRef, useState } from 'react';
 import { Image, Layer, Stage } from 'react-konva';
 import useImage from 'use-image';
 
-import { InteractionType } from '../../constants';
+import { InteractionType } from '../../apollo/globalTypes';
 import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { ShapeConfig } from '../../types';
 import { getPointerPosition } from '../../utils/getPointerPosition';
@@ -29,6 +29,16 @@ function EditorInternal({ image }: Props) {
   const [, { open }] = useDialoog();
 
   const isBackground = (e: Konva.KonvaEventObject<any>) => e.target === e.target.getStage() || e.target.getLayer()?.name() === 'background';
+  const openSettings = (config: ShapeConfig) => open.c((props) => (
+    <ShapeSettings
+      shape={config}
+      onDelete={() => {
+        setShapes(shapes.filter((s) => s.id !== config.id));
+        props.close();
+      }}
+      {...props}
+    />
+  ), { strict: true });
 
   return (
     <StyledWrapper
@@ -52,8 +62,7 @@ function EditorInternal({ image }: Props) {
         }
 
         const type = e.dataTransfer.getData('type') as InteractionType;
-
-        setShapes([...shapes, {
+        const shape = {
           id: `${type}-${Date.now()}`,
           type,
           x: pos.x - 16,
@@ -61,7 +70,10 @@ function EditorInternal({ image }: Props) {
           width: 32,
           height: 32,
           rotation: 0
-        }]);
+        };
+
+        setShapes([...shapes, shape]);
+        openSettings(shape)();
       }}
     >
       {rect && (
@@ -113,9 +125,7 @@ function EditorInternal({ image }: Props) {
                   setConfig={setConfig}
                   selected={selected === config.id}
                   setSelected={() => setSelected(config.id)}
-                  openSettings={() => open((props) => (
-                    <ShapeSettings shape={config} {...props}/>
-                  ))}
+                  openSettings={openSettings(config)}
                 />
               );
             })}

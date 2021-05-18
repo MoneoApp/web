@@ -3,20 +3,28 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { InteractionType } from "./globalTypes";
+
 // ====================================================
 // GraphQL query operation: DeviceQuery
 // ====================================================
 
-export interface DeviceQuery_device_overlays_interactions {
+export interface DeviceQuery_device_interactions {
   __typename: "Interaction";
+  id: string;
+  type: InteractionType;
+}
+
+export interface DeviceQuery_device_manuals_steps {
+  __typename: "ManualStep";
   id: string;
 }
 
-export interface DeviceQuery_device_overlays {
-  __typename: "Overlay";
+export interface DeviceQuery_device_manuals {
+  __typename: "Manual";
   id: string;
-  name: string;
-  interactions: DeviceQuery_device_overlays_interactions[];
+  title: string;
+  steps: DeviceQuery_device_manuals_steps[];
 }
 
 export interface DeviceQuery_device {
@@ -25,7 +33,8 @@ export interface DeviceQuery_device {
   model: string;
   brand: string;
   image: string;
-  overlays: DeviceQuery_device_overlays[];
+  interactions: DeviceQuery_device_interactions[];
+  manuals: DeviceQuery_device_manuals[];
 }
 
 export interface DeviceQuery {

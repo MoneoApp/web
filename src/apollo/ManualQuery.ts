@@ -4,19 +4,19 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: OverlayQuery
+// GraphQL query operation: ManualQuery
 // ====================================================
 
-export interface OverlayQuery_overlay {
-  __typename: "Overlay";
+export interface ManualQuery_manual {
+  __typename: "Manual";
   id: string;
-  name: string;
+  title: string;
 }
 
-export interface OverlayQuery {
-  overlay: OverlayQuery_overlay | null;
+export interface ManualQuery {
+  manual: ManualQuery_manual | null;
 }
 
-export interface OverlayQueryVariables {
+export interface ManualQueryVariables {
   id: string;
 }

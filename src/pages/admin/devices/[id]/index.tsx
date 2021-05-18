@@ -35,10 +35,14 @@ const query = gql`
       model
       brand
       image
-      overlays {
+      interactions {
         id
-        name
-        interactions {
+        type
+      }
+      manuals {
+        id
+        title
+        steps {
           id
         }
       }
@@ -85,7 +89,7 @@ export default function Device() {
       }
     })
   });
-  const [results, setSearch] = useSearch(data?.device?.overlays, ['name']);
+  const [results, setSearch] = useSearch(data?.device?.manuals, ['name']);
 
   return (
     <>
@@ -138,7 +142,7 @@ export default function Device() {
               </FieldForm>
             </Column>
             <Column sizes={{ phone: 3 }}>
-              <Link href={`/admin/devices/${id}/overlays/new`} passHref={true}>
+              <Link href={`/admin/devices/${id}/manuals/new`} passHref={true}>
                 <StyledButton as="a" text="Nieuw">
                   <StyledButtonText>
                     Nieuw
@@ -151,10 +155,10 @@ export default function Device() {
           <Table
             data={results ?? []}
             keyBy="id"
-            href={(value) => `/admin/devices/${id}/overlays/${value.id}`}
+            href={(value) => `/admin/devices/${id}/manuals/${value.id}`}
             columns={{
-              name: { title: 'Naam' },
-              interactions: {
+              title: { title: 'Titel' },
+              steps: {
                 title: 'Stappen',
                 size: '7.5rem',
                 render: (value) => value.length
