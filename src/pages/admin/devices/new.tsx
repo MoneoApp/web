@@ -23,7 +23,7 @@ import { useFileUrl } from '../../../hooks/useFileUrl';
 
 const mutation = gql`
   mutation NewDeviceMutation($model: String!, $brand: String!, $image: Upload!, $type: DeviceType!) {
-    createDevice(model: $model, brand: $brand, image: $image, type: $type) {
+    createDevice(model: $model, brand: $brand, image: $image, type: $type, interactions: []) {
       id
       model
       brand

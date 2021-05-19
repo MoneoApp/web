@@ -52,7 +52,7 @@ const query = gql`
 
 const updateMutation = gql`
   mutation DeviceMutation($id: ID!, $model: String!, $brand: String!, $image: Upload) {
-    updateDevice(id: $id, model: $model, brand: $brand, image: $image) {
+    updateDevice(id: $id, model: $model, brand: $brand, image: $image, interactions: []) {
       id
       model
       brand

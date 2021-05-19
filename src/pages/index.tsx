@@ -6,11 +6,10 @@ import { CreateUser } from '../../shared/structs/CreateUser';
 import { Login } from '../../shared/structs/Login';
 import { LoginMutation, LoginMutationVariables } from '../apollo/LoginMutation';
 import { RegisterMutation, RegisterMutationVariables } from '../apollo/RegisterMutation';
-import background from '../assets/background.jpg';
-import Logo from '../assets/logo.svg';
 import { Button } from '../components/forms/Button';
 import { Form } from '../components/forms/Form';
 import { Input } from '../components/forms/Input';
+import { Logo } from '../components/Logo';
 import { Empty } from '../components/templates/Empty';
 import { useNotify } from '../hooks/useNotify';
 import { useAuthentication } from '../states/authentication';
@@ -90,7 +89,7 @@ const StyledRoot = styled.main`
     left: -16px;
     width: calc(100% + 32px);
     height: calc(100% + 32px);
-    background: url(${background}) center;
+    background: url("/background.jpg") center;
     background-size: cover;
     filter: blur(8px);
   }

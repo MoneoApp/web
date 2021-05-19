@@ -5,10 +5,10 @@ import { UserRole } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 
-import Logo from '../../assets/logo.svg';
 import { useAuthentication } from '../../states/authentication';
 import { withBreakpoint } from '../../utils/withBreakpoint';
 import { Container } from '../layout/Container';
+import { Logo } from '../Logo';
 import { Heading } from '../navigation/Heading';
 import { SidebarItem } from '../navigation/SidebarItem';
 
