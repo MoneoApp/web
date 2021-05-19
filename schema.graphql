@@ -27,6 +27,7 @@ type Interaction {
   device: Device!
   height: Float!
   id: ID!
+  rotation: Float!
   title: String!
   type: InteractionType!
   width: Float!
@@ -59,13 +60,13 @@ type ManualStep {
 }
 
 type Mutation {
-  createDevice(brand: String!, image: Upload!, model: String!, type: DeviceType!): Device!
+  createDevice(brand: String!, image: Upload!, interactions: [UpsertInteraction!]!, model: String!, type: DeviceType!): Device!
   createUser(inviteId: ID!, password: String!): User!
   deleteDevice(id: ID!): Device
   deleteUser(id: ID!): User
   inviteUser(email: String!): Boolean!
   login(email: String!, password: String!): Authentication!
-  updateDevice(brand: String!, id: ID!, image: Upload, model: String!): Device
+  updateDevice(brand: String!, id: ID!, image: Upload, interactions: [UpsertInteraction!]!, model: String!): Device
   updateUser(email: String!, id: ID!, role: UserRole!): User
 }
 
@@ -79,6 +80,18 @@ type Query {
 }
 
 scalar Upload
+
+input UpsertInteraction {
+  description: String!
+  height: Float!
+  id: ID
+  rotation: Float!
+  title: String!
+  type: InteractionType!
+  width: Float!
+  x: Float!
+  y: Float!
+}
 
 type User {
   devices: [Device!]!

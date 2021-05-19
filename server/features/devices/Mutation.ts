@@ -1,5 +1,5 @@
 import { UserRole } from '@prisma/client';
-import { extendType, nullable } from 'nexus';
+import { extendType, list, nullable } from 'nexus';
 
 import { CreateDevice } from '../../../shared/structs/CreateDevice';
 import { UpdateDevice } from '../../../shared/structs/UpdateDevice';
@@ -17,13 +17,14 @@ export const DeviceMutation = extendType({
         model: 'String',
         brand: 'String',
         image: 'Upload',
-        type: 'DeviceType'
+        type: 'DeviceType',
+        interactions: list('UpsertInteraction')
       },
       authorize: guard(
         authorized(),
         validated(CreateDevice)
       ),
-      resolve: async (parent, { model, brand, image, type }, { db, user }) => {
+      resolve: async (parent, { model, brand, image, type, interactions }, { db, user }) => {
         const fileName = await storeImage(image);
 
         return await db.device.create({
@@ -32,7 +33,14 @@ export const DeviceMutation = extendType({
             brand,
             image: fileName,
             type,
-            userId: user!.id
+            user: {
+              connect: { id: user!.id }
+            },
+            interactions: {
+              createMany: {
+                data: interactions.map(({ id, ...i }) => i)
+              }
+            }
           }
         });
       }
@@ -44,13 +52,14 @@ export const DeviceMutation = extendType({
         id: 'ID',
         model: 'String',
         brand: 'String',
-        image: nullable('Upload')
+        image: nullable('Upload'),
+        interactions: list('UpsertInteraction')
       },
       authorize: guard(
         authorized(),
         validated(UpdateDevice)
       ),
-      resolve: async (parent, { id, model, brand, image }, { db, user }) => {
+      resolve: async (parent, { id, model, brand, image, interactions }, { db }) => {
         const fileName = image ? await storeImage(image) : undefined;
 
         return await db.device.update({
@@ -58,7 +67,19 @@ export const DeviceMutation = extendType({
           data: {
             model,
             brand,
-            image: fileName
+            image: fileName,
+            interactions: {
+              upsert: interactions.map(({ id: interactionId, ...data }) => ({
+                where: {
+                  id: interactionId ?? undefined
+                },
+                create: data,
+                update: data
+              })),
+              deleteMany: {
+                id: { notIn: interactions.map((i) => i.id ?? '') }
+              }
+            }
           }
         });
       }

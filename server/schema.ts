@@ -8,11 +8,15 @@ import { Error } from '../shared/constants';
 import { reflection } from './constants';
 import * as features from './features';
 import * as models from './models';
+import * as enums from './models/enums';
+import * as inputs from './models/inputs';
 
 export const schema = makeSchema({
   types: {
     ...features,
     ...models,
+    ...enums,
+    ...inputs,
     JSONObject: JSONObjectResolver
   },
   outputs: {
