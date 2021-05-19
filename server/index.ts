@@ -14,6 +14,8 @@ const db = new PrismaClient({
 
 export const server = new ApolloServer({
   schema,
+  introspection: true,
+  playground: true,
   context: async ({ req }: { req: IncomingMessage }) => {
     let user: TokenData | undefined;
     const token = req.headers.authorization?.substr(7);
