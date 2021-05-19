@@ -36,9 +36,7 @@ function EditorInternal({ image }: Props) {
         setShapes(shapes.filter((s) => s.id !== config.id));
         props.close();
       }}
-      onCreate={({title, description}) => {
-        console.log('Title:', title);
-        console.log('Description:', description);
+      onCreate={(data) => {
         props.close();
       }}
       {...props}

@@ -11,7 +11,7 @@ import { Input } from '../forms/Input';
 type Props = {
   shape: ShapeConfig,
   onDelete: () => void
-  onCreate: ({title, description}: { title: string, description: string }) => void
+  onCreate: (data: unknown) => void
 };
 
 export function ShapeSettings({ shape, onDelete, onCreate, ...props }: Props & DialoogProps) {
