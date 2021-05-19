@@ -3,17 +3,22 @@ import styled from '@emotion/styled';
 import { DialoogProps } from 'dialoog';
 import { ComponentPropsWithoutRef } from 'react';
 
+type Props = {
+  strict?: boolean
+};
+
 export function Dialog({
+  strict = false,
   open,
   close,
   remove,
   index,
   children,
   ...props
-}: DialoogProps & ComponentPropsWithoutRef<'div'>) {
+}: Props & DialoogProps & ComponentPropsWithoutRef<'div'>) {
   return (
     <>
-      <StyledBackdrop open={open} onClick={close}/>
+      <StyledBackdrop open={open} onClick={() => !strict && close()}/>
       <StyledDialog open={open} onAnimationEnd={() => !open && remove()} {...props}>
         {children}
       </StyledDialog>

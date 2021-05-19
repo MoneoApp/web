@@ -12,6 +12,11 @@ export enum DeviceType {
   STATIC = "STATIC",
 }
 
+export enum InteractionType {
+  CIRCLE = "CIRCLE",
+  SQUARE = "SQUARE",
+}
+
 export enum UserRole {
   ADMIN = "ADMIN",
   USER = "USER",

@@ -1,7 +1,12 @@
+import { faCircle, faSquare, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { ComponentType } from 'react';
+
 import { Error } from '../shared/constants';
 
-import { UserRole } from './apollo/globalTypes';
-import { Breakpoint, Color, Shade } from './types';
+import { InteractionType, UserRole } from './apollo/globalTypes';
+import { CircleShape } from './components/editor/shapes/CircleShape';
+import { SquareShape } from './components/editor/shapes/SquareShape';
+import { Breakpoint, Color, Shade, ShapeConfig } from './types';
 
 export const breakpoints: Record<Breakpoint, number> = {
   phone: 0,
@@ -46,6 +51,7 @@ export const messages: Record<Error, string> = {
 };
 
 export const errors: Record<string, string> = {
+  any: 'Ongeldige invoer',
   string: 'Ongeldige invoer',
   email: 'Ongeldig e-mailadres',
   password: 'Ongeldig wachtwoord',
@@ -56,4 +62,14 @@ export const errors: Record<string, string> = {
 export const roles: Record<UserRole, string> = {
   USER: 'Gebruiker',
   ADMIN: 'Beheerder'
+};
+
+export const shapes: Record<InteractionType, ComponentType<ShapeConfig>> = {
+  [InteractionType.SQUARE]: SquareShape,
+  [InteractionType.CIRCLE]: CircleShape
+};
+
+export const shapeIcons: Record<InteractionType, IconDefinition> = {
+  [InteractionType.SQUARE]: faSquare,
+  [InteractionType.CIRCLE]: faCircle
 };
