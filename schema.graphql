@@ -71,9 +71,9 @@ type Mutation {
 
 type Query {
   device(id: ID!): Device
-  devices: [Device!]!
+  devices(search: String): [Device!]!
   manual(id: ID!): Manual
-  manuals: [Manual!]!
+  manuals(search: String): [Manual!]!
   user(id: ID!): User
   users: [User!]!
 }
