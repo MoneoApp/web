@@ -2,9 +2,9 @@ import Konva from 'konva';
 import React, { ComponentType, createElement, useEffect, useRef } from 'react';
 import { Group, Transformer } from 'react-konva';
 
+import { InteractionType } from '../../apollo/globalTypes';
 import { shapes, transformSettings } from '../../constants';
 import { ShapeConfig } from '../../types';
-import { InteractionType } from '../../apollo/globalTypes';
 
 type Props = {
   config: ShapeConfig,
