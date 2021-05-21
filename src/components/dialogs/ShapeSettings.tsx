@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { DialoogProps } from 'dialoog';
+import { Infer } from 'superstruct';
 
 import { CreateInteraction } from '../../../shared/structs/CreateInteraction';
 import { ShapeConfig } from '../../types';
@@ -11,13 +12,20 @@ import { Input } from '../forms/Input';
 type Props = {
   shape: ShapeConfig,
   onDelete: () => void
-  onCreate: (data: unknown) => void
+  onCreate: (data: Infer<typeof CreateInteraction>) => void
 };
 
 export function ShapeSettings({ shape, onDelete, onCreate, ...props }: Props & DialoogProps) {
   return (
     <Dialog strict={true} {...props}>
-      <Form struct={CreateInteraction} onSubmit={onCreate}>
+      <Form
+        struct={CreateInteraction}
+        values={{
+          title: shape.title,
+          description: shape.description
+        }}
+        onSubmit={onCreate}
+      >
         <Input name="title" label="Titel"/>
         <Input name="description" label="Beschrijving"/>
         <StyledActions>

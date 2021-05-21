@@ -16,11 +16,10 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
   const ref = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
   const [preview, setPreview] = useState<string>();
-  const form = useFormContext();
+  const { setValue, formState: { errors: formErrors, isSubmitting } } = useFormContext();
 
-  const error = form.formState.errors[props.name];
+  const error = formErrors[props.name];
 
-  const { isSubmitting } = form?.formState ?? {};
   const setFile = (files: FileList | null) => {
     const file = files?.[0];
 
@@ -33,7 +32,7 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
     }
 
     setPreview(URL.createObjectURL(file));
-    form?.setValue(props.name, file, {
+    setValue(props.name, file, {
       shouldDirty: true
     });
     ref.current.value = '';

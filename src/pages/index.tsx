@@ -41,10 +41,7 @@ export default function Index() {
     onCompleted: ({ login: { token, user: { role } } }) => login(token, role).then(() => push('/admin'))
   });
   const [mutateRegister] = useMutation<RegisterMutation, RegisterMutationVariables>(registerMutation, {
-    onCompleted: () => {
-      notify('Succesvol geregistreerd');
-      void push('/');
-    }
+    onCompleted: () => push('/').then(() => notify('Succesvol geregistreerd'))
   });
 
   return (

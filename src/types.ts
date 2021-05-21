@@ -15,5 +15,7 @@ export type ShapeConfig = {
   y: number,
   width: number,
   height: number,
-  rotation: number
+  rotation: number,
+  title: string,
+  description: string
 };

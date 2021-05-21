@@ -16,7 +16,7 @@ export function Toolbox() {
             draggable={true}
             onDragStart={(e) => e.dataTransfer.setData('type', shape)}
           >
-            <FontAwesomeIcon icon={icon} fixedWidth={true}/>
+            <FontAwesomeIcon icon={icon!} fixedWidth={true}/>
           </StyledShape>
         ))}
       </StyledShapes>
@@ -25,6 +25,9 @@ export function Toolbox() {
 }
 
 const StyledToolbox = styled.div`
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
   padding: .5rem .75rem;
   background-color: var(--gray-200);
   border-radius: 8px;

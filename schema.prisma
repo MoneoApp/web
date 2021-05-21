@@ -61,6 +61,7 @@ model Interaction {
 enum InteractionType {
   SQUARE
   CIRCLE
+  ANCHOR
 }
 
 model Manual {

@@ -36,6 +36,7 @@ type Interaction {
 }
 
 enum InteractionType {
+  ANCHOR
   CIRCLE
   SQUARE
 }

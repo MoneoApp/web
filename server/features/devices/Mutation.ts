@@ -1,6 +1,8 @@
-import { UserRole } from '@prisma/client';
+import { DeviceType, InteractionType, UserRole } from '@prisma/client';
+import { ApolloError } from 'apollo-server-micro';
 import { extendType, list, nullable } from 'nexus';
 
+import { Error } from '../../../shared/constants';
 import { CreateDevice } from '../../../shared/structs/CreateDevice';
 import { UpdateDevice } from '../../../shared/structs/UpdateDevice';
 import { authorized } from '../../guards/authorized';
@@ -25,6 +27,12 @@ export const DeviceMutation = extendType({
         validated(CreateDevice)
       ),
       resolve: async (parent, { model, brand, image, type, interactions }, { db, user }) => {
+        const wanted = type === DeviceType.DYNAMIC ? 1 : 0;
+
+        if (interactions.filter((i) => i.type === InteractionType.ANCHOR).length !== wanted) {
+          throw new ApolloError('invalid interactions', Error.InvalidInteractions);
+        }
+
         const fileName = await storeImage(image);
 
         return await db.device.create({
@@ -60,6 +68,20 @@ export const DeviceMutation = extendType({
         validated(UpdateDevice)
       ),
       resolve: async (parent, { id, model, brand, image, interactions }, { db }) => {
+        const device = await db.device.findUnique({
+          where: { id }
+        });
+
+        if (!device) {
+          return null;
+        }
+
+        const wanted = device.type === DeviceType.DYNAMIC ? 1 : 0;
+
+        if (interactions.filter((i) => i.type === InteractionType.ANCHOR).length !== wanted) {
+          throw new ApolloError('invalid interactions', Error.InvalidInteractions);
+        }
+
         const fileName = image ? await storeImage(image) : undefined;
 
         return await db.device.update({
