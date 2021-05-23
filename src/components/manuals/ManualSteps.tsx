@@ -52,9 +52,6 @@ export function ManualSteps({ name, interactions }: Props) {
           )}
         </Droppable>
       </DragDropContext>
-      <StyledActions>
-        <Button text="Opslaan"/>
-      </StyledActions>
     </>
   );
 }
@@ -64,12 +61,6 @@ const StyledRow = styled.div`
   align-items: center;
   gap: 1rem;
   margin: 0 0 1rem .75rem;
-`;
-
-const StyledActions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin: 1rem 0;
 `;
 
 const StyledError = styled.span`

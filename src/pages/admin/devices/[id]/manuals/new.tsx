@@ -1,10 +1,12 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 
 import { CreateManual } from '../../../../../../shared/structs/CreateManual';
 import { InteractionType } from '../../../../../apollo/globalTypes';
 import { NewManualMutation, NewManualMutationVariables } from '../../../../../apollo/NewManualMutation';
 import { NewManualQuery, NewManualQueryVariables } from '../../../../../apollo/NewManualQuery';
+import { Button } from '../../../../../components/forms/Button';
 import { Form } from '../../../../../components/forms/Form';
 import { Input } from '../../../../../components/forms/Input';
 import { Column } from '../../../../../components/layout/Column';
@@ -76,6 +78,9 @@ export default function NewManual() {
             name="steps"
             interactions={data.device.interactions.filter((interaction) => interaction.type !== InteractionType.ANCHOR)}
           />
+          <StyledActions>
+            <Button text="Opslaan"/>
+          </StyledActions>
         </Form>
       ) : (
         <Spinner text="Apparaat ophalen..."/>
@@ -83,3 +88,9 @@ export default function NewManual() {
     </>
   );
 }
+
+const StyledActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem 0;
+`;
