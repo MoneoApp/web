@@ -75,7 +75,7 @@ model Manual {
 model ManualStep {
   id           String        @id @default(cuid())
   text         String
-  order        Int           @default(autoincrement())
+  order        Int           @default(0)
   manualId     String
   manual       Manual        @relation(fields: [manualId], references: [id])
   interactions Interaction[]
