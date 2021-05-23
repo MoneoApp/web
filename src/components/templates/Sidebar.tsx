@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { faLifeRing, faMobileAlt, faTachometerAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { UserRole } from '@prisma/client';
 import { useRouter } from 'next/router';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 import { useAuthentication } from '../../states/authentication';
 import { withBreakpoint } from '../../utils/withBreakpoint';
@@ -38,8 +38,15 @@ const items = [{
 export function Sidebar({ children }: Props) {
   const { pathname } = useRouter();
   const [{ role }] = useAuthentication();
+  const [actualRole, setRole] = useState<UserRole>(UserRole.USER);
 
   const current = items.find(({ href }) => pathname === href)?.text;
+
+  useEffect(() => {
+    if (role) {
+      setRole(role);
+    }
+  }, [role, setRole]);
 
   return (
     <StyledContainer>
@@ -47,7 +54,7 @@ export function Sidebar({ children }: Props) {
         <StyledBrand>
           <StyledLogo/>
         </StyledBrand>
-        {items.filter((i) => !i.role || i.role === role).map(({ href, text, icon }) => (
+        {items.filter((i) => !i.role || i.role === actualRole).map(({ href, text, icon }) => (
           <SidebarItem key={href} href={href} text={text} icon={icon}/>
         ))}
       </StyledSidebar>
