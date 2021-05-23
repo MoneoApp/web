@@ -14,7 +14,8 @@ type Props = {
     value: string,
     icon: IconProp,
     description: string,
-    color: ColorShade
+    color: ColorShade,
+    disabled?: boolean
   }[]
 };
 
@@ -24,7 +25,7 @@ export function BigRadio({ name, label, options }: Props) {
   const error = e[name];
 
   return (
-    <>
+    <StyledRadio>
       <StyledTitle>
         {label}
         {error && (
@@ -41,7 +42,7 @@ export function BigRadio({ name, label, options }: Props) {
               id={option.value}
               value={option.value}
               shade={option.color}
-              disabled={isSubmitting}
+              disabled={option.disabled || isSubmitting}
               {...register(name)}
             />
             <StyledLabel htmlFor={option.value}>
@@ -58,9 +59,13 @@ export function BigRadio({ name, label, options }: Props) {
           )}
         </Fragment>
       ))}
-    </>
+    </StyledRadio>
   );
 }
+
+const StyledRadio = styled.div`
+  margin-bottom: 1rem;
+`;
 
 const StyledTitle = styled.div`
   margin: 0 0 1rem .75rem;
@@ -78,6 +83,11 @@ const StyledWrapper = styled.div`
 `;
 
 const StyledInput = styled.input<{ shade: ColorShade }>`
+  &:disabled ~ label {
+    opacity: .5;
+    pointer-events: none;
+  }
+
   &:focus ~ label > div {
     box-shadow: 0 0 0 3px var(--yellow-300);
     z-index: 1;

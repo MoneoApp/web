@@ -13,6 +13,7 @@ export enum DeviceType {
 }
 
 export enum InteractionType {
+  ANCHOR = "ANCHOR",
   CIRCLE = "CIRCLE",
   SQUARE = "SQUARE",
 }
@@ -20,6 +21,24 @@ export enum InteractionType {
 export enum UserRole {
   ADMIN = "ADMIN",
   USER = "USER",
+}
+
+export interface UpsertInteraction {
+  description: string;
+  height: number;
+  id?: string | null;
+  rotation: number;
+  title: string;
+  type: InteractionType;
+  width: number;
+  x: number;
+  y: number;
+}
+
+export interface UpsertManualStep {
+  interactionIds: string[];
+  order: number;
+  text: string;
 }
 
 //==============================================================

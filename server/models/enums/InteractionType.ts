@@ -4,6 +4,7 @@ export const InteractionType = enumType({
   name: 'InteractionType',
   members: [
     'SQUARE',
-    'CIRCLE'
+    'CIRCLE',
+    'ANCHOR'
   ]
 });

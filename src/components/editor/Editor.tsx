@@ -2,26 +2,34 @@ import styled from '@emotion/styled';
 import { useDialoog } from 'dialoog';
 import Konva from 'konva';
 import dynamic from 'next/dynamic';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { Image, Layer, Stage } from 'react-konva';
 import useImage from 'use-image';
 
-import { InteractionType } from '../../apollo/globalTypes';
+import { DeviceType, InteractionType } from '../../apollo/globalTypes';
+import { useFileUrl } from '../../hooks/useFileUrl';
 import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { ShapeConfig } from '../../types';
 import { getPointerPosition } from '../../utils/getPointerPosition';
 import { ShapeSettings } from '../dialogs/ShapeSettings';
-import { Button } from '../forms/Button';
 
 import { Shape } from './Shape';
 import { Toolbox } from './Toolbox';
 
 type Props = {
-  image: string
+  name: string,
+  image: string,
+  type: string
 };
 
-function EditorInternal({ image }: Props) {
-  const [src] = useImage(image);
+function EditorInternal({ name, image, type }: Props) {
+  const { watch, setValue } = useFormContext();
+
+  const { [image]: imageData, [type]: typeData } = watch();
+  const url = useFileUrl(imageData);
+
+  const [src] = useImage(url ?? '');
   const ref = useRef<Konva.Stage>(null);
   const [wrapperRef, rect] = useResizeObserver();
   const [shapes, setShapes] = useState<ShapeConfig[]>([]);
@@ -33,15 +41,46 @@ function EditorInternal({ image }: Props) {
     <ShapeSettings
       shape={config}
       onDelete={() => {
-        setShapes(shapes.filter((s) => s.id !== config.id));
+        setShapes((ss) => ss.filter((s) => s.id !== config.id));
         props.close();
       }}
-      onCreate={(data) => {
+      onCreate={(values) => {
+        setShapes((ss) => ss.map((s) => s.id !== config.id ? s : {
+          ...s,
+          ...values
+        }));
         props.close();
       }}
       {...props}
     />
   ), { strict: true });
+
+  useEffect(() => {
+    if (!typeData) {
+      return;
+    } else if (typeData !== DeviceType.DYNAMIC) {
+      return setShapes((s) => s.filter((shape) => shape.type !== InteractionType.ANCHOR));
+    }
+
+    setShapes((s) => s.find((shape) => shape.type === InteractionType.ANCHOR) ? s : [
+      ...s,
+      {
+        id: `L${InteractionType.ANCHOR}-${Date.now()}`,
+        type: InteractionType.ANCHOR,
+        x: 32,
+        y: 32,
+        width: 128,
+        height: 128,
+        rotation: 0,
+        title: 'Anchor',
+        description: 'Anchor'
+      }
+    ]);
+  }, [typeData, setShapes]);
+
+  useEffect(() => {
+    setValue(name, shapes);
+  }, [name, shapes, setValue]);
 
   return (
     <StyledWrapper
@@ -64,15 +103,17 @@ function EditorInternal({ image }: Props) {
           return;
         }
 
-        const type = e.dataTransfer.getData('type') as InteractionType;
+        const interactionType = e.dataTransfer.getData('type') as InteractionType;
         const shape = {
-          id: `${type}-${Date.now()}`,
-          type,
+          id: `L${interactionType}-${Date.now()}`,
+          type: interactionType,
           x: pos.x - 16,
           y: pos.y - 16,
           width: 32,
           height: 32,
-          rotation: 0
+          rotation: 0,
+          title: '',
+          description: ''
         };
 
         setShapes([...shapes, shape]);
@@ -87,6 +128,8 @@ function EditorInternal({ image }: Props) {
           draggable={true}
           onClick={(e) => isBackground(e) && setSelected(undefined)}
           onWheel={(e) => {
+            e.evt.preventDefault();
+
             const stage = e.target.getStage();
             const oldScale = stage?.scaleX();
             const pointer = stage?.getPointerPosition();
@@ -97,7 +140,7 @@ function EditorInternal({ image }: Props) {
 
             const scaleBy = 1.05;
             const scrolledScale = e.evt.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
-            const newScale = Math.max(0.35, Math.min(scrolledScale, 2.5));
+            const newScale = Math.max(0.25, Math.min(scrolledScale, 2.5));
             const mousePointTo = {
               x: (pointer.x - stage.x()) / oldScale,
               y: (pointer.y - stage.y()) / oldScale
@@ -135,10 +178,7 @@ function EditorInternal({ image }: Props) {
           </Layer>
         </Stage>
       )}
-      <StyledOverlay>
-        <Button text="Opslaan"/>
-        <Toolbox/>
-      </StyledOverlay>
+      <Toolbox/>
     </StyledWrapper>
   );
 }
@@ -149,15 +189,6 @@ const StyledWrapper = styled.div`
   background-color: var(--gray-100);
   border-radius: 16px;
   overflow: hidden;
-`;
-
-const StyledOverlay = styled.div`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  top: 1rem;
-  left: 1rem;
-  gap: .5rem;
 `;
 
 export const Editor = dynamic(() => Promise.resolve(EditorInternal), {

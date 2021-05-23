@@ -11,6 +11,7 @@ export const Interaction = objectType({
     t.float('y');
     t.float('width');
     t.float('height');
+    t.float('rotation');
     t.string('title');
     t.string('description');
 

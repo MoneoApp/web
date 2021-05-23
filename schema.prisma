@@ -61,6 +61,7 @@ model Interaction {
 enum InteractionType {
   SQUARE
   CIRCLE
+  ANCHOR
 }
 
 model Manual {
@@ -74,6 +75,7 @@ model Manual {
 model ManualStep {
   id           String        @id @default(cuid())
   text         String
+  order        Int
   manualId     String
   manual       Manual        @relation(fields: [manualId], references: [id])
   interactions Interaction[]

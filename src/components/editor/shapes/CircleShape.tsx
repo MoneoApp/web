@@ -1,4 +1,4 @@
-import { Circle, Rect } from 'react-konva';
+import { Rect } from 'react-konva';
 
 import { ShapeConfig } from '../../../types';
 
@@ -13,5 +13,5 @@ export function CircleShape({ width, height }: ShapeConfig) {
       strokeWidth={1}
       cornerRadius={Math.max(width, height)}
     />
-  )
+  );
 }
