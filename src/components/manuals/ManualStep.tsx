@@ -46,7 +46,7 @@ export function ManualStep({ name, order, step, interactions, remove }: Props) {
                 <SelectInteractions
                   interactions={interactions}
                   interactionIds={interactionIds}
-                  setValue={(value) => setValue(interactionName, value.length ? value : undefined)}
+                  setValue={(value) => setValue(interactionName, value)}
                   {...props}
                 />
               ), { strict: true })}

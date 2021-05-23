@@ -5,5 +5,5 @@ import { UpsertManualStep } from './UpsertManualStep';
 export const CreateManual = object({
   deviceId: string(),
   title: size(string(), 3, 70),
-  steps: array(UpsertManualStep)
+  steps: size(array(UpsertManualStep), 1, Infinity)
 });
