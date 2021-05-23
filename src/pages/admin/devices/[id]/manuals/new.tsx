@@ -6,5 +6,5 @@ export default function NewManual() {
       <Heading text="Nieuwe handleiding"/>
       <h1>Nieuwe handleiding</h1>
     </>
-  )
+  );
 }

@@ -57,17 +57,21 @@ type ManualStep {
   id: ID!
   interactions: [Interaction!]!
   manual: Manual!
+  order: Int!
   text: String!
 }
 
 type Mutation {
   createDevice(brand: String!, image: Upload!, interactions: [UpsertInteraction!]!, model: String!, type: DeviceType!): Device!
+  createManual(deviceId: ID!, steps: [UpsertManualStep!]!, title: String!): Manual!
   createUser(inviteId: ID!, password: String!): User!
   deleteDevice(id: ID!): Device
+  deleteManual(id: ID!): Manual
   deleteUser(id: ID!): User
   inviteUser(email: String!): Boolean!
   login(email: String!, password: String!): Authentication!
   updateDevice(brand: String!, id: ID!, image: Upload, interactions: [UpsertInteraction!]!, model: String!): Device
+  updateManual(id: ID!, steps: [UpsertManualStep!]!, title: String!): Manual
   updateUser(email: String!, id: ID!, role: UserRole!): User
 }
 
@@ -92,6 +96,13 @@ input UpsertInteraction {
   width: Float!
   x: Float!
   y: Float!
+}
+
+input UpsertManualStep {
+  id: ID
+  interactionIds: [ID!]!
+  order: Int!
+  text: String!
 }
 
 type User {
