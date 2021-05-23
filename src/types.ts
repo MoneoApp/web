@@ -19,3 +19,9 @@ export type ShapeConfig = {
   title: string,
   description: string
 };
+
+export type ManualStepConfig = {
+  id: string,
+  text: string,
+  interactionIds: string[]
+};

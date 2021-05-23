@@ -1,7 +1,7 @@
-import { array, number, object, string } from 'superstruct';
+import { array, number, object, size, string } from 'superstruct';
 
 export const UpsertManualStep = object({
-  text: string(),
+  text: size(string(), 3, 70),
   order: number(),
   interactionIds: array(string())
 });

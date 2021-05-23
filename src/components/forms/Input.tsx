@@ -1,11 +1,10 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ComponentPropsWithoutRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { errors } from '../../constants';
+import { ErrorHandler } from './ErrorHandler';
 
 type Props<T> = {
   as?: T,
@@ -18,12 +17,10 @@ export function Input<T extends keyof JSX.IntrinsicElements = 'input'>({
   label,
   ...props
 }: Props<T> & ComponentPropsWithoutRef<T>) {
-  const { register, formState: { errors: e, isSubmitting } } = useFormContext();
-
-  const error = e[name];
+  const { register, formState: { isSubmitting } } = useFormContext();
 
   return (
-    <StyledWrapper error={Boolean(error)}>
+    <ErrorHandler name={name}>
       <StyledLabel htmlFor={name}>
         {label}
       </StyledLabel>
@@ -31,26 +28,9 @@ export function Input<T extends keyof JSX.IntrinsicElements = 'input'>({
       {props.as === 'select' && (
         <StyledIcon icon={faChevronDown}/>
       )}
-      {error && (
-        <StyledError>
-          {errors[error.type] ?? 'Onbekende fout'}
-        </StyledError>
-      )}
-    </StyledWrapper>
+    </ErrorHandler>
   );
 }
-
-const StyledWrapper = styled.div<{ error: boolean }>`
-  position: relative;
-  width: 100%;
-  margin-bottom: 1rem;
-  border-radius: 8px;
-
-  ${(props) => props.error && css`
-    background-color: var(--red-200);
-    box-shadow: 0 0 0 3px var(--red-200);
-  `};
-`;
 
 const StyledLabel = styled.label`
   position: absolute;
@@ -90,9 +70,4 @@ const StyledIcon = styled(FontAwesomeIcon)`
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-`;
-
-const StyledError = styled.div`
-  margin: .25rem .75rem;
-  color: white;
 `;

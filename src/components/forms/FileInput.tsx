@@ -4,7 +4,7 @@ import 'csshake/dist/csshake-slow.css';
 import { ComponentPropsWithoutRef, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { errors } from '../../constants';
+import { ErrorHandler } from './ErrorHandler';
 
 type Props = {
   name: string,
@@ -16,9 +16,7 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
   const ref = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
   const [preview, setPreview] = useState<string>();
-  const { setValue, formState: { errors: formErrors, isSubmitting } } = useFormContext();
-
-  const error = formErrors[props.name];
+  const { setValue, formState: { isSubmitting } } = useFormContext();
 
   const setFile = (files: FileList | null) => {
     const file = files?.[0];
@@ -39,7 +37,7 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
   };
 
   return (
-    <StyledWrapper error={Boolean(error)}>
+    <ErrorHandler name={props.name}>
       <StyledDrop
         type="button"
         over={over}
@@ -75,26 +73,9 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
           Sleep hier een bestand of klik om er een te selecteren
         </StyledHint>
       </StyledDrop>
-      {error && (
-        <StyledError>
-          {errors[error.type] ?? 'Onbekende fout'}
-        </StyledError>
-      )}
-    </StyledWrapper>
+    </ErrorHandler>
   );
 }
-
-const StyledWrapper = styled.div<{ error: boolean }>`
-  position: relative;
-  width: 100%;
-  margin-bottom: 1rem;
-  border-radius: 8px;
-
-  ${(props) => props.error && css`
-    background-color: var(--red-200);
-    box-shadow: 0 0 0 3px var(--red-200);
-  `};
-`;
 
 const StyledDrop = styled.button<{ over: boolean, preview?: string }>`
   position: relative;
@@ -161,9 +142,4 @@ const StyledHint = styled.span<{ over: boolean, preview: boolean }>`
   ${(props) => props.preview && css`
     box-shadow: 0 0 4rem var(--gray-300);
   `};
-`;
-
-const StyledError = styled.div`
-  margin: .25rem .75rem;
-  color: white;
 `;
