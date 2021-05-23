@@ -31,13 +31,14 @@ export function ManualStep({ name, order, step, interactions, remove }: Props) {
 
   const interactionName = `${name}.${order}.interactionIds`;
   const interactionIds = watch(interactionName) ?? [] as string[];
+  const defaultText = watch(`${name}.${order}.text`);
 
   return (
     <Draggable draggableId={step.id} index={order}>
       {(provided) => (
         <StyledRow ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
           <FontAwesomeIcon icon={faGripLines}/>
-          <Input name={`${name}.${order}.text`} label="Tekst"/>
+          <Input name={`${name}.${order}.text`} label="Tekst" defaultValue={defaultText}/>
           <ErrorHandler name={interactionName} big={false}>
             <Button
               text={`${interactionIds.length} interacties`}

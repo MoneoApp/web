@@ -99,7 +99,6 @@ input UpsertInteraction {
 }
 
 input UpsertManualStep {
-  id: ID
   interactionIds: [ID!]!
   order: Int!
   text: String!

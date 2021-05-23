@@ -35,6 +35,12 @@ export interface UpsertInteraction {
   y: number;
 }
 
+export interface UpsertManualStep {
+  interactionIds: string[];
+  order: number;
+  text: string;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================
