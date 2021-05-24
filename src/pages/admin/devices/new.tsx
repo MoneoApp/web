@@ -4,8 +4,9 @@ import { faEye, faQrcode } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 
 import { CreateDevice } from '../../../../shared/structs/CreateDevice';
-import { DeviceType } from '../../../apollo/globalTypes';
+import { DeviceType, InteractionType } from '../../../apollo/globalTypes';
 import { NewDeviceMutation, NewDeviceMutationVariables } from '../../../apollo/NewDeviceMutation';
+import { Editor } from '../../../components/editor/Editor';
 import { BigRadio } from '../../../components/forms/BigRadio';
 import { Button } from '../../../components/forms/Button';
 import { FileInput } from '../../../components/forms/FileInput';
@@ -17,8 +18,8 @@ import { Heading } from '../../../components/navigation/Heading';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 
 const mutation = gql`
-  mutation NewDeviceMutation($model: String!, $brand: String!, $type: DeviceType!) {
-    createDevice(model: $model, brand: $brand, type: $type) {
+  mutation NewDeviceMutation($model: String!, $brand: String!, $image: Upload!, $type: DeviceType!, $interactions: [UpsertInteraction!]!) {
+    createDevice(model: $model, brand: $brand, image: $image, type: $type, interactions: $interactions) {
       id
       model
       brand
@@ -45,21 +46,30 @@ export default function NewDevice() {
   return (
     <>
       <Heading text="Nieuw apparaat"/>
-      <Row>
-        <Column sizes={{ phone: 12, laptop: 6 }}>
-          <Form
-            struct={CreateDevice}
-            onSubmit={({ model, brand, type }) => mutate({
-              variables: {
-                model,
-                brand,
-                type: type as DeviceType
-              }
-            })}
-          >
+      <Form
+        struct={CreateDevice}
+        onSubmit={({ model, brand, image, type, interactions }) => mutate({
+          variables: {
+            model,
+            brand,
+            image,
+            type: type as DeviceType,
+            interactions: interactions.map(({ id, ...i }) => ({
+              ...i,
+              type: i.type as InteractionType
+            }))
+          }
+        })}
+      >
+        <Row>
+          <Column sizes={{ phone: 12, laptop: 6 }}>
             <Input name="model" label="Model"/>
             <Input name="brand" label="Merk"/>
-            <FileInput name="image" label="Productafbeelding" accept="image/*"/>
+            <FileInput
+              name="image"
+              label="Productafbeelding"
+              accept="image/*"
+            />
             <BigRadio
               name="type"
               label="Detectietype"
@@ -67,7 +77,8 @@ export default function NewDevice() {
                 value: DeviceType.STATIC,
                 icon: faQrcode,
                 description: 'Gebruik een QR code als een startpunt voor de overlay. Vaak gebruikt voor stilstaande apparaten.',
-                color: 'red-100'
+                color: 'red-100',
+                disabled: true
               }, {
                 value: DeviceType.DYNAMIC,
                 icon: faEye,
@@ -75,12 +86,15 @@ export default function NewDevice() {
                 color: 'green-100'
               }]}
             />
+          </Column>
+          <Column sizes={{ phone: 12 }}>
+            <Editor name="interactions" image="image" type="type"/>
             <StyledActions>
-              <Button text="Aanmaken"/>
+              <Button text="Opslaan"/>
             </StyledActions>
-          </Form>
-        </Column>
-      </Row>
+          </Column>
+        </Row>
+      </Form>
     </>
   );
 }
@@ -88,5 +102,5 @@ export default function NewDevice() {
 const StyledActions = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-top: 1rem;
+  margin: 1rem 0;
 `;

@@ -6,24 +6,20 @@ export const Interaction = objectType({
   name: 'Interaction',
   definition: (t) => {
     t.id('id');
+    t.field('type', { type: 'InteractionType' });
     t.float('x');
     t.float('y');
     t.float('width');
     t.float('height');
-    t.string('text');
+    t.float('rotation');
+    t.string('title');
+    t.string('description');
 
-    t.field('overlay', {
-      type: 'Overlay',
+    t.field('device', {
+      type: 'Device',
       resolve: ({ id }, args, { db }) => ensure(db.interaction.findUnique({
         where: { id }
-      }).overlay())
-    });
-
-    t.field('blocks', {
-      type: list('ContentBlock'),
-      resolve: ({ id }, args, { db }) => db.interaction.findUnique({
-        where: { id }
-      }).blocks()
+      }).device())
     });
   }
 });

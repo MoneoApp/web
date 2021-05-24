@@ -12,10 +12,10 @@ ENV NODE_ENV production
 EXPOSE 3000
 
 WORKDIR /app
-COPY package.json package-lock.json schema.prisma ./
+COPY package.json package-lock.json next.config.js schema.prisma ./
+COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/migrations ./migrations
 COPY --from=build /app/public ./public
 COPY --from=build /app/.next ./.next
 
-RUN npm ci
 CMD npm start

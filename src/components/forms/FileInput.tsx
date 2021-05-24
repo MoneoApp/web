@@ -4,18 +4,20 @@ import 'csshake/dist/csshake-slow.css';
 import { ComponentPropsWithoutRef, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { ErrorHandler } from './ErrorHandler';
+
 type Props = {
   name: string,
-  label: string
+  label: string,
+  default?: string
 };
 
 export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
   const ref = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
   const [preview, setPreview] = useState<string>();
-  const form = useFormContext();
+  const { setValue, formState: { isSubmitting } } = useFormContext();
 
-  const { isSubmitting } = form?.formState ?? {};
   const setFile = (files: FileList | null) => {
     const file = files?.[0];
 
@@ -28,48 +30,50 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
     }
 
     setPreview(URL.createObjectURL(file));
-    form?.setValue(props.name, file, {
+    setValue(props.name, file, {
       shouldDirty: true
     });
     ref.current.value = '';
   };
 
   return (
-    <StyledDrop
-      type="button"
-      over={over}
-      preview={preview}
-      onDragOver={(event) => {
-        event.preventDefault();
-        setOver(event.dataTransfer.types.some((t) => t === 'Files'));
-      }}
-      onDragLeave={() => setOver(false)}
-      onDrop={(event) => {
-        if (!over) {
-          return;
-        }
+    <ErrorHandler name={props.name}>
+      <StyledDrop
+        type="button"
+        over={over}
+        preview={preview ?? props.default}
+        onDragOver={(event) => {
+          event.preventDefault();
+          setOver(event.dataTransfer.types.some((t) => t === 'Files'));
+        }}
+        onDragLeave={() => setOver(false)}
+        onDrop={(event) => {
+          if (!over) {
+            return;
+          }
 
-        event.preventDefault();
-        setOver(false);
-        setFile(event.dataTransfer.files);
-      }}
-      onClick={() => ref.current?.click()}
-    >
-      <StyledLabel htmlFor={props.name}>
-        {props.label}
-      </StyledLabel>
-      <StyledInput
-        ref={ref}
-        type="file"
-        id={props.name}
-        readOnly={isSubmitting}
-        onChange={(event) => setFile(event.target.files)}
-        {...props}
-      />
-      <StyledHint over={over} preview={preview !== undefined}>
-        Sleep hier een bestand of klik om er een te selecteren
-      </StyledHint>
-    </StyledDrop>
+          event.preventDefault();
+          setOver(false);
+          setFile(event.dataTransfer.files);
+        }}
+        onClick={() => ref.current?.click()}
+      >
+        <StyledLabel htmlFor={props.name}>
+          {props.label}
+        </StyledLabel>
+        <StyledInput
+          ref={ref}
+          type="file"
+          id={props.name}
+          readOnly={isSubmitting}
+          onChange={(event) => setFile(event.target.files)}
+          {...props}
+        />
+        <StyledHint over={over} preview={preview !== undefined}>
+          Sleep hier een bestand of klik om er een te selecteren
+        </StyledHint>
+      </StyledDrop>
+    </ErrorHandler>
   );
 }
 
@@ -78,7 +82,6 @@ const StyledDrop = styled.button<{ over: boolean, preview?: string }>`
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-bottom: 1rem;
   padding: 8rem 0;
   background-color: var(--gray-100);
   border-radius: .5rem;

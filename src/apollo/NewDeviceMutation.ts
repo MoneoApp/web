@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { DeviceType } from "./globalTypes";
+import { DeviceType, UpsertInteraction } from "./globalTypes";
 
 // ====================================================
 // GraphQL mutation operation: NewDeviceMutation
@@ -23,5 +23,7 @@ export interface NewDeviceMutation {
 export interface NewDeviceMutationVariables {
   model: string;
   brand: string;
+  image: any;
   type: DeviceType;
+  interactions: UpsertInteraction[];
 }

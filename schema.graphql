@@ -7,24 +7,13 @@ type Authentication {
   user: User!
 }
 
-type ContentBlock {
-  data: JSONObject!
-  id: ID!
-  interaction: Interaction!
-  type: ContentBlockType!
-}
-
-enum ContentBlockType {
-  IMAGE
-  LIST
-  TEXT
-}
-
 type Device {
   brand: String!
   id: ID!
+  image: String!
+  interactions: [Interaction!]!
+  manuals: [Manual!]!
   model: String!
-  overlays: [Overlay!]!
   user: User!
 }
 
@@ -34,14 +23,22 @@ enum DeviceType {
 }
 
 type Interaction {
-  blocks: [ContentBlock!]!
+  description: String!
+  device: Device!
   height: Float!
   id: ID!
-  overlay: Overlay!
-  text: String!
+  rotation: Float!
+  title: String!
+  type: InteractionType!
   width: Float!
   x: Float!
   y: Float!
+}
+
+enum InteractionType {
+  ANCHOR
+  CIRCLE
+  SQUARE
 }
 
 """
@@ -49,29 +46,62 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
+type Manual {
+  device: Device!
+  id: ID!
+  steps: [ManualStep!]!
+  title: String!
+}
+
+type ManualStep {
+  id: ID!
+  interactions: [Interaction!]!
+  manual: Manual!
+  order: Int!
+  text: String!
+}
+
 type Mutation {
-  createDevice(brand: String!, model: String!, type: DeviceType!): Device!
-  createOverlay(deviceId: ID!, name: String!): Overlay!
+  createDevice(brand: String!, image: Upload!, interactions: [UpsertInteraction!]!, model: String!, type: DeviceType!): Device!
+  createManual(deviceId: ID!, steps: [UpsertManualStep!]!, title: String!): Manual!
   createUser(inviteId: ID!, password: String!): User!
+  deleteDevice(id: ID!): Device
+  deleteManual(id: ID!): Manual
   deleteUser(id: ID!): User
   inviteUser(email: String!): Boolean!
   login(email: String!, password: String!): Authentication!
+  updateDevice(brand: String!, id: ID!, image: Upload, interactions: [UpsertInteraction!]!, model: String!): Device
+  updateManual(id: ID!, steps: [UpsertManualStep!]!, title: String!): Manual
   updateUser(email: String!, id: ID!, role: UserRole!): User
-}
-
-type Overlay {
-  device: Device!
-  id: ID!
-  interactions: [Interaction!]!
-  name: String!
 }
 
 type Query {
   device(id: ID!): Device
-  devices: [Device!]!
-  overlays: [Overlay!]!
+  devices(search: String): [Device!]!
+  manual(id: ID!): Manual
+  manuals(search: String): [Manual!]!
   user(id: ID!): User
   users: [User!]!
+}
+
+scalar Upload
+
+input UpsertInteraction {
+  description: String!
+  height: Float!
+  id: ID
+  rotation: Float!
+  title: String!
+  type: InteractionType!
+  width: Float!
+  x: Float!
+  y: Float!
+}
+
+input UpsertManualStep {
+  interactionIds: [ID!]!
+  order: Int!
+  text: String!
 }
 
 type User {
