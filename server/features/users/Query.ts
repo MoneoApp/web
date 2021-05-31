@@ -1,4 +1,4 @@
-import { UserRole } from '@prisma/client';
+import { UserType } from '@prisma/client';
 import { extendType, list, nullable } from 'nexus';
 
 import { authorized } from '../../guards/authorized';
@@ -10,7 +10,7 @@ export const UserQuery = extendType({
     t.field('users', {
       type: list('User'),
       authorize: guard(
-        authorized(UserRole.ADMIN)
+        authorized(UserType.ADMIN)
       ),
       resolve: (parent, args, { db }) => db.user.findMany()
     });
@@ -21,7 +21,7 @@ export const UserQuery = extendType({
         id: 'ID'
       },
       authorize: guard(
-        authorized(UserRole.ADMIN)
+        authorized(UserType.ADMIN)
       ),
       resolve: (parent, { id }, { db }) => db.user.findUnique({
         where: { id }

@@ -7,14 +7,21 @@ type Authentication {
   user: User!
 }
 
+type Customer {
+  devices: [Device!]!
+  id: ID!
+  name: String!
+  users: [User!]!
+}
+
 type Device {
   brand: String!
+  customer: Customer!
   id: ID!
   image: String!
   interactions: [Interaction!]!
   manuals: [Manual!]!
   model: String!
-  user: User!
 }
 
 enum DeviceType {
@@ -72,7 +79,7 @@ type Mutation {
   login(email: String!, password: String!): Authentication!
   updateDevice(brand: String!, id: ID!, image: Upload, interactions: [UpsertInteraction!]!, model: String!): Device
   updateManual(id: ID!, steps: [UpsertManualStep!]!, title: String!): Manual
-  updateUser(email: String!, id: ID!, role: UserRole!): User
+  updateUser(email: String!, id: ID!, type: UserType!): User
 }
 
 type Query {
@@ -105,13 +112,14 @@ input UpsertManualStep {
 }
 
 type User {
-  devices: [Device!]!
+  customer: Customer
   email: String!
   id: ID!
-  role: UserRole!
+  type: UserType!
 }
 
-enum UserRole {
+enum UserType {
   ADMIN
+  CONTACT
   USER
 }

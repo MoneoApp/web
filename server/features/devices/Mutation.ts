@@ -1,4 +1,4 @@
-import { DeviceType, InteractionType, UserRole } from '@prisma/client';
+import { DeviceType, InteractionType, UserType } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 import { extendType, list, nullable } from 'nexus';
 
@@ -33,6 +33,14 @@ export const DeviceMutation = extendType({
           throw new ApolloError('invalid interactions', Error.InvalidInteractions);
         }
 
+        const customer = await db.user.findUnique({
+          where: { id: user!.id }
+        }).customer();
+
+        if (!customer) {
+          throw new ApolloError('unknown', Error.Unknown);
+        }
+
         const fileName = await storeImage(image);
 
         return await db.device.create({
@@ -41,8 +49,8 @@ export const DeviceMutation = extendType({
             brand,
             image: fileName,
             type,
-            user: {
-              connect: { id: user!.id }
+            customer: {
+              connect: { id: customer.id }
             },
             interactions: {
               createMany: {
@@ -113,7 +121,7 @@ export const DeviceMutation = extendType({
         id: 'ID'
       },
       authorize: guard(
-        authorized(UserRole.ADMIN)
+        authorized(UserType.ADMIN)
       ),
       resolve: async (parent, { id }, { db, user }) => {
         const transaction = await db.$transaction([

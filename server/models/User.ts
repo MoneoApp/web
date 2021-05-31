@@ -1,4 +1,4 @@
-import { list, objectType } from 'nexus';
+import { list, nullable, objectType } from 'nexus';
 
 export const User = objectType({
   name: 'User',
@@ -6,15 +6,15 @@ export const User = objectType({
     t.id('id');
     t.string('email');
 
-    t.field('role', {
-      type: 'UserRole'
+    t.field('type', {
+      type: 'UserType'
     });
 
-    t.field('devices', {
-      type: list('Device'),
+    t.field('customer', {
+      type: nullable('Customer'),
       resolve: ({ id }, args, { db }) => db.user.findUnique({
         where: { id }
-      }).devices()
+      }).customer()
     });
   }
 });

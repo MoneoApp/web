@@ -10,23 +10,24 @@ generator client {
 
 model Customer {
   id      String   @id @default(cuid())
-  name    String
+  name    String   @unique
   users   User[]
   devices Device[]
   invites Invite[]
 }
 
 model User {
-  id         String    @id @default(cuid())
-  email      String    @unique
+  id         String   @id @default(cuid())
+  email      String   @unique
   password   String
-  type       UserType  @default(USER)
-  customerId String?
-  customer   Customer? @relation(fields: [customerId], references: [id])
+  type       UserType @default(USER)
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
 }
 
 enum UserType {
   USER
+  CONTACT
   ADMIN
 }
 

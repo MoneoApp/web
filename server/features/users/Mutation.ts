@@ -1,4 +1,4 @@
-import { UserRole } from '@prisma/client';
+import { UserType } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 import { compare, hash } from 'bcryptjs';
 import { addDays, isAfter } from 'date-fns';
@@ -28,7 +28,7 @@ export const UserMutation = extendType({
         email: 'String'
       },
       authorize: guard(
-        authorized(UserRole.ADMIN),
+        authorized(UserType.ADMIN),
         validated(InviteUser)
       ),
       resolve: async (parent, { email }, { db }) => {
@@ -114,17 +114,17 @@ export const UserMutation = extendType({
       args: {
         id: 'ID',
         email: 'String',
-        role: 'UserRole'
+        type: 'UserType'
       },
       authorize: guard(
-        authorized(UserRole.ADMIN),
+        authorized(UserType.ADMIN),
         validated(UpdateUser)
       ),
-      resolve: (parent, { id, email, role }, { db }) => db.user.update({
+      resolve: (parent, { id, email, type }, { db }) => db.user.update({
         where: { id },
         data: {
           email,
-          role
+          type
         }
       })
     });
@@ -135,7 +135,7 @@ export const UserMutation = extendType({
         id: 'ID'
       },
       authorize: guard(
-        or(current(), authorized(UserRole.ADMIN))
+        or(current(), authorized(UserType.ADMIN))
       ),
       resolve: async (parent, { id }, { db }) => {
         const transaction = await db.$transaction([
