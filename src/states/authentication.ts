@@ -1,10 +1,10 @@
 import { createDakpan } from 'dakpan';
 
-import { UserRole } from '../apollo/globalTypes';
+import { UserType } from '../apollo/globalTypes';
 
 type State = {
   token?: string,
-  role?: UserRole
+  type?: UserType
 };
 
 export const [AuthProvider, useAuthentication] = createDakpan<State>(() => {
@@ -13,29 +13,29 @@ export const [AuthProvider, useAuthentication] = createDakpan<State>(() => {
   }
 
   const token = localStorage.getItem('token') || undefined;
-  const role = localStorage.getItem('role') || undefined;
+  const type = localStorage.getItem('type') || undefined;
 
-  if (role && !UserRole[role as UserRole]) {
+  if (!type || !UserType[type as UserType]) {
     return {};
   }
 
   return {
     token,
-    role: role as UserRole
+    type: type as UserType
   };
 })({
-  login: (token: string, role: UserRole) => () => {
+  login: (token: string, type: UserType) => () => {
     localStorage.setItem('token', token);
-    localStorage.setItem('role', role);
+    localStorage.setItem('type', type);
 
     return {
       token,
-      role
+      type
     };
   },
   logout: () => () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    localStorage.removeItem('type');
 
     return {};
   }

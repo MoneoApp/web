@@ -6,7 +6,7 @@ import { Guard } from '../types';
 
 export function authorized(type?: UserType): Guard {
   return (args, { user }) => {
-    if (type ? user?.role !== type : !user) {
+    if (type ? user?.type !== type : !user) {
       throw new ApolloError('unauthorized', Error.Unauthorized);
     }
   };

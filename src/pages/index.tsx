@@ -39,7 +39,7 @@ export default function Index() {
   const { push, query: { invite } } = useRouter();
   const [, { login }] = useAuthentication();
   const [mutateLogin] = useMutation<LoginMutation, LoginMutationVariables>(loginMutation, {
-    onCompleted: ({ login: { token, user: { role } } }) => login(token, role).then(() => push('/admin'))
+    onCompleted: ({ login: { token, user: { type } } }) => login(token, type).then(() => push('/admin'))
   });
   const [mutateRegister] = useMutation<RegisterMutation, RegisterMutationVariables>(registerMutation, {
     onCompleted: () => push('/').then(() => notify('Succesvol geregistreerd'))

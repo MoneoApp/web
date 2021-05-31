@@ -4,7 +4,7 @@ import { Transformer } from 'react-konva';
 
 import { Error } from '../shared/constants';
 
-import { InteractionType, UserRole } from './apollo/globalTypes';
+import { InteractionType, UserType } from './apollo/globalTypes';
 import { AnchorShape } from './components/editor/shapes/AnchorShape';
 import { CircleShape } from './components/editor/shapes/CircleShape';
 import { SquareShape } from './components/editor/shapes/SquareShape';
@@ -63,8 +63,9 @@ export const errors: Record<string, string> = {
   emailInUse: 'E-mailadres al in gebruik'
 };
 
-export const roles: Record<UserRole, string> = {
+export const userTypes: Record<UserType, string> = {
   USER: 'Gebruiker',
+  CONTACT: 'Contactpersoon',
   ADMIN: 'Beheerder'
 };
 

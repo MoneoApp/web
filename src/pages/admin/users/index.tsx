@@ -14,7 +14,7 @@ import { Column } from '../../../components/layout/Column';
 import { Row } from '../../../components/layout/Row';
 import { Spinner } from '../../../components/Spinner';
 import { Table } from '../../../components/users/Table';
-import { roles } from '../../../constants';
+import { userTypes } from '../../../constants';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 import { useSearch } from '../../../hooks/useSearch';
 import { withBreakpoint } from '../../../utils/withBreakpoint';
@@ -68,15 +68,15 @@ export default function Users() {
           href={(value) => `/admin/users/${value.id}`}
           columns={{
             email: { title: 'E-mail' },
-            role: {
+            type: {
               title: 'Rol',
               size: '7.5rem',
-              render: (value) => roles[value]
+              render: (value) => userTypes[value]
             },
-            devices: {
+            customer: {
               title: 'Apparaten',
               size: '7.5rem',
-              render: (value) => value.length
+              render: (value) => value.devices.length
             }
           }}
         />
