@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { InteractionType } from "./globalTypes";
+import { DeviceType, InteractionType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: DeviceQuery
@@ -12,7 +12,14 @@ import { InteractionType } from "./globalTypes";
 export interface DeviceQuery_device_interactions {
   __typename: "Interaction";
   id: string;
+  title: string;
+  description: string;
   type: InteractionType;
+  x: number;
+  y: number;
+  rotation: number;
+  width: number;
+  height: number;
 }
 
 export interface DeviceQuery_device_manuals_steps {
@@ -33,6 +40,7 @@ export interface DeviceQuery_device {
   model: string;
   brand: string;
   image: string;
+  type: DeviceType;
   interactions: DeviceQuery_device_interactions[];
   manuals: DeviceQuery_device_manuals[];
 }

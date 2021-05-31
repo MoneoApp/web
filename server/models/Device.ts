@@ -9,6 +9,7 @@ export const Device = objectType({
     t.string('model');
     t.string('brand');
     t.string('image');
+    t.field('type', { type: 'DeviceType' });
 
     t.field('user', {
       type: 'User',

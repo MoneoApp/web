@@ -14,6 +14,7 @@ type Props = {
 export function ErrorHandler({ name, big = true, children }: Props) {
   const { formState: { errors: formErrors } } = useFormContext();
 
+  console.log(formErrors);
   const error = get(formErrors, name);
 
   return (
