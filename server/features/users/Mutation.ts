@@ -25,13 +25,14 @@ export const UserMutation = extendType({
   definition: (t) => {
     t.boolean('inviteUser', {
       args: {
+        customerId: 'ID',
         email: 'String'
       },
       authorize: guard(
         authorized(UserType.ADMIN),
         validated(InviteUser)
       ),
-      resolve: async (parent, { email }, { db }) => {
+      resolve: async (parent, { customerId, email }, { db }) => {
         try {
           const count = await db.user.count({
             where: { email }
@@ -42,7 +43,12 @@ export const UserMutation = extendType({
           }
 
           const invite = await db.invite.create({
-            data: { email }
+            data: {
+              customer: {
+                connect: { id: customerId }
+              },
+              email
+            }
           });
 
           const transporter = createTransport({
@@ -103,7 +109,10 @@ export const UserMutation = extendType({
         return await db.user.create({
           data: {
             email: invite.email,
-            password: hashed
+            password: hashed,
+            customer: {
+              connect: { id: invite.customerId }
+            }
           }
         });
       }
@@ -137,27 +146,9 @@ export const UserMutation = extendType({
       authorize: guard(
         or(current(), authorized(UserType.ADMIN))
       ),
-      resolve: async (parent, { id }, { db }) => {
-        const transaction = await db.$transaction([
-          db.manualStep.deleteMany({
-            where: { manual: { device: { user: { id } } } }
-          }),
-          db.manual.deleteMany({
-            where: { device: { user: { id } } }
-          }),
-          db.interaction.deleteMany({
-            where: { device: { user: { id } } }
-          }),
-          db.device.deleteMany({
-            where: { user: { id } }
-          }),
-          db.user.delete({
-            where: { id }
-          })
-        ]);
-
-        return transaction[4];
-      }
+      resolve: async (parent, { id }, { db }) => db.user.delete({
+        where: { id }
+      })
     });
 
     t.field('login', {
@@ -184,7 +175,7 @@ export const UserMutation = extendType({
         return {
           token: sign({
             id: user.id,
-            role: user.role
+            type: user.type
           }, secret),
           user
         };

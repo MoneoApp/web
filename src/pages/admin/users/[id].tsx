@@ -24,22 +24,25 @@ const query = gql`
     user(id: $id) {
       id
       email
-      role
-      devices {
+      type
+      customer {
         id
-        model
-        brand
+        devices {
+          id
+          model
+          brand
+        }
       }
     }
   }
 `;
 
 const updateMutation = gql`
-  mutation UserMutation($id: ID!, $email: String!, $role: UserRole!) {
-    updateUser(id: $id, email: $email, role: $role) {
+  mutation UserMutation($id: ID!, $email: String!, $type: UserType!) {
+    updateUser(id: $id, email: $email, type: $type) {
       id
       email
-      role
+      type
     }
   }
 `;

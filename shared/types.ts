@@ -1,4 +1,4 @@
-import { UserRole } from '@prisma/client';
+import { UserType } from '@prisma/client';
 import { FieldPath, FieldValues } from 'react-hook-form';
 
 export type BadField<T extends FieldValues> = {
@@ -8,5 +8,5 @@ export type BadField<T extends FieldValues> = {
 
 export type TokenData = {
   id: string,
-  role: UserRole
+  type: UserType
 };

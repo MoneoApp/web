@@ -19,7 +19,8 @@ const loginMutation = gql`
     login(email: $email, password: $password) {
       token
       user {
-        role
+        id
+        type
       }
     }
   }

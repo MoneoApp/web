@@ -69,20 +69,25 @@ type ManualStep {
 }
 
 type Mutation {
+  createCustomer(name: String!): Customer!
   createDevice(brand: String!, image: Upload!, interactions: [UpsertInteraction!]!, model: String!, type: DeviceType!): Device!
   createManual(deviceId: ID!, steps: [UpsertManualStep!]!, title: String!): Manual!
   createUser(inviteId: ID!, password: String!): User!
+  deleteCustomer(id: ID!): Customer
   deleteDevice(id: ID!): Device
   deleteManual(id: ID!): Manual
   deleteUser(id: ID!): User
-  inviteUser(email: String!): Boolean!
+  inviteUser(customerId: ID!, email: String!): Boolean!
   login(email: String!, password: String!): Authentication!
+  updateCustomer(id: ID!, name: String!): Customer
   updateDevice(brand: String!, id: ID!, image: Upload, interactions: [UpsertInteraction!]!, model: String!): Device
   updateManual(id: ID!, steps: [UpsertManualStep!]!, title: String!): Manual
   updateUser(email: String!, id: ID!, type: UserType!): User
 }
 
 type Query {
+  customer(id: ID!): Customer
+  customers: [Customer!]!
   device(id: ID!): Device
   devices(search: String): [Device!]!
   manual(id: ID!): Manual
@@ -112,7 +117,7 @@ input UpsertManualStep {
 }
 
 type User {
-  customer: Customer
+  customer: Customer!
   email: String!
   id: ID!
   type: UserType!

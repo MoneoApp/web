@@ -24,9 +24,12 @@ const query = gql`
     users {
       id
       email
-      role
-      devices {
+      type
+      customer {
         id
+        devices {
+          id
+        }
       }
     }
   }
