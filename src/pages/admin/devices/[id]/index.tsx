@@ -12,6 +12,7 @@ import { DeleteDeviceMutation, DeleteDeviceMutationVariables } from '../../../..
 import { DeviceMutation, DeviceMutationVariables } from '../../../../apollo/DeviceMutation';
 import { DeviceQuery, DeviceQueryVariables } from '../../../../apollo/DeviceQuery';
 import { Confirm } from '../../../../components/dialogs/Confirm';
+import { PreviewQr } from '../../../../components/dialogs/ViewQr';
 import { Button } from '../../../../components/forms/Button';
 import { FieldForm } from '../../../../components/forms/FieldForm';
 import { FileInput } from '../../../../components/forms/FileInput';
@@ -126,6 +127,17 @@ export default function Device() {
                         onConfirm={() => mutateDelete({
                           variables: { id: id as string }
                         })}
+                        {...props}
+                      />
+                    ))}
+                  />
+                  <Button
+                    text="Preview"
+                    type="button"
+                    palette={['gray-500', 'gray-200']}
+                    onClick={open.c((props) => (
+                      <PreviewQr
+                        id={data!.device!.id}
                         {...props}
                       />
                     ))}
