@@ -10,13 +10,15 @@ import { Dialog } from '../Dialog';
 import { DeviceInteractions } from '../manuals/DeviceInteractions';
 
 type Props = {
+  name: string,
   image: string,
   interactions: InteractionFragment[],
   initialValue: InteractionConfig[],
-  control: UseFieldArrayReturn
+  control: UseFieldArrayReturn,
+  update: (name: string, value: unknown) => void
 };
 
-export function SelectInteractions({ image, interactions, initialValue, control, ...props }: Props & DialoogProps) {
+export function SelectInteractions({ name, image, interactions, initialValue, control, update, ...props }: Props & DialoogProps) {
   const [data] = useImage(getUploadUrl(image));
   const [value, setValue] = useState(initialValue);
 
@@ -31,6 +33,10 @@ export function SelectInteractions({ image, interactions, initialValue, control,
             add={(v) => {
               control.append(v);
               setValue([...value, v]);
+            }}
+            update={(index, v) => {
+              update(`${name}.${index}`, v);
+              setValue(value.map((_, i) => i === index ? v : _));
             }}
             remove={(index) => {
               control.remove(index);

@@ -52,10 +52,12 @@ export function ManualStep({ id, name, order, image, interactions, remove }: Pro
               type="button"
               onClick={open.c((props) => (
                 <SelectInteractions
+                  name={interactionsName}
                   image={image}
                   interactions={interactions}
                   initialValue={interactionsData}
                   control={array}
+                  update={(n, v) => setValue(n, v)}
                   {...props}
                 />
               ))}
