@@ -51,9 +51,7 @@ function EditorInternal({ name, image, type }: Props) {
         y: 32,
         width: 128,
         height: 128,
-        rotation: 0,
-        title: 'Anchor',
-        description: 'Anchor'
+        rotation: 0
       }
     ]);
   }, [typeData, setShapes]);
@@ -91,9 +89,7 @@ function EditorInternal({ name, image, type }: Props) {
           y: pos.y - 16,
           width: 32,
           height: 32,
-          rotation: 0,
-          title: '',
-          description: ''
+          rotation: 0
         };
 
         setShapes([...shapes, shape]);

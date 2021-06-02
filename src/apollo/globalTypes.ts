@@ -29,11 +29,9 @@ export interface ManualStepInteraction {
 }
 
 export interface UpsertInteraction {
-  description: string;
   height: number;
   id?: string | null;
   rotation: number;
-  title: string;
   type: InteractionType;
   width: number;
   x: number;
