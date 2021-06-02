@@ -35,7 +35,7 @@ export default function NewDevice() {
     context: {
       fetchOptions: {
         onProgress: (ev: ProgressEvent) => {
-          setProgress(ev.loaded / ev.total);
+          setProgress((ev.loaded / ev.total) * 100);
         }
       }
     },
@@ -96,11 +96,11 @@ export default function NewDevice() {
                 color: 'green-100'
               }]}
             />
-            <p>Progress: {progress}</p>
             <FileInput
               name="mlImages"
               label="Afbeeldingen zip"
               accept="application/zip"
+              progress={progress}
             />
           </Column>
           <Column sizes={{ phone: 12 }}>
