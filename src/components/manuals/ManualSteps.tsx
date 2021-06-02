@@ -3,6 +3,7 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { InteractionFragment } from '../../apollo/InteractionFragment';
+import { errors } from '../../constants';
 import { Button } from '../forms/Button';
 
 import { ManualStep } from './ManualStep';
@@ -14,17 +15,24 @@ type Props = {
 };
 
 export function ManualSteps({ name, image, interactions }: Props) {
-  const { control } = useFormContext();
+  const { control, formState: { errors: formErrors } } = useFormContext();
   const { fields, append, move, remove } = useFieldArray({
     control,
     name
   });
+
+  const error = formErrors[name];
 
   return (
     <>
       <StyledRow>
         Stappen
         <Button text="Toevoegen" type="button" onClick={() => append({ text: '' })}/>
+        {error && !Array.isArray(error) && (
+          <StyledError>
+            {errors[error.type] ?? 'Onbekende fout'}
+          </StyledError>
+        )}
       </StyledRow>
       <DragDropContext onDragEnd={({ source, destination }) => destination && move(source.index, destination.index)}>
         <Droppable droppableId="steps">
