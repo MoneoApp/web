@@ -23,5 +23,10 @@ export type ShapeConfig = {
 export type ManualStepConfig = {
   id: string,
   text: string,
-  interactionIds: string[]
+  interactions: StepInteractionConfig[]
 };
+
+export type StepInteractionConfig = {
+  id: string,
+  color: string
+}

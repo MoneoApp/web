@@ -17,6 +17,7 @@ import { Row } from '../../../../../components/layout/Row';
 import { ManualSteps } from '../../../../../components/manuals/ManualSteps';
 import { Heading } from '../../../../../components/navigation/Heading';
 import { Spinner } from '../../../../../components/Spinner';
+import { colors } from '../../../../../constants';
 import { useAuthGuard } from '../../../../../hooks/useAuthGuard';
 import { useNotify } from '../../../../../hooks/useNotify';
 
@@ -30,6 +31,7 @@ const query = gql`
         order
         interactions {
           id
+          color
         }
       }
       device {
@@ -96,7 +98,10 @@ export default function Manual() {
             title: data.manual.title,
             steps: [...data.manual.steps].sort((a, b) => a.order - b.order).map((step) => ({
               text: step.text,
-              interactionIds: step.interactions.map((interaction) => interaction.id)
+              interactions: step.interactions.map((interaction) => ({
+                id: interaction.id,
+                color: interaction.color ?? colors.yellow['200']![0]
+              }))
             }))
           }}
           onSubmit={(variables) => mutateUpdate({ variables })}

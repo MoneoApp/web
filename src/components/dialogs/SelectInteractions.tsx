@@ -1,24 +1,24 @@
 import styled from '@emotion/styled';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DialoogProps } from 'dialoog';
 import { useState } from 'react';
 
 import { useSearch } from '../../hooks/useSearch';
+import { StepInteractionConfig } from '../../types';
 import { Dialog } from '../Dialog';
 import { Button } from '../forms/Button';
 import { FieldForm } from '../forms/FieldForm';
 import { Input } from '../forms/Input';
+import { StepInteraction } from '../manuals/StepInteraction';
 
 type Props = {
-  interactions: { id: string, title: string }[],
-  interactionIds: string[],
-  setValue: (value: string[]) => void
+  data: { id: string, title: string }[],
+  value: StepInteractionConfig[],
+  setValue: (value: StepInteractionConfig[]) => void
 };
 
-export function SelectInteractions({ interactions, interactionIds, setValue, ...props }: Props & DialoogProps) {
-  const [ids, setIds] = useState(interactionIds);
-  const [results, setSearch] = useSearch(interactions, ['title']);
+export function SelectInteractions({ data, value, setValue, ...props }: Props & DialoogProps) {
+  const [interactions, setInteractions] = useState(value);
+  const [results, setSearch] = useSearch(data, ['title']);
 
   return (
     <StyledDialog strict={true} {...props}>
@@ -28,29 +28,28 @@ export function SelectInteractions({ interactions, interactionIds, setValue, ...
       </FieldForm>
       <StyledInteractions>
         {results?.map(({ id, title }) => {
-          const active = ids.indexOf(id) !== -1;
+          const active = interactions.some((i) => i.id === id);
 
           return (
-            <StyledInteraction key={id}>
-              <Button
-                text="Toggle"
-                palette={['gray-500', active ? 'yellow-200' : 'gray-200']}
-                onClick={() => setIds([
-                  ...ids.filter((i) => i !== id),
-                  ...active ? [] : [id]
-                ])}
-              >
-                <FontAwesomeIcon icon={active ? faCheck : faTimes} fixedWidth={true}/>
-              </Button>
-              {title}
-            </StyledInteraction>
+            <StepInteraction
+              key={id}
+              title={title}
+              active={active}
+              onToggle={() => setInteractions([
+                ...interactions.filter((i) => i.id !== id),
+                ...active ? [] : [{
+                  id,
+                  color: 'yellow'
+                }]
+              ])}
+            />
           );
         })}
       </StyledInteractions>
       <StyledButton
         text="Opslaan"
         onClick={() => {
-          setValue(ids);
+          setValue(interactions);
           props.close();
         }}
       />
@@ -63,6 +62,7 @@ const StyledDialog = styled(Dialog)`
   flex-direction: column;
   min-width: 20rem;
   height: 25rem;
+  overflow-y: visible;
 `;
 
 const StyledTitle = styled.h2`
@@ -77,7 +77,6 @@ const StyledInteractions = styled.div`
   gap: 1rem;
   margin-bottom: 1rem;
   padding: 3px;
-  overflow-y: scroll;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -91,12 +90,6 @@ const StyledInteractions = styled.div`
     background-color: var(--gray-300);
     border-radius: 3px;
   }
-`;
-
-const StyledInteraction = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
 `;
 
 const StyledButton = styled(Button)`

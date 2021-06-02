@@ -12,6 +12,7 @@ import { InteractionType } from "./globalTypes";
 export interface ManualQuery_manual_steps_interactions {
   __typename: "Interaction";
   id: string;
+  color: string | null;
 }
 
 export interface ManualQuery_manual_steps {

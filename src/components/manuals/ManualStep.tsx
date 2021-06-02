@@ -45,8 +45,8 @@ export function ManualStep({ name, order, step, interactions, remove }: Props) {
               type="button"
               onClick={open.c((props) => (
                 <SelectInteractions
-                  interactions={interactions}
-                  interactionIds={interactionIds}
+                  data={interactions}
+                  value={interactionIds}
                   setValue={(value) => setValue(interactionName, value)}
                   {...props}
                 />
