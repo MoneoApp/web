@@ -15,5 +15,11 @@ export type ShapeConfig = {
   y: number,
   width: number,
   height: number,
-  rotation: number
+  rotation: number,
+  color?: string
+};
+
+export type InteractionConfig = {
+  id: string,
+  color: string
 };

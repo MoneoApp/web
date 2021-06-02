@@ -1,11 +1,10 @@
-
 import styled from '@emotion/styled';
 import { faGripLines, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDialoog } from 'dialoog';
 import { useEffect } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { InteractionFragment } from '../../apollo/InteractionFragment';
 import { Confirm } from '../dialogs/Confirm';
@@ -13,6 +12,7 @@ import { SelectInteractions } from '../dialogs/SelectInteractions';
 import { Button } from '../forms/Button';
 import { ErrorHandler } from '../forms/ErrorHandler';
 import { Input } from '../forms/Input';
+import { InteractionConfig } from '../../types';
 
 type Props = {
   id: string,
@@ -25,14 +25,20 @@ type Props = {
 
 export function ManualStep({ id, name, order, image, interactions, remove }: Props) {
   const [, { open }] = useDialoog();
-  const { watch, setValue } = useFormContext();
+  const { control, watch, setValue } = useFormContext();
 
   useEffect(() => {
     setValue(`${name}.${order}.order`, order);
   }, [name, order, setValue]);
 
   const interactionsName = `${name}.${order}.interactions`;
+  const interactionsData: InteractionConfig[] = watch(interactionsName) ?? [];
   const defaultText = watch(`${name}.${order}.text`);
+
+  const array = useFieldArray({
+    control,
+    name: interactionsName
+  });
 
   return (
     <Draggable draggableId={id} index={order}>
@@ -42,12 +48,14 @@ export function ManualStep({ id, name, order, image, interactions, remove }: Pro
           <Input name={`${name}.${order}.text`} label="Tekst" defaultValue={defaultText}/>
           <ErrorHandler name={interactionsName} big={false}>
             <Button
-              text="Interacties"
+              text={`${array.fields.length} interacties`}
               type="button"
               onClick={open.c((props) => (
                 <SelectInteractions
                   image={image}
                   interactions={interactions}
+                  initialValue={interactionsData}
+                  control={array}
                   {...props}
                 />
               ))}
