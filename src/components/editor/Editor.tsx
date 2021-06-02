@@ -143,6 +143,7 @@ function EditorInternal({ name, image, type }: Props) {
                 setConfig={(c) => setShapes(shapes.map((cc) => c.id === cc.id ? c : cc))}
                 selected={selected === config.id}
                 setSelected={() => setSelected(config.id)}
+                deleteShape={() => setShapes((c) => c.filter((cc) => cc.id !== config.id))}
               />
             ))}
           </Layer>
