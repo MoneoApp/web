@@ -2,7 +2,6 @@ import Konva from 'konva';
 import React, { ComponentType, createElement, useEffect, useRef } from 'react';
 import { Group, Transformer } from 'react-konva';
 
-import { InteractionType } from '../../apollo/globalTypes';
 import { shapes, transformSettings } from '../../constants';
 import { ShapeConfig } from '../../types';
 
@@ -10,11 +9,10 @@ type Props = {
   config: ShapeConfig,
   setConfig: (box: ShapeConfig) => void,
   selected: boolean,
-  setSelected: () => void,
-  openSettings: () => void
+  setSelected: () => void
 };
 
-export function Shape({ config, setConfig, selected, setSelected, openSettings }: Props) {
+export function Shape({ config, setConfig, selected, setSelected }: Props) {
   const ref = useRef<Konva.Group>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
@@ -67,7 +65,6 @@ export function Shape({ config, setConfig, selected, setSelected, openSettings }
             ...position
           });
         }}
-        onDblClick={() => config.type !== InteractionType.ANCHOR && openSettings()}
       >
         {createElement(shapes[config.type] as ComponentType<ShapeConfig>, config)}
       </Group>

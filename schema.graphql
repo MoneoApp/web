@@ -24,12 +24,10 @@ enum DeviceType {
 
 type Interaction {
   color: String
-  description: String!
   device: Device!
   height: Float!
   id: ID!
   rotation: Float!
-  title: String!
   type: InteractionType!
   width: Float!
   x: Float!
@@ -93,11 +91,9 @@ type Query {
 scalar Upload
 
 input UpsertInteraction {
-  description: String!
   height: Float!
   id: ID
   rotation: Float!
-  title: String!
   type: InteractionType!
   width: Float!
   x: Float!

@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 
 import { CreateManual } from '../../../../../../shared/structs/CreateManual';
-import { InteractionType } from '../../../../../apollo/globalTypes';
 import { NewManualMutation, NewManualMutationVariables } from '../../../../../apollo/NewManualMutation';
 import { NewManualQuery, NewManualQueryVariables } from '../../../../../apollo/NewManualQuery';
 import { Button } from '../../../../../components/forms/Button';
@@ -11,7 +10,6 @@ import { Form } from '../../../../../components/forms/Form';
 import { Input } from '../../../../../components/forms/Input';
 import { Column } from '../../../../../components/layout/Column';
 import { Row } from '../../../../../components/layout/Row';
-import { ManualSteps } from '../../../../../components/manuals/ManualSteps';
 import { Heading } from '../../../../../components/navigation/Heading';
 import { Spinner } from '../../../../../components/Spinner';
 import { useAuthGuard } from '../../../../../hooks/useAuthGuard';
@@ -19,9 +17,9 @@ import { useAuthGuard } from '../../../../../hooks/useAuthGuard';
 const query = gql`
   query NewManualQuery($id: ID!) {
     device(id: $id) {
+      id
       interactions {
         id
-        title
         type
       }
     }
@@ -74,10 +72,6 @@ export default function NewManual() {
               <Input name="title" label="Titel"/>
             </Column>
           </Row>
-          <ManualSteps
-            name="steps"
-            interactions={data.device.interactions.filter((interaction) => interaction.type !== InteractionType.ANCHOR)}
-          />
           <StyledActions>
             <Button text="Opslaan"/>
           </StyledActions>

@@ -25,12 +25,18 @@ export interface ManualQuery_manual_steps {
 export interface ManualQuery_manual_device_interactions {
   __typename: "Interaction";
   id: string;
-  title: string;
   type: InteractionType;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number;
 }
 
 export interface ManualQuery_manual_device {
   __typename: "Device";
+  id: string;
+  image: string;
   interactions: ManualQuery_manual_device_interactions[];
 }
 

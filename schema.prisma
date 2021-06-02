@@ -52,8 +52,6 @@ model Interaction {
   width       Float
   height      Float
   rotation    Float
-  title       String
-  description String
   deviceId    String
   device      Device                  @relation(fields: [deviceId], references: [id])
   steps       ManualStepInteraction[]

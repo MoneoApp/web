@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 
 import { UpdateManual } from '../../../../../../shared/structs/UpdateManual';
 import { DeleteManualMutation, DeleteManualMutationVariables } from '../../../../../apollo/DeleteManualMutation';
-import { InteractionType } from '../../../../../apollo/globalTypes';
 import { ManualMutation, ManualMutationVariables } from '../../../../../apollo/ManualMutation';
 import { ManualQuery, ManualQueryVariables } from '../../../../../apollo/ManualQuery';
 import { Confirm } from '../../../../../components/dialogs/Confirm';
@@ -14,7 +13,6 @@ import { Form } from '../../../../../components/forms/Form';
 import { Input } from '../../../../../components/forms/Input';
 import { Column } from '../../../../../components/layout/Column';
 import { Row } from '../../../../../components/layout/Row';
-import { ManualSteps } from '../../../../../components/manuals/ManualSteps';
 import { Heading } from '../../../../../components/navigation/Heading';
 import { Spinner } from '../../../../../components/Spinner';
 import { useAuthGuard } from '../../../../../hooks/useAuthGuard';
@@ -34,10 +32,16 @@ const query = gql`
         }
       }
       device {
+        id
+        image
         interactions {
           id
-          title
           type
+          x
+          y
+          width
+          height
+          rotation
         }
       }
     }
@@ -81,7 +85,7 @@ export default function Manual() {
     update: (cache) => cache.modify({
       id: `Device:${id}`,
       fields: {
-        devices: (devices: any[] = [], { readField }) => devices.filter((device) => readField('id', device) !== id)
+        manuals: (manuals: any[] = [], { readField }) => manuals.filter((manual) => readField('id', manual) !== id)
       }
     })
   });
@@ -110,10 +114,6 @@ export default function Manual() {
               <Input name="title" label="Titel"/>
             </Column>
           </Row>
-          <ManualSteps
-            name="steps"
-            interactions={data.manual.device.interactions.filter((interaction) => interaction.type !== InteractionType.ANCHOR)}
-          />
           <StyledActions>
             <Button
               text="Verwijder"

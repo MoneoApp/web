@@ -15,18 +15,5 @@ export type ShapeConfig = {
   y: number,
   width: number,
   height: number,
-  rotation: number,
-  title: string,
-  description: string
+  rotation: number
 };
-
-export type ManualStepConfig = {
-  id: string,
-  text: string,
-  interactions: StepInteractionConfig[]
-};
-
-export type StepInteractionConfig = {
-  id: string,
-  color: string
-}

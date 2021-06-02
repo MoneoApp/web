@@ -12,12 +12,12 @@ import { InteractionType } from "./globalTypes";
 export interface NewManualQuery_device_interactions {
   __typename: "Interaction";
   id: string;
-  title: string;
   type: InteractionType;
 }
 
 export interface NewManualQuery_device {
   __typename: "Device";
+  id: string;
   interactions: NewManualQuery_device_interactions[];
 }
 

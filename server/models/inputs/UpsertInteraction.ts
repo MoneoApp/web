@@ -10,7 +10,5 @@ export const UpsertInteraction = inputObjectType({
     t.float('width');
     t.float('height');
     t.float('rotation');
-    t.string('title');
-    t.string('description');
   }
 });
