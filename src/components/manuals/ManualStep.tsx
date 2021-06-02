@@ -9,6 +9,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { InteractionFragment } from '../../apollo/InteractionFragment';
 import { Confirm } from '../dialogs/Confirm';
+import { SelectInteractions } from '../dialogs/SelectInteractions';
 import { Button } from '../forms/Button';
 import { ErrorHandler } from '../forms/ErrorHandler';
 import { Input } from '../forms/Input';
@@ -17,11 +18,12 @@ type Props = {
   id: string,
   name: string,
   order: number,
+  image: string,
   interactions: InteractionFragment[]
   remove: () => void
 };
 
-export function ManualStep({ id, name, order, interactions, remove }: Props) {
+export function ManualStep({ id, name, order, image, interactions, remove }: Props) {
   const [, { open }] = useDialoog();
   const { watch, setValue } = useFormContext();
 
@@ -39,7 +41,17 @@ export function ManualStep({ id, name, order, interactions, remove }: Props) {
           <FontAwesomeIcon icon={faGripLines}/>
           <Input name={`${name}.${order}.text`} label="Tekst" defaultValue={defaultText}/>
           <ErrorHandler name={interactionsName} big={false}>
-            <Button text="Interacties"/>
+            <Button
+              text="Interacties"
+              type="button"
+              onClick={open.c((props) => (
+                <SelectInteractions
+                  image={image}
+                  interactions={interactions}
+                  {...props}
+                />
+              ))}
+            />
           </ErrorHandler>
           <Button
             text="Verwijder stap"

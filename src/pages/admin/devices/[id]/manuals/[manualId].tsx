@@ -115,6 +115,7 @@ export default function Manual() {
           </Row>
           <ManualSteps
             name="steps"
+            image={data.manual.device.image}
             interactions={data.manual.device.interactions.filter((interaction) => interaction.type !== InteractionType.ANCHOR)}
           />
           <StyledActions>

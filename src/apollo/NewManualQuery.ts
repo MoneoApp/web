@@ -23,6 +23,7 @@ export interface NewManualQuery_device_interactions {
 export interface NewManualQuery_device {
   __typename: "Device";
   id: string;
+  image: string;
   interactions: NewManualQuery_device_interactions[];
 }
 
