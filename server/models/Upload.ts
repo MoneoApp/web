@@ -11,8 +11,10 @@ export const Upload = scalarType({
     const upload = await value;
     const stream = upload.createReadStream();
     const fileType = await fromStream(stream);
+    const overrides: Record<string, string> = { 'application/x-zip-compressed': 'application/zip' };
+    const mime = overrides[upload.mimetype] ?? upload.mimetype
 
-    if (!fileType || fileType.mime !== upload.mimetype) {
+    if (!fileType || fileType.mime !== mime) {
       throw new GraphQLError('Mime type does not match file content.');
     }
 

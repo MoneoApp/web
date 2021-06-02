@@ -8,7 +8,7 @@ import { UpdateDevice } from '../../../shared/structs/UpdateDevice';
 import { authorized } from '../../guards/authorized';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
-import { storeImage } from '../../utils/storeImage';
+import { storeFile } from '../../utils/storeFile';
 
 export const DeviceMutation = extendType({
   type: 'Mutation',
@@ -20,20 +20,22 @@ export const DeviceMutation = extendType({
         brand: 'String',
         image: 'Upload',
         type: 'DeviceType',
+        mlImages: 'Upload',
         interactions: list('UpsertInteraction')
       },
       authorize: guard(
         authorized(),
         validated(CreateDevice)
       ),
-      resolve: async (parent, { model, brand, image, type, interactions }, { db, user }) => {
+      resolve: async (parent, { model, brand, image, type, mlImages, interactions }, { db, user }) => {
         const wanted = type === DeviceType.DYNAMIC ? 1 : 0;
 
         if (interactions.filter((i) => i.type === InteractionType.ANCHOR).length !== wanted) {
           throw new ApolloError('invalid interactions', Error.InvalidInteractions);
         }
 
-        const fileName = await storeImage(image);
+        const fileName = await storeFile(image, 'image/');
+        await storeFile(mlImages, 'application/zip')
 
         return await db.device.create({
           data: {
@@ -82,7 +84,7 @@ export const DeviceMutation = extendType({
           throw new ApolloError('invalid interactions', Error.InvalidInteractions);
         }
 
-        const fileName = image ? await storeImage(image) : undefined;
+        const fileName = image ? await storeFile(image, 'image/') : undefined;
 
         return await db.device.update({
           where: { id },

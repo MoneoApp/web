@@ -2,6 +2,7 @@ import { gql, useMutation } from '@apollo/client';
 import styled from '@emotion/styled';
 import { faEye, faQrcode } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 import { CreateDevice } from '../../../../shared/structs/CreateDevice';
 import { DeviceType, InteractionType } from '../../../apollo/globalTypes';
@@ -18,8 +19,8 @@ import { Heading } from '../../../components/navigation/Heading';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 
 const mutation = gql`
-  mutation NewDeviceMutation($model: String!, $brand: String!, $image: Upload!, $type: DeviceType!, $interactions: [UpsertInteraction!]!) {
-    createDevice(model: $model, brand: $brand, image: $image, type: $type, interactions: $interactions) {
+  mutation NewDeviceMutation($model: String!, $brand: String!, $image: Upload!, $type: DeviceType!, $mlImages: Upload!, $interactions: [UpsertInteraction!]!) {
+    createDevice(model: $model, brand: $brand, image: $image, type: $type, mlImages: $mlImages, interactions: $interactions) {
       id
       model
       brand
@@ -29,7 +30,15 @@ const mutation = gql`
 
 export default function NewDevice() {
   const { push } = useRouter();
+  const [progress, setProgress] = useState<number>(0);
   const [mutate] = useMutation<NewDeviceMutation, NewDeviceMutationVariables>(mutation, {
+    context: {
+      fetchOptions: {
+        onProgress: (ev: ProgressEvent) => {
+          setProgress(ev.loaded / ev.total);
+        }
+      }
+    },
     onCompleted: () => push('/admin/devices'),
     update: (cache, { data }) => data?.createDevice && cache.modify({
       fields: {
@@ -48,12 +57,13 @@ export default function NewDevice() {
       <Heading text="Nieuw apparaat"/>
       <Form
         struct={CreateDevice}
-        onSubmit={({ model, brand, image, type, interactions }) => mutate({
+        onSubmit={({ model, brand, image, type, mlImages, interactions }) => mutate({
           variables: {
             model,
             brand,
             image,
             type: type as DeviceType,
+            mlImages,
             interactions: interactions.map(({ id, ...i }) => ({
               ...i,
               type: i.type as InteractionType
@@ -86,6 +96,12 @@ export default function NewDevice() {
                 color: 'green-100'
               }]}
             />
+            <p>Progress: {progress}</p>
+            <FileInput
+              name="mlImages"
+              label="Afbeeldingen zip"
+              accept="application/zip"
+            />
           </Column>
           <Column sizes={{ phone: 12 }}>
             <Editor name="interactions" image="image" type="type"/>
@@ -102,5 +118,5 @@ export default function NewDevice() {
 const StyledActions = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin: 1rem 0;
+  margin-top: 1rem;
 `;
