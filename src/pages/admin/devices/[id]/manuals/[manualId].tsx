@@ -17,7 +17,6 @@ import { Row } from '../../../../../components/layout/Row';
 import { ManualSteps } from '../../../../../components/manuals/ManualSteps';
 import { Heading } from '../../../../../components/navigation/Heading';
 import { Spinner } from '../../../../../components/Spinner';
-import { colors } from '../../../../../constants';
 import { useAuthGuard } from '../../../../../hooks/useAuthGuard';
 import { useNotify } from '../../../../../hooks/useNotify';
 
@@ -100,7 +99,7 @@ export default function Manual() {
               text: step.text,
               interactions: step.interactions.map((interaction) => ({
                 id: interaction.id,
-                color: interaction.color ?? colors.yellow['200']![0]
+                color: interaction.color!
               }))
             }))
           }}

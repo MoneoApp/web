@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { useFormContext } from 'react-hook-form';
 
-import { ManualStepConfig } from '../../types';
+import { ManualStepConfig, StepInteractionConfig } from '../../types';
 import { Confirm } from '../dialogs/Confirm';
 import { SelectInteractions } from '../dialogs/SelectInteractions';
 import { Button } from '../forms/Button';
@@ -29,9 +29,11 @@ export function ManualStep({ name, order, step, interactions, remove }: Props) {
     setValue(`${name}.${order}.order`, order);
   }, [name, order, setValue]);
 
-  const interactionName = `${name}.${order}.interactionIds`;
-  const interactionIds = watch(interactionName) ?? [] as string[];
+  const interactionsName = `${name}.${order}.interactions`;
+  const interactionData = watch(interactionsName) ?? [] as StepInteractionConfig[];
   const defaultText = watch(`${name}.${order}.text`);
+
+  console.log('watch', interactionData);
 
   return (
     <Draggable draggableId={step.id} index={order}>
@@ -39,15 +41,18 @@ export function ManualStep({ name, order, step, interactions, remove }: Props) {
         <StyledRow ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
           <FontAwesomeIcon icon={faGripLines}/>
           <Input name={`${name}.${order}.text`} label="Tekst" defaultValue={defaultText}/>
-          <ErrorHandler name={interactionName} big={false}>
+          <ErrorHandler name={interactionsName} big={false}>
             <Button
-              text={`${interactionIds.length} interacties`}
+              text={`${interactionData.length} interacties`}
               type="button"
               onClick={open.c((props) => (
                 <SelectInteractions
                   data={interactions}
-                  value={interactionIds}
-                  setValue={(value) => setValue(interactionName, value)}
+                  value={interactionData}
+                  setValue={(value) => {
+                    setValue(interactionsName, value);
+                    console.log('set', value)
+                  }}
                   {...props}
                 />
               ), { strict: true })}

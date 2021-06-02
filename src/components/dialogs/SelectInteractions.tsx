@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { DialoogProps } from 'dialoog';
 import { useState } from 'react';
 
+import { colors } from '../../constants';
 import { useSearch } from '../../hooks/useSearch';
 import { StepInteractionConfig } from '../../types';
 import { Dialog } from '../Dialog';
@@ -28,19 +29,21 @@ export function SelectInteractions({ data, value, setValue, ...props }: Props & 
       </FieldForm>
       <StyledInteractions>
         {results?.map(({ id, title }) => {
-          const active = interactions.some((i) => i.id === id);
+          const active = interactions.find((i) => i.id === id);
 
           return (
             <StepInteraction
               key={id}
               title={title}
-              active={active}
-              onToggle={() => setInteractions([
+              active={Boolean(active)}
+              color={active?.color ?? colors.yellow['200']![0]}
+              setColor={(color) => setInteractions(interactions.map((i) => i.id !== id ? i : {
+                ...i,
+                color
+              }))}
+              onToggle={(color) => setInteractions([
                 ...interactions.filter((i) => i.id !== id),
-                ...active ? [] : [{
-                  id,
-                  color: 'yellow'
-                }]
+                ...active ? [] : [{ id, color }]
               ])}
             />
           );
