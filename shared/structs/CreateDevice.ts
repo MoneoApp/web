@@ -7,8 +7,6 @@ export const CreateDevice = object({
   brand: size(string(), 3, 70),
   image: refine(any(), 'truthy', (value) => Boolean(value)),
   type: string(),
-  mlImages: dynamic((value: any) => {
-   return value?.type === 'dynamic' ? optional(any()) : optional(any());
-  }),
+  mlImages: optional(any()),
   interactions: array(UpsertInteraction)
 });

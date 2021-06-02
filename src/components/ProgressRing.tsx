@@ -1,4 +1,3 @@
-import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
 type Props = {
@@ -24,7 +23,6 @@ export function ProgressRing({ radius, stroke, progress }: Props) {
           strokeWidth={stroke}
           strokeDasharray={`${circumference} ${circumference}`}
           style={{ strokeDashoffset }}
-          stroke-width={stroke}
           r={normalizedRadius}
           cx={radius}
           cy={radius}

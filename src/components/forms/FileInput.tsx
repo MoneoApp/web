@@ -73,19 +73,17 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
           {...props}
         />
 
-        {props.progress ?
-          (
-            <ProgressRing
-              radius={60}
-              stroke={4}
-              progress={props.progress}
-            />
-          ) : (
-            <StyledHint over={over} preview={preview !== undefined}>
-              Sleep hier een bestand of klik om er een te selecteren
-            </StyledHint>
-          )
-        }
+        {props.progress ? (
+          <ProgressRing
+            radius={60}
+            stroke={4}
+            progress={props.progress}
+          />
+        ) : (
+          <StyledHint over={over} preview={preview !== undefined}>
+            Sleep hier een bestand of klik om er een te selecteren
+          </StyledHint>
+        )}
       </StyledDrop>
     </ErrorHandler>
   );

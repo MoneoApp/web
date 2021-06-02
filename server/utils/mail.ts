@@ -4,7 +4,7 @@ type Config = {
   to: string | string[],
   subject: string,
   html: string
-}
+};
 
 export async function mail({to, subject, html }: Config) {
   const transporter = createTransport({
