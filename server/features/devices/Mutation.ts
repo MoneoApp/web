@@ -8,6 +8,7 @@ import { UpdateDevice } from '../../../shared/structs/UpdateDevice';
 import { authorized } from '../../guards/authorized';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
+import { mail } from '../../utils/mail';
 import { storeFile } from '../../utils/storeFile';
 
 export const DeviceMutation = extendType({
@@ -35,7 +36,19 @@ export const DeviceMutation = extendType({
         }
 
         const fileName = await storeFile(image, 'image/');
-        await storeFile(mlImages, 'application/zip')
+        const zipFileName = await storeFile(mlImages, 'application/zip');
+
+        const admins = await db.user.findMany({
+          where: { role: UserRole.ADMIN },
+          select: { email: true }
+        });
+        const adminEmail = Object.values(admins).map((a) => a.email);
+
+        await mail({
+          to: adminEmail,
+          subject: 'ML zip ontvangen',
+          html: `Een klant heeft een zip geüpload voor ${brand}/${model}. Klik <a href="${process.env.PUBLIC_URL}/uploads/${zipFileName}">hier</a> om de zip te downloaden`
+        });
 
         return await db.device.create({
           data: {
