@@ -2,15 +2,15 @@ import { Rect } from 'react-konva';
 
 import { ShapeConfig } from '../../../types';
 
-export function CircleShape({ width, height }: ShapeConfig) {
+export function CircleShape({ width, height, color }: ShapeConfig) {
   return (
     <Rect
-      fill="black"
-      opacity={.5}
+      fill={color ?? 'black'}
+      opacity={color ? 1 : .5}
       width={width}
       height={height}
       stroke="white"
-      strokeWidth={1}
+      strokeWidth={color ? 0 : 1}
       cornerRadius={Math.max(width, height)}
     />
   );

@@ -1,8 +1,6 @@
-import { assign, number, object, optional, string } from 'superstruct';
+import { number, object, optional, string } from 'superstruct';
 
-import { CreateInteraction } from './CreateInteraction';
-
-export const UpsertInteraction = assign(CreateInteraction, object({
+export const UpsertInteraction = object({
   id: optional(string()),
   type: string(),
   x: number(),
@@ -10,4 +8,4 @@ export const UpsertInteraction = assign(CreateInteraction, object({
   width: number(),
   height: number(),
   rotation: number()
-}));
+});

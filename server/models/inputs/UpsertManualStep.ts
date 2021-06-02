@@ -5,6 +5,6 @@ export const UpsertManualStep = inputObjectType({
   definition: (t) => {
     t.string('text');
     t.int('order');
-    t.list.id('interactionIds');
+    t.list.field('interactions', { type: 'ManualStepInteraction' });
   }
 });

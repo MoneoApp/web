@@ -2,18 +2,19 @@ import styled from '@emotion/styled';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
+import { InteractionFragment } from '../../apollo/InteractionFragment';
 import { errors } from '../../constants';
-import { ManualStepConfig } from '../../types';
 import { Button } from '../forms/Button';
 
 import { ManualStep } from './ManualStep';
 
 type Props = {
   name: string,
-  interactions: { id: string, title: string }[]
+  image: string,
+  interactions: InteractionFragment[]
 };
 
-export function ManualSteps({ name, interactions }: Props) {
+export function ManualSteps({ name, image, interactions }: Props) {
   const { control, formState: { errors: formErrors } } = useFormContext();
   const { fields, append, move, remove } = useFieldArray({
     control,
@@ -40,9 +41,10 @@ export function ManualSteps({ name, interactions }: Props) {
               {fields.map((step, index) => (
                 <ManualStep
                   key={step.id}
+                  id={step.id}
                   name={name}
                   order={index}
-                  step={step as ManualStepConfig}
+                  image={image}
                   interactions={interactions}
                   remove={() => remove(index)}
                 />
