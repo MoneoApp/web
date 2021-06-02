@@ -1,4 +1,4 @@
-import { list, objectType } from 'nexus';
+import { objectType } from 'nexus';
 
 import { ensure } from '../utils/ensure';
 
@@ -12,8 +12,7 @@ export const Interaction = objectType({
     t.float('width');
     t.float('height');
     t.float('rotation');
-    t.string('title');
-    t.string('description');
+    t.nullable.string('color');
 
     t.field('device', {
       type: 'Device',

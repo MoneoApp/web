@@ -18,9 +18,17 @@ export const ManualStep = objectType({
 
     t.field('interactions', {
       type: list('Interaction'),
-      resolve: ({ id }, args, { db }) => db.manualStep.findUnique({
-        where: { id }
-      }).interactions()
+      resolve: async ({ id }, args, { db }) => {
+        const interactions = await db.manualStepInteraction.findMany({
+          where: { stepId: id },
+          include: { interaction: true }
+        });
+
+        return interactions.map(({ color, interaction }) => ({
+          ...interaction,
+          color
+        }));
+      }
     });
   }
-})
+});

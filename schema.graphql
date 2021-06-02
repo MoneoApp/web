@@ -24,12 +24,11 @@ enum DeviceType {
 }
 
 type Interaction {
-  description: String!
+  color: String
   device: Device!
   height: Float!
   id: ID!
   rotation: Float!
-  title: String!
   type: InteractionType!
   width: Float!
   x: Float!
@@ -62,6 +61,11 @@ type ManualStep {
   text: String!
 }
 
+input ManualStepInteraction {
+  color: String!
+  id: ID!
+}
+
 type Mutation {
   createDevice(brand: String!, image: Upload!, interactions: [UpsertInteraction!]!, model: String!, type: DeviceType!): Device!
   createManual(deviceId: ID!, steps: [UpsertManualStep!]!, title: String!): Manual!
@@ -88,11 +92,9 @@ type Query {
 scalar Upload
 
 input UpsertInteraction {
-  description: String!
   height: Float!
   id: ID
   rotation: Float!
-  title: String!
   type: InteractionType!
   width: Float!
   x: Float!
@@ -100,7 +102,7 @@ input UpsertInteraction {
 }
 
 input UpsertManualStep {
-  interactionIds: [ID!]!
+  interactions: [ManualStepInteraction!]!
   order: Int!
   text: String!
 }

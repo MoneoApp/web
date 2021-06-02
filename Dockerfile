@@ -1,4 +1,4 @@
-FROM node:15-alpine AS build
+FROM node:14-alpine AS build
 
 WORKDIR /app
 COPY . .
@@ -6,7 +6,7 @@ COPY . .
 RUN npm ci
 RUN npm run build
 
-FROM node:15-alpine AS run
+FROM node:14-alpine AS run
 
 ENV NODE_ENV production
 EXPOSE 3000

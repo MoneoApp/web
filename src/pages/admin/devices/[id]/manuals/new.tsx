@@ -14,18 +14,20 @@ import { Row } from '../../../../../components/layout/Row';
 import { ManualSteps } from '../../../../../components/manuals/ManualSteps';
 import { Heading } from '../../../../../components/navigation/Heading';
 import { Spinner } from '../../../../../components/Spinner';
+import { interactionFragment } from '../../../../../fragments';
 import { useAuthGuard } from '../../../../../hooks/useAuthGuard';
 
 const query = gql`
   query NewManualQuery($id: ID!) {
     device(id: $id) {
+      id
+      image
       interactions {
-        id
-        title
-        type
+        ...InteractionFragment
       }
     }
   }
+  ${interactionFragment}
 `;
 
 const mutation = gql`
@@ -76,6 +78,7 @@ export default function NewManual() {
           </Row>
           <ManualSteps
             name="steps"
+            image={data.device.image}
             interactions={data.device.interactions.filter((interaction) => interaction.type !== InteractionType.ANCHOR)}
           />
           <StyledActions>

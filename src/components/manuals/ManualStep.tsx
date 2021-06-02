@@ -4,9 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDialoog } from 'dialoog';
 import { useEffect } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import { ManualStepConfig } from '../../types';
+import { InteractionFragment } from '../../apollo/InteractionFragment';
+import { InteractionConfig } from '../../types';
 import { Confirm } from '../dialogs/Confirm';
 import { SelectInteractions } from '../dialogs/SelectInteractions';
 import { Button } from '../forms/Button';
@@ -14,43 +15,52 @@ import { ErrorHandler } from '../forms/ErrorHandler';
 import { Input } from '../forms/Input';
 
 type Props = {
+  id: string,
   name: string,
   order: number,
-  step: ManualStepConfig,
-  interactions: { id: string, title: string }[],
+  image: string,
+  interactions: InteractionFragment[]
   remove: () => void
 };
 
-export function ManualStep({ name, order, step, interactions, remove }: Props) {
+export function ManualStep({ id, name, order, image, interactions, remove }: Props) {
   const [, { open }] = useDialoog();
-  const { watch, setValue } = useFormContext();
+  const { control, watch, setValue } = useFormContext();
 
   useEffect(() => {
     setValue(`${name}.${order}.order`, order);
   }, [name, order, setValue]);
 
-  const interactionName = `${name}.${order}.interactionIds`;
-  const interactionIds = watch(interactionName) ?? [] as string[];
+  const interactionsName = `${name}.${order}.interactions`;
+  const interactionsData: InteractionConfig[] = watch(interactionsName) ?? [];
   const defaultText = watch(`${name}.${order}.text`);
 
+  const array = useFieldArray({
+    control,
+    name: interactionsName
+  });
+
   return (
-    <Draggable draggableId={step.id} index={order}>
+    <Draggable draggableId={id} index={order}>
       {(provided) => (
         <StyledRow ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
           <FontAwesomeIcon icon={faGripLines}/>
           <Input name={`${name}.${order}.text`} label="Tekst" defaultValue={defaultText}/>
-          <ErrorHandler name={interactionName} big={false}>
+          <ErrorHandler name={interactionsName} big={false}>
             <Button
-              text={`${interactionIds.length} interacties`}
+              text={`${array.fields.length} interacties`}
               type="button"
               onClick={open.c((props) => (
                 <SelectInteractions
+                  name={interactionsName}
+                  image={image}
                   interactions={interactions}
-                  interactionIds={interactionIds}
-                  setValue={(value) => setValue(interactionName, value)}
+                  initialValue={interactionsData}
+                  control={array}
+                  update={(n, v) => setValue(n, v)}
                   {...props}
                 />
-              ), { strict: true })}
+              ))}
             />
           </ErrorHandler>
           <Button
@@ -81,7 +91,6 @@ const StyledRow = styled.div`
   padding: 1rem;
   background-color: var(--gray-200);
   border-radius: 16px;
-
   & > * {
     margin-bottom: 0 !important;
   }

@@ -11,10 +11,10 @@ type Props = {
   setConfig: (box: ShapeConfig) => void,
   selected: boolean,
   setSelected: () => void,
-  openSettings: () => void
+  deleteShape: () => void
 };
 
-export function Shape({ config, setConfig, selected, setSelected, openSettings }: Props) {
+export function Shape({ config, setConfig, selected, setSelected, deleteShape }: Props) {
   const ref = useRef<Konva.Group>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
@@ -67,7 +67,7 @@ export function Shape({ config, setConfig, selected, setSelected, openSettings }
             ...position
           });
         }}
-        onDblClick={() => config.type !== InteractionType.ANCHOR && openSettings()}
+        onDblClick={() => config.type !== InteractionType.ANCHOR && deleteShape()}
       >
         {createElement(shapes[config.type] as ComponentType<ShapeConfig>, config)}
       </Group>
