@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 import { UpdateManual } from '../../../../../../shared/structs/UpdateManual';
 import { DeleteManualMutation, DeleteManualMutationVariables } from '../../../../../apollo/DeleteManualMutation';
+import { InteractionType } from '../../../../../apollo/globalTypes';
 import { ManualMutation, ManualMutationVariables } from '../../../../../apollo/ManualMutation';
 import { ManualQuery, ManualQueryVariables } from '../../../../../apollo/ManualQuery';
 import { Confirm } from '../../../../../components/dialogs/Confirm';
@@ -13,8 +14,10 @@ import { Form } from '../../../../../components/forms/Form';
 import { Input } from '../../../../../components/forms/Input';
 import { Column } from '../../../../../components/layout/Column';
 import { Row } from '../../../../../components/layout/Row';
+import { ManualSteps } from '../../../../../components/manuals/ManualSteps';
 import { Heading } from '../../../../../components/navigation/Heading';
 import { Spinner } from '../../../../../components/Spinner';
+import { interactionFragment } from '../../../../../fragments';
 import { useAuthGuard } from '../../../../../hooks/useAuthGuard';
 import { useNotify } from '../../../../../hooks/useNotify';
 
@@ -35,17 +38,12 @@ const query = gql`
         id
         image
         interactions {
-          id
-          type
-          x
-          y
-          width
-          height
-          rotation
+          ...InteractionFragment
         }
       }
     }
   }
+  ${interactionFragment}
 `;
 
 const updateMutation = gql`
@@ -101,6 +99,7 @@ export default function Manual() {
             title: data.manual.title,
             steps: [...data.manual.steps].sort((a, b) => a.order - b.order).map((step) => ({
               text: step.text,
+              order: step.order,
               interactions: step.interactions.map((interaction) => ({
                 id: interaction.id,
                 color: interaction.color!
@@ -114,6 +113,10 @@ export default function Manual() {
               <Input name="title" label="Titel"/>
             </Column>
           </Row>
+          <ManualSteps
+            name="steps"
+            interactions={data.manual.device.interactions.filter((interaction) => interaction.type !== InteractionType.ANCHOR)}
+          />
           <StyledActions>
             <Button
               text="Verwijder"
@@ -121,7 +124,7 @@ export default function Manual() {
               palette={['red-200', 'gray-0']}
               onClick={open.c((props) => (
                 <Confirm
-                  text="Weet je zeker dat je dize handleiding wil verwijderen?"
+                  text="Weet je zeker dat je deze handleiding wil verwijderen?"
                   onConfirm={() => mutateDelete({
                     variables: { id: manualId as string }
                   })}
