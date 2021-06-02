@@ -14,6 +14,7 @@ export const Interaction = objectType({
     t.float('rotation');
     t.string('title');
     t.string('description');
+    t.nullable.string('color');
 
     t.field('device', {
       type: 'Device',

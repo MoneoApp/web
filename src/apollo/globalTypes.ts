@@ -23,6 +23,11 @@ export enum UserRole {
   USER = "USER",
 }
 
+export interface ManualStepInteraction {
+  color: string;
+  id: string;
+}
+
 export interface UpsertInteraction {
   description: string;
   height: number;
@@ -36,7 +41,7 @@ export interface UpsertInteraction {
 }
 
 export interface UpsertManualStep {
-  interactionIds: string[];
+  interactions: ManualStepInteraction[];
   order: number;
   text: string;
 }

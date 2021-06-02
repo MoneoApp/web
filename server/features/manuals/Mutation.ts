@@ -38,9 +38,12 @@ export const ManualMutation = extendType({
             text: step.text,
             order: step.order,
             interactions: {
-              connect: step.interactionIds.map((interactionId) => ({
-                id: interactionId
-              }))
+              createMany: {
+                data: step.interactions.map(({ id, color }) => ({
+                  interactionId: id,
+                  color
+                }))
+              }
             }
           }
         })));
@@ -71,10 +74,11 @@ export const ManualMutation = extendType({
         }
 
         await db.$transaction([
+          db.manualStepInteraction.deleteMany({
+            where: { step: { manual: { id } } }
+          }),
           db.manualStep.deleteMany({
-            where: {
-              manual: { id }
-            }
+            where: { manual: { id } }
           }),
           ...steps.map((step) => db.manualStep.create({
             data: {
@@ -84,9 +88,12 @@ export const ManualMutation = extendType({
               text: step.text,
               order: step.order,
               interactions: {
-                connect: step.interactionIds.map((interactionId) => ({
-                  id: interactionId
-                }))
+                createMany: {
+                  data: step.interactions.map(({ id: interactionId, color }) => ({
+                    interactionId,
+                    color
+                  }))
+                }
               }
             }
           }))
@@ -103,6 +110,9 @@ export const ManualMutation = extendType({
       },
       resolve: async (parent, { id }, { db }) => {
         const transaction = await db.$transaction([
+          db.manualStepInteraction.deleteMany({
+            where: { step: { manual: { id } } }
+          }),
           db.manualStep.deleteMany({
             where: { manual: { id } }
           }),
@@ -111,7 +121,7 @@ export const ManualMutation = extendType({
           })
         ]);
 
-        return transaction[1];
+        return transaction[2];
       }
     });
   }

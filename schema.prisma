@@ -45,7 +45,7 @@ enum DeviceType {
 }
 
 model Interaction {
-  id          String          @id @default(cuid())
+  id          String                  @id @default(cuid())
   type        InteractionType
   x           Float
   y           Float
@@ -55,8 +55,8 @@ model Interaction {
   title       String
   description String
   deviceId    String
-  device      Device          @relation(fields: [deviceId], references: [id])
-  steps       ManualStep[]
+  device      Device                  @relation(fields: [deviceId], references: [id])
+  steps       ManualStepInteraction[]
 }
 
 enum InteractionType {
@@ -74,10 +74,20 @@ model Manual {
 }
 
 model ManualStep {
-  id           String        @id @default(cuid())
+  id           String                  @id @default(cuid())
   text         String
-  order        Int           @default(0)
+  order        Int
   manualId     String
-  manual       Manual        @relation(fields: [manualId], references: [id])
-  interactions Interaction[]
+  manual       Manual                  @relation(fields: [manualId], references: [id])
+  interactions ManualStepInteraction[]
+}
+
+model ManualStepInteraction {
+  stepId        String
+  step          ManualStep  @relation(fields: [stepId], references: [id])
+  interactionId String
+  interaction   Interaction @relation(fields: [interactionId], references: [id])
+  color         String
+
+  @@id([stepId, interactionId])
 }
