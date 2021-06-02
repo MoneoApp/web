@@ -22,7 +22,7 @@ export function ProgressRing({ radius, stroke, progress }: Props) {
           stroke="var(--yellow-200)"
           fill="transparent"
           strokeWidth={stroke}
-          strokeDasharray={circumference + ' ' + circumference}
+          strokeDasharray={`${circumference} ${circumference}`}
           style={{ strokeDashoffset }}
           stroke-width={stroke}
           r={normalizedRadius}
