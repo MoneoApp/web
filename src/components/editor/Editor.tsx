@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { useDialoog } from 'dialoog';
 import Konva from 'konva';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
@@ -12,7 +11,6 @@ import { useFileUrl } from '../../hooks/useFileUrl';
 import { useResizeObserver } from '../../hooks/useResizeObserver';
 import { ShapeConfig } from '../../types';
 import { getPointerPosition } from '../../utils/getPointerPosition';
-import { ShapeSettings } from '../dialogs/ShapeSettings';
 
 import { Shape } from './Shape';
 import { Toolbox } from './Toolbox';
@@ -34,26 +32,8 @@ function EditorInternal({ name, image, type }: Props) {
   const [wrapperRef, rect] = useResizeObserver();
   const [shapes, setShapes] = useState<ShapeConfig[]>([]);
   const [selected, setSelected] = useState<string>();
-  const [, { open }] = useDialoog();
 
   const isBackground = (e: Konva.KonvaEventObject<any>) => e.target === e.target.getStage() || e.target.getLayer()?.name() === 'background';
-  const openSettings = (config: ShapeConfig) => open.c((props) => (
-    <ShapeSettings
-      shape={config}
-      onDelete={() => {
-        setShapes((ss) => ss.filter((s) => s.id !== config.id));
-        props.close();
-      }}
-      onCreate={(values) => {
-        setShapes((ss) => ss.map((s) => s.id !== config.id ? s : {
-          ...s,
-          ...values
-        }));
-        props.close();
-      }}
-      {...props}
-    />
-  ), { strict: true });
 
   useEffect(() => {
     if (!typeData) {
@@ -71,9 +51,7 @@ function EditorInternal({ name, image, type }: Props) {
         y: 32,
         width: 128,
         height: 128,
-        rotation: 0,
-        title: 'Anchor',
-        description: 'Anchor'
+        rotation: 0
       }
     ]);
   }, [typeData, setShapes]);
@@ -111,13 +89,10 @@ function EditorInternal({ name, image, type }: Props) {
           y: pos.y - 16,
           width: 32,
           height: 32,
-          rotation: 0,
-          title: '',
-          description: ''
+          rotation: 0
         };
 
         setShapes([...shapes, shape]);
-        openSettings(shape)();
       }}
     >
       {rect && (
@@ -161,20 +136,16 @@ function EditorInternal({ name, image, type }: Props) {
             <Image image={src}/>
           </Layer>
           <Layer>
-            {shapes.map((config) => {
-              const setConfig = (c: ShapeConfig) => setShapes(shapes.map((cc) => c.id === cc.id ? c : cc));
-
-              return (
-                <Shape
-                  key={config.id}
-                  config={config}
-                  setConfig={setConfig}
-                  selected={selected === config.id}
-                  setSelected={() => setSelected(config.id)}
-                  openSettings={openSettings(config)}
-                />
-              );
-            })}
+            {shapes.map((config) => (
+              <Shape
+                key={config.id}
+                config={config}
+                setConfig={(c) => setShapes(shapes.map((cc) => c.id === cc.id ? c : cc))}
+                selected={selected === config.id}
+                setSelected={() => setSelected(config.id)}
+                deleteShape={() => setShapes((c) => c.filter((cc) => cc.id !== config.id))}
+              />
+            ))}
           </Layer>
         </Stage>
       )}

@@ -16,12 +16,10 @@ export type ShapeConfig = {
   width: number,
   height: number,
   rotation: number,
-  title: string,
-  description: string
+  color?: string
 };
 
-export type ManualStepConfig = {
+export type InteractionConfig = {
   id: string,
-  text: string,
-  interactionIds: string[]
+  color: string
 };
