@@ -7,12 +7,12 @@ import { Draggable } from 'react-beautiful-dnd';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { InteractionFragment } from '../../apollo/InteractionFragment';
+import { InteractionConfig } from '../../types';
 import { Confirm } from '../dialogs/Confirm';
 import { SelectInteractions } from '../dialogs/SelectInteractions';
 import { Button } from '../forms/Button';
 import { ErrorHandler } from '../forms/ErrorHandler';
 import { Input } from '../forms/Input';
-import { InteractionConfig } from '../../types';
 
 type Props = {
   id: string,
