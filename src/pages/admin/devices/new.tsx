@@ -35,9 +35,7 @@ export default function NewDevice() {
   const [mutate] = useMutation<NewDeviceMutation, NewDeviceMutationVariables>(mutation, {
     context: {
       fetchOptions: {
-        onProgress: (ev: ProgressEvent) => {
-          setProgress((ev.loaded / ev.total) * 100);
-        }
+        onProgress: (ev: ProgressEvent) => setProgress((ev.loaded / ev.total) * 100)
       }
     },
     onCompleted: () => push('/admin/devices'),
