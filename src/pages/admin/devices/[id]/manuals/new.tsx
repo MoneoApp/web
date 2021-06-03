@@ -21,7 +21,6 @@ const query = gql`
   query NewManualQuery($id: ID!) {
     device(id: $id) {
       id
-      image
       interactions {
         ...InteractionFragment
       }
@@ -78,7 +77,7 @@ export default function NewManual() {
           </Row>
           <ManualSteps
             name="steps"
-            image={data.device.image}
+            id={data.device.id}
             interactions={data.device.interactions.filter((interaction) => interaction.type !== InteractionType.ANCHOR)}
           />
           <StyledActions>
