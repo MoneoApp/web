@@ -83,6 +83,16 @@ export const DeviceMutation = extendType({
         }
 
         const fileName = image ? await storeImage(image) : undefined;
+        const used = await db.manualStepInteraction.findMany({
+          where: {
+            interaction: {
+              id: { in: interactions.map((i) => i.id ?? '') }
+            }
+          },
+          select: {
+            interactionId: true
+          }
+        });
 
         return await db.device.update({
           where: { id },
@@ -91,16 +101,21 @@ export const DeviceMutation = extendType({
             brand,
             image: fileName,
             interactions: {
+              deleteMany: {
+                id: {
+                  notIn: [
+                    ...interactions.map((i) => i.id ?? ''),
+                    ...used.map((i) => i.interactionId)
+                  ]
+                }
+              },
               upsert: interactions.map(({ id: interactionId, ...data }) => ({
                 where: {
-                  id: interactionId ?? undefined
+                  id: interactionId ?? ''
                 },
                 create: data,
                 update: data
-              })),
-              deleteMany: {
-                id: { notIn: interactions.map((i) => i.id ?? '') }
-              }
+              }))
             }
           }
         });
