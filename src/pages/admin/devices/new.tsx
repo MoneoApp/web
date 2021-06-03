@@ -31,7 +31,7 @@ const mutation = gql`
 
 export default function NewDevice() {
   const { push } = useRouter();
-  const [progress, setProgress] = useState<number>(0);
+  const [progress, setProgress] = useState(0);
   const [mutate] = useMutation<NewDeviceMutation, NewDeviceMutationVariables>(mutation, {
     context: {
       fetchOptions: {
