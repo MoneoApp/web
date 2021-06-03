@@ -63,7 +63,7 @@ type ManualStep {
 }
 
 type Mutation {
-  createDevice(brand: String!, image: Upload!, interactions: [UpsertInteraction!]!, mlImages: Upload!, model: String!, type: DeviceType!): Device!
+  createDevice(brand: String!, image: Upload!, interactions: [UpsertInteraction!]!, mlImages: Upload, model: String!, type: DeviceType!): Device!
   createManual(deviceId: ID!, steps: [UpsertManualStep!]!, title: String!): Manual!
   createUser(inviteId: ID!, password: String!): User!
   deleteDevice(id: ID!): Device

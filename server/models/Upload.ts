@@ -2,7 +2,7 @@ import { fromStream } from 'file-type';
 import { GraphQLError } from 'graphql';
 import { scalarType } from 'nexus';
 
-import { overrides } from '../constants';
+import { mimeOverrides } from '../constants';
 
 export const Upload = scalarType({
   name: 'Upload',
@@ -13,7 +13,7 @@ export const Upload = scalarType({
     const upload = await value;
     const stream = upload.createReadStream();
     const fileType = await fromStream(stream);
-    const mime = overrides[upload.mimetype] ?? upload.mimetype
+    const mime = mimeOverrides[upload.mimetype] ?? upload.mimetype;
 
     if (!fileType || fileType.mime !== mime) {
       throw new GraphQLError('Mime type does not match file content.');

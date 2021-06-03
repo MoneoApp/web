@@ -48,7 +48,7 @@ export const UserMutation = extendType({
           await mail({
             to: email,
             subject: 'Uitnodiging Moneo',
-            html: `U bent uitgenodigd voor Moneo. Klik <a href="${process.env.PUBLIC_URL}/?invite=${invite.id}">hier</a> om te registreren`
+            html: `U bent uitgenodigd voor Moneo. Klik <a href="${process.env.PUBLIC_URL}/?invite=${invite.id}">hier</a> om te registreren.`
           });
 
           return true;

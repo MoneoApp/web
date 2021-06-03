@@ -10,6 +10,7 @@ import { NewDeviceMutation, NewDeviceMutationVariables } from '../../../apollo/N
 import { Editor } from '../../../components/editor/Editor';
 import { BigRadio } from '../../../components/forms/BigRadio';
 import { Button } from '../../../components/forms/Button';
+import { ConditionalField } from '../../../components/forms/ConditionalField';
 import { FileInput } from '../../../components/forms/FileInput';
 import { Form } from '../../../components/forms/Form';
 import { Input } from '../../../components/forms/Input';
@@ -19,7 +20,7 @@ import { Heading } from '../../../components/navigation/Heading';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 
 const mutation = gql`
-  mutation NewDeviceMutation($model: String!, $brand: String!, $image: Upload!, $type: DeviceType!, $mlImages: Upload!, $interactions: [UpsertInteraction!]!) {
+  mutation NewDeviceMutation($model: String!, $brand: String!, $image: Upload!, $type: DeviceType!, $mlImages: Upload, $interactions: [UpsertInteraction!]!) {
     createDevice(model: $model, brand: $brand, image: $image, type: $type, mlImages: $mlImages, interactions: $interactions) {
       id
       model
@@ -96,12 +97,14 @@ export default function NewDevice() {
                 color: 'green-100'
               }]}
             />
-            <FileInput
-              name="mlImages"
-              label="Afbeeldingen zip"
-              accept="application/zip"
-              progress={progress}
-            />
+            <ConditionalField name="type" check={(v) => v === DeviceType.DYNAMIC}>
+              <FileInput
+                name="mlImages"
+                label="Modelafbeeldingen"
+                accept="application/zip"
+                progress={progress}
+              />
+            </ConditionalField>
           </Column>
           <Column sizes={{ phone: 12 }}>
             <Editor name="interactions" image="image" type="type"/>

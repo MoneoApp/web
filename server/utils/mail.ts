@@ -6,7 +6,7 @@ type Config = {
   html: string
 };
 
-export async function mail({to, subject, html }: Config) {
+export async function mail({ to, subject, html }: Config) {
   const transporter = createTransport({
     host: process.env.SMTP_HOST,
     port: 587,

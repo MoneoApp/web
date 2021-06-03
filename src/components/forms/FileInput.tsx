@@ -72,7 +72,6 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
           onChange={(event) => setFile(event.target.files)}
           {...props}
         />
-
         {props.progress ? (
           <ProgressRing
             radius={60}
@@ -154,8 +153,4 @@ const StyledHint = styled.span<{ over: boolean, preview: boolean }>`
   ${(props) => props.preview && css`
     box-shadow: 0 0 4rem var(--gray-300);
   `};
-`;
-
-const StyledProgress = styled.div`
-  padding: 2rem;
 `;

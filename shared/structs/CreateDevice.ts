@@ -1,4 +1,4 @@
-import { any, array, dynamic, never, object, optional, refine, size, string } from 'superstruct';
+import { any, array, object, optional, refine, size, string } from 'superstruct';
 
 import { UpsertInteraction } from './UpsertInteraction';
 

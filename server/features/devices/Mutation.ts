@@ -29,26 +29,25 @@ export const DeviceMutation = extendType({
         validated(CreateDevice)
       ),
       resolve: async (parent, { model, brand, image, type, mlImages, interactions }, { db, user }) => {
-        const wanted = type === DeviceType.DYNAMIC ? 1 : 0;
+        const anchors = type === DeviceType.DYNAMIC ? 1 : 0;
 
-        if (interactions.filter((i) => i.type === InteractionType.ANCHOR).length !== wanted) {
+        if (interactions.filter((i) => i.type === InteractionType.ANCHOR).length !== anchors) {
           throw new ApolloError('invalid interactions', Error.InvalidInteractions);
         }
 
-        const fileName = await storeFile(image, 'image/');
+        const imageName = await storeFile(image, 'image/');
 
-        if (wanted) {
-          const zipFileName = await storeFile(mlImages, 'application/zip');
+        if (anchors) {
+          const zipName = await storeFile(mlImages, 'application/zip');
           const admins = await db.user.findMany({
             where: { role: UserRole.ADMIN },
             select: { email: true }
           });
-          const adminEmail = Object.values(admins).map((a) => a.email);
 
           await mail({
-            to: adminEmail,
-            subject: 'ML zip ontvangen',
-            html: `Een klant heeft een zip geüpload voor ${brand}/${model}. Klik <a href="${process.env.PUBLIC_URL}/uploads/${zipFileName}">hier</a> om de zip te downloaden`
+            to: Object.values(admins).map((a) => a.email),
+            subject: 'Nieuw ML apparaat aangemaakt',
+            html: `Een klant heeft een zip geüpload voor ${brand}/${model}. Klik <a href="${process.env.PUBLIC_URL}/uploads/${zipName}">hier</a> om de zip te downloaden.`
           });
         }
 
@@ -56,7 +55,7 @@ export const DeviceMutation = extendType({
           data: {
             model,
             brand,
-            image: fileName,
+            image: imageName,
             type,
             user: {
               connect: { id: user!.id }

@@ -2,8 +2,8 @@ import styled from '@emotion/styled';
 
 type Props = {
   radius: number,
-  stroke: number
-  progress: number;
+  stroke: number,
+  progress: number
 };
 
 export function ProgressRing({ radius, stroke, progress }: Props) {
@@ -22,7 +22,7 @@ export function ProgressRing({ radius, stroke, progress }: Props) {
           fill="transparent"
           strokeWidth={stroke}
           strokeDasharray={`${circumference} ${circumference}`}
-          style={{ strokeDashoffset }}
+          strokeDashoffset={strokeDashoffset}
           r={normalizedRadius}
           cx={radius}
           cy={radius}

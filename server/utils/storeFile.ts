@@ -5,10 +5,10 @@ import { join } from 'path';
 
 import { Error } from '../../shared/constants';
 
-export async function storeFile(file: any, startMime: string) {
+export async function storeFile(file: any, mimeStart: string) {
   const { createReadStream, extension, mime } = await file;
 
-  if (!mime.startsWith(startMime)) {
+  if (!mime.startsWith(mimeStart)) {
     throw new ApolloError('invalid file type', Error.InvalidFileType);
   }
 
