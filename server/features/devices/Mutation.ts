@@ -55,7 +55,8 @@ export const DeviceMutation = extendType({
         });
 
         if (anchors) {
-          const zipName = await storeFile(mlImages, 'application/zip', `ml-${device.id}`);
+          await storeFile(mlImages, 'application/zip', `ml-${device.id}`);
+
           const admins = await db.user.findMany({
             where: { role: UserRole.ADMIN },
             select: { email: true }
@@ -64,7 +65,7 @@ export const DeviceMutation = extendType({
           await mail({
             to: Object.values(admins).map((a) => a.email),
             subject: 'Nieuw ML apparaat aangemaakt',
-            html: `Een klant heeft een zip geüpload voor ${brand}/${model}. Klik <a href="${process.env.PUBLIC_URL}/uploads/${zipName}">hier</a> om de zip te downloaden.`
+            html: `Een klant heeft een zip geüpload voor ${brand}/${model}. Klik <a href="${process.env.PUBLIC_URL}/api/${device.id}/ml">hier</a> om de zip te downloaden.`
           });
         }
 
