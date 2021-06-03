@@ -6,7 +6,9 @@ COPY . .
 RUN npm ci
 RUN npm run build
 
-FROM node:14-alpine AS run
+FROM nikolaik/python-nodejs:python3.9-nodejs14-alpine AS run
+
+RUN pip install "tensorflow==2.5.0" "tensorflow-hub[make_image_classifier]==0.12.0"
 
 ENV NODE_ENV production
 EXPOSE 3000
