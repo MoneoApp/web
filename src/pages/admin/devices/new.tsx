@@ -2,6 +2,7 @@ import { gql, useMutation } from '@apollo/client';
 import styled from '@emotion/styled';
 import { faEye, faQrcode } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 import { CreateDevice } from '../../../../shared/structs/CreateDevice';
 import { DeviceType, InteractionType } from '../../../apollo/globalTypes';
@@ -9,6 +10,7 @@ import { NewDeviceMutation, NewDeviceMutationVariables } from '../../../apollo/N
 import { Editor } from '../../../components/editor/Editor';
 import { BigRadio } from '../../../components/forms/BigRadio';
 import { Button } from '../../../components/forms/Button';
+import { ConditionalField } from '../../../components/forms/ConditionalField';
 import { FileInput } from '../../../components/forms/FileInput';
 import { Form } from '../../../components/forms/Form';
 import { Input } from '../../../components/forms/Input';
@@ -18,8 +20,8 @@ import { Heading } from '../../../components/navigation/Heading';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 
 const mutation = gql`
-  mutation NewDeviceMutation($model: String!, $brand: String!, $image: Upload!, $type: DeviceType!, $interactions: [UpsertInteraction!]!) {
-    createDevice(model: $model, brand: $brand, image: $image, type: $type, interactions: $interactions) {
+  mutation NewDeviceMutation($model: String!, $brand: String!, $image: Upload!, $type: DeviceType!, $mlImages: Upload, $interactions: [UpsertInteraction!]!) {
+    createDevice(model: $model, brand: $brand, image: $image, type: $type, mlImages: $mlImages, interactions: $interactions) {
       id
       model
       brand
@@ -29,7 +31,13 @@ const mutation = gql`
 
 export default function NewDevice() {
   const { push } = useRouter();
+  const [progress, setProgress] = useState(0);
   const [mutate] = useMutation<NewDeviceMutation, NewDeviceMutationVariables>(mutation, {
+    context: {
+      fetchOptions: {
+        onProgress: (ev: ProgressEvent) => setProgress((ev.loaded / ev.total) * 100)
+      }
+    },
     onCompleted: () => push('/admin/devices'),
     update: (cache, { data }) => data?.createDevice && cache.modify({
       fields: {
@@ -48,12 +56,13 @@ export default function NewDevice() {
       <Heading text="Nieuw apparaat"/>
       <Form
         struct={CreateDevice}
-        onSubmit={({ model, brand, image, type, interactions }) => mutate({
+        onSubmit={({ model, brand, image, type, mlImages, interactions }) => mutate({
           variables: {
             model,
             brand,
             image,
             type: type as DeviceType,
+            mlImages,
             interactions: interactions.map(({ id, ...i }) => ({
               ...i,
               type: i.type as InteractionType
@@ -86,6 +95,14 @@ export default function NewDevice() {
                 color: 'green-100'
               }]}
             />
+            <ConditionalField name="type" check={(v) => v === DeviceType.DYNAMIC}>
+              <FileInput
+                name="mlImages"
+                label="Modelafbeeldingen"
+                accept="application/zip"
+                progress={progress}
+              />
+            </ConditionalField>
           </Column>
           <Column sizes={{ phone: 12 }}>
             <Editor name="interactions" image="image" type="type"/>

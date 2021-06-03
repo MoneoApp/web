@@ -25,5 +25,6 @@ export interface NewDeviceMutationVariables {
   brand: string;
   image: any;
   type: DeviceType;
+  mlImages?: any | null;
   interactions: UpsertInteraction[];
 }

@@ -4,12 +4,15 @@ import 'csshake/dist/csshake-slow.css';
 import { ComponentPropsWithoutRef, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { ProgressRing } from '../ProgressRing';
+
 import { ErrorHandler } from './ErrorHandler';
 
 type Props = {
   name: string,
   label: string,
-  default?: string
+  default?: string,
+  progress?: number
 };
 
 export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
@@ -69,9 +72,17 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
           onChange={(event) => setFile(event.target.files)}
           {...props}
         />
-        <StyledHint over={over} preview={preview !== undefined}>
-          Sleep hier een bestand of klik om er een te selecteren
-        </StyledHint>
+        {props.progress ? (
+          <ProgressRing
+            radius={60}
+            stroke={4}
+            progress={props.progress}
+          />
+        ) : (
+          <StyledHint over={over} preview={preview !== undefined}>
+            Sleep hier een bestand of klik om er een te selecteren
+          </StyledHint>
+        )}
       </StyledDrop>
     </ErrorHandler>
   );

@@ -12,6 +12,36 @@ import { Sidebar } from '../components/templates/Sidebar';
 import { AuthProvider } from '../states/authentication';
 import { generatePalette } from '../utils/generatePalette';
 
+function progressFetch(url: RequestInfo, opts: any = {}) {
+  return new Promise<any>((resolve, reject) => {
+    if (typeof url !== 'string') {
+      return reject();
+    }
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open(opts.method || 'get', url);
+
+    for (const [key, header] of Object.entries(opts.headers ?? {})) {
+      xhr.setRequestHeader(key, header as string);
+    }
+
+    xhr.onload = (e: any) => resolve({
+      ok: true,
+      text: () => Promise.resolve(e.target.responseText),
+      json: () => Promise.resolve(JSON.parse(e.target.responseText))
+    });
+
+    xhr.onerror = reject;
+
+    if (xhr.upload) {
+      xhr.upload.onprogress = opts.onProgress;
+    }
+
+    xhr.send(opts.body);
+  });
+}
+
 const client = new ApolloClient({
   link: setContext((_, { headers }) => {
     const token = localStorage.getItem('token');
@@ -23,7 +53,8 @@ const client = new ApolloClient({
       }
     };
   }).concat(createUploadLink({
-    uri: '/api'
+    uri: '/api',
+    fetch: typeof window === 'undefined' ? fetch : progressFetch
   })),
   cache: new InMemoryCache()
 });
