@@ -18,27 +18,31 @@ import { Toolbox } from './Toolbox';
 type Props = {
   name: string,
   image: string,
-  type: string
+  imageOverride?: string,
+  type: string,
+  typeOverride?: DeviceType
 };
 
-function EditorInternal({ name, image, type }: Props) {
+function EditorInternal({ name, image, imageOverride, type, typeOverride }: Props) {
   const { watch, setValue } = useFormContext();
 
-  const { [image]: imageData, [type]: typeData } = watch();
+  const { [name]: initialData, [image]: imageData, [type]: typeData } = watch();
   const url = useFileUrl(imageData);
 
-  const [src] = useImage(url ?? '');
+  const [src] = useImage(imageOverride ?? url ?? '');
   const ref = useRef<Konva.Stage>(null);
   const [wrapperRef, rect] = useResizeObserver();
-  const [shapes, setShapes] = useState<ShapeConfig[]>([]);
+  const [shapes, setShapes] = useState<ShapeConfig[]>(initialData ?? []);
   const [selected, setSelected] = useState<string>();
 
   const isBackground = (e: Konva.KonvaEventObject<any>) => e.target === e.target.getStage() || e.target.getLayer()?.name() === 'background';
 
   useEffect(() => {
-    if (!typeData) {
+    const data = typeOverride ?? typeData;
+
+    if (!data) {
       return;
-    } else if (typeData !== DeviceType.DYNAMIC) {
+    } else if (data !== DeviceType.DYNAMIC) {
       return setShapes((s) => s.filter((shape) => shape.type !== InteractionType.ANCHOR));
     }
 
@@ -54,7 +58,7 @@ function EditorInternal({ name, image, type }: Props) {
         rotation: 0
       }
     ]);
-  }, [typeData, setShapes]);
+  }, [typeData, typeOverride, setShapes]);
 
   useEffect(() => {
     setValue(name, shapes);

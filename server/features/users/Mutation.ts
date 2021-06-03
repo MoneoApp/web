@@ -4,7 +4,6 @@ import { compare, hash } from 'bcryptjs';
 import { addDays, isAfter } from 'date-fns';
 import { sign } from 'jsonwebtoken';
 import { extendType, nullable } from 'nexus';
-import { createTransport } from 'nodemailer';
 import { Infer } from 'superstruct';
 
 import { Error } from '../../../shared/constants';
@@ -19,6 +18,7 @@ import { or } from '../../guards/or';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
 import { inputError } from '../../utils/inputError';
+import { mail } from '../../utils/mail';
 
 export const UserMutation = extendType({
   type: 'Mutation',
@@ -51,21 +51,10 @@ export const UserMutation = extendType({
             }
           });
 
-          const transporter = createTransport({
-            host: process.env.SMTP_HOST,
-            port: 587,
-            secure: false,
-            auth: {
-              user: process.env.SMTP_USERNAME,
-              pass: process.env.SMTP_PASSWORD
-            }
-          });
-
-          await transporter.sendMail({
-            from: `"Moneo App" <${process.env.SMTP_USERNAME}>`,
+          await mail({
             to: email,
             subject: 'Uitnodiging Moneo',
-            html: `U bent uitgenodigd voor Moneo. Klik <a href="${process.env.PUBLIC_URL}/?invite=${invite.id}">hier</a> om te registreren`
+            html: `U bent uitgenodigd voor Moneo. Klik <a href="${process.env.PUBLIC_URL}/?invite=${invite.id}">hier</a> om te registreren.`
           });
 
           return true;

@@ -1,4 +1,4 @@
-import { any, array, object, refine, size, string } from 'superstruct';
+import { any, array, object, optional, refine, size, string } from 'superstruct';
 
 import { UpsertInteraction } from './UpsertInteraction';
 
@@ -7,5 +7,6 @@ export const CreateDevice = object({
   brand: size(string(), 3, 70),
   image: refine(any(), 'truthy', (value) => Boolean(value)),
   type: string(),
+  mlImages: optional(any()),
   interactions: array(UpsertInteraction)
 });

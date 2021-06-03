@@ -8,7 +8,8 @@ import { UpdateDevice } from '../../../shared/structs/UpdateDevice';
 import { authorized } from '../../guards/authorized';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
-import { storeImage } from '../../utils/storeImage';
+import { mail } from '../../utils/mail';
+import { storeFile } from '../../utils/storeFile';
 
 export const DeviceMutation = extendType({
   type: 'Mutation',
@@ -20,16 +21,17 @@ export const DeviceMutation = extendType({
         brand: 'String',
         image: 'Upload',
         type: 'DeviceType',
+        mlImages: nullable('Upload'),
         interactions: list('UpsertInteraction')
       },
       authorize: guard(
         authorized(),
         validated(CreateDevice)
       ),
-      resolve: async (parent, { model, brand, image, type, interactions }, { db, user }) => {
-        const wanted = type === DeviceType.DYNAMIC ? 1 : 0;
+      resolve: async (parent, { model, brand, image, type, mlImages, interactions }, { db, user }) => {
+        const anchors = type === DeviceType.DYNAMIC ? 1 : 0;
 
-        if (interactions.filter((i) => i.type === InteractionType.ANCHOR).length !== wanted) {
+        if (interactions.filter((i) => i.type === InteractionType.ANCHOR).length !== anchors) {
           throw new ApolloError('invalid interactions', Error.InvalidInteractions);
         }
 
@@ -41,13 +43,27 @@ export const DeviceMutation = extendType({
           throw new ApolloError('unknown', Error.Unknown);
         }
 
-        const fileName = await storeImage(image);
+        const imageName = await storeFile(image, 'image/');
+
+        if (anchors) {
+          const zipName = await storeFile(mlImages, 'application/zip');
+          const admins = await db.user.findMany({
+            where: { role: UserRole.ADMIN },
+            select: { email: true }
+          });
+
+          await mail({
+            to: Object.values(admins).map((a) => a.email),
+            subject: 'Nieuw ML apparaat aangemaakt',
+            html: `Een klant heeft een zip geüpload voor ${brand}/${model}. Klik <a href="${process.env.PUBLIC_URL}/uploads/${zipName}">hier</a> om de zip te downloaden.`
+          });
+        }
 
         return await db.device.create({
           data: {
             model,
             brand,
-            image: fileName,
+            image: imageName,
             type,
             customer: {
               connect: { id: customer.id }
@@ -90,7 +106,17 @@ export const DeviceMutation = extendType({
           throw new ApolloError('invalid interactions', Error.InvalidInteractions);
         }
 
-        const fileName = image ? await storeImage(image) : undefined;
+        const fileName = image ? await storeFile(image, 'image/') : undefined;
+        const used = await db.manualStepInteraction.findMany({
+          where: {
+            interaction: {
+              id: { in: interactions.map((i) => i.id ?? '') }
+            }
+          },
+          select: {
+            interactionId: true
+          }
+        });
 
         return await db.device.update({
           where: { id },
@@ -99,16 +125,21 @@ export const DeviceMutation = extendType({
             brand,
             image: fileName,
             interactions: {
+              deleteMany: {
+                id: {
+                  notIn: [
+                    ...interactions.map((i) => i.id ?? ''),
+                    ...used.map((i) => i.interactionId)
+                  ]
+                }
+              },
               upsert: interactions.map(({ id: interactionId, ...data }) => ({
                 where: {
-                  id: interactionId ?? undefined
+                  id: interactionId ?? ''
                 },
                 create: data,
                 update: data
-              })),
-              deleteMany: {
-                id: { notIn: interactions.map((i) => i.id ?? '') }
-              }
+              }))
             }
           }
         });

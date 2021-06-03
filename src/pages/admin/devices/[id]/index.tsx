@@ -11,8 +11,10 @@ import { UpdateDevice } from '../../../../../shared/structs/UpdateDevice';
 import { DeleteDeviceMutation, DeleteDeviceMutationVariables } from '../../../../apollo/DeleteDeviceMutation';
 import { DeviceMutation, DeviceMutationVariables } from '../../../../apollo/DeviceMutation';
 import { DeviceQuery, DeviceQueryVariables } from '../../../../apollo/DeviceQuery';
+import { InteractionType } from '../../../../apollo/globalTypes';
 import { Confirm } from '../../../../components/dialogs/Confirm';
 import { PreviewQr } from '../../../../components/dialogs/ViewQr';
+import { Editor } from '../../../../components/editor/Editor';
 import { Button } from '../../../../components/forms/Button';
 import { FieldForm } from '../../../../components/forms/FieldForm';
 import { FileInput } from '../../../../components/forms/FileInput';
@@ -23,6 +25,7 @@ import { Row } from '../../../../components/layout/Row';
 import { Heading } from '../../../../components/navigation/Heading';
 import { Spinner } from '../../../../components/Spinner';
 import { Table } from '../../../../components/users/Table';
+import { interactionFragment } from '../../../../fragments';
 import { useAuthGuard } from '../../../../hooks/useAuthGuard';
 import { useNotify } from '../../../../hooks/useNotify';
 import { useSearch } from '../../../../hooks/useSearch';
@@ -36,9 +39,9 @@ const query = gql`
       model
       brand
       image
+      type
       interactions {
-        id
-        type
+        ...InteractionFragment
       }
       manuals {
         id
@@ -49,17 +52,23 @@ const query = gql`
       }
     }
   }
+  ${interactionFragment}
 `;
 
 const updateMutation = gql`
-  mutation DeviceMutation($id: ID!, $model: String!, $brand: String!, $image: Upload) {
-    updateDevice(id: $id, model: $model, brand: $brand, image: $image, interactions: []) {
+  mutation DeviceMutation($id: ID!, $model: String!, $brand: String!, $image: Upload, $interactions: [UpsertInteraction!]!) {
+    updateDevice(id: $id, model: $model, brand: $brand, image: $image, interactions: $interactions) {
       id
       model
       brand
       image
+      type
+      interactions {
+        ...InteractionFragment
+      }
     }
   }
+  ${interactionFragment}
 `;
 
 const deleteMutation = gql`
@@ -97,17 +106,30 @@ export default function Device() {
       <Heading text="Apparaat"/>
       {data?.device ? (
         <>
-          <Row>
-            <Column sizes={{ phone: 12, laptop: 6 }}>
-              <Form
-                struct={UpdateDevice}
-                values={{
-                  id: data.device.id,
-                  model: data.device.model,
-                  brand: data.device.brand
-                }}
-                onSubmit={(variables) => mutateUpdate({ variables })}
-              >
+          <Form
+            struct={UpdateDevice}
+            values={{
+              id: data.device.id,
+              model: data.device.model,
+              brand: data.device.brand,
+              interactions: data.device.interactions.map(({ __typename, ...i }) => i)
+            }}
+            onSubmit={({ id: updateId, model, brand, image, interactions }) => mutateUpdate({
+              variables: {
+                id: updateId,
+                model,
+                brand,
+                image,
+                interactions: interactions.map(({ id: interactionId, ...i }) => ({
+                  ...i,
+                  id: interactionId![0] === 'L' ? undefined : interactionId,
+                  type: i.type as InteractionType
+                }))
+              }
+            })}
+          >
+            <Row>
+              <Column sizes={{ phone: 12, laptop: 6 }}>
                 <Input name="model" label="Model"/>
                 <Input name="brand" label="Merk"/>
                 <FileInput
@@ -115,6 +137,15 @@ export default function Device() {
                   label="Productafbeelding"
                   accept="image/*"
                   default={getUploadUrl(data.device.image)}
+                />
+              </Column>
+              <Column sizes={{ phone: 12 }}>
+                <Editor
+                  name="interactions"
+                  image="image"
+                  imageOverride={getUploadUrl(data.device.image)}
+                  type="type"
+                  typeOverride={data.device.type}
                 />
                 <StyledActions>
                   <Button
@@ -144,9 +175,9 @@ export default function Device() {
                   />
                   <Button text="Opslaan"/>
                 </StyledActions>
-              </Form>
-            </Column>
-          </Row>
+              </Column>
+            </Row>
+          </Form>
           <Row spacing={{ phone: 1 }}>
             <Column sizes={{ phone: 9 }}>
               <FieldForm name="search" onChange={setSearch}>
@@ -188,7 +219,7 @@ export default function Device() {
 const StyledActions = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 
   & > *:not(:last-child) {
     margin-right: 1rem;
