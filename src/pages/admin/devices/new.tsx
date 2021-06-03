@@ -121,5 +121,5 @@ export default function NewDevice() {
 const StyledActions = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-top: 1rem;
+  margin: 1rem 0;
 `;
