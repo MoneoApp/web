@@ -5,21 +5,21 @@ import useImage from 'use-image';
 
 import { InteractionFragment } from '../../apollo/InteractionFragment';
 import { InteractionConfig } from '../../types';
-import { getUploadUrl } from '../../utils/getUploadUrl';
+import { getStaticAsset } from '../../utils/getStaticAsset';
 import { Dialog } from '../Dialog';
 import { DeviceInteractions } from '../manuals/DeviceInteractions';
 
 type Props = {
   name: string,
-  image: string,
+  id: string,
   interactions: InteractionFragment[],
   initialValue: InteractionConfig[],
   control: UseFieldArrayReturn,
   update: (name: string, value: unknown) => void
 };
 
-export function SelectInteractions({ name, image, interactions, initialValue, control, update, ...props }: Props & DialoogProps) {
-  const [data] = useImage(getUploadUrl(image));
+export function SelectInteractions({ name, id, interactions, initialValue, control, update, ...props }: Props & DialoogProps) {
+  const [data] = useImage(getStaticAsset(id, 'full'));
   const [value, setValue] = useState(initialValue);
 
   return (

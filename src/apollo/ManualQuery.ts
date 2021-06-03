@@ -36,7 +36,6 @@ export interface ManualQuery_manual_device_interactions {
 export interface ManualQuery_manual_device {
   __typename: "Device";
   id: string;
-  image: string;
   interactions: ManualQuery_manual_device_interactions[];
 }
 

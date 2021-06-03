@@ -1,29 +1,25 @@
 import { InteractionType, PrismaClient } from '@prisma/client';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { resolve } from 'path';
 import Sharp from 'sharp';
 
+import { findDevice } from '../../../utils/findDevice';
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
-  const db = new PrismaClient({
-    log: ['query']
-  });
 
-  const device = await db.device.findUnique({
+  const device = await findDevice(res, (db) => db.device.findUnique({
     where: { id: id as string },
-    include: {
+    select: {
+      image: true,
       interactions: {
         where: { type: InteractionType.ANCHOR }
       }
     }
-  });
+  }));
 
   if (!device) {
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-
-    return res
-      .status(404)
-      .send('¯\\_(404)_/¯');
+    return;
   }
 
   const path = resolve('.', 'public', 'uploads', device.image);
