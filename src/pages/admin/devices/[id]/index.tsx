@@ -29,7 +29,7 @@ import { interactionFragment } from '../../../../fragments';
 import { useAuthGuard } from '../../../../hooks/useAuthGuard';
 import { useNotify } from '../../../../hooks/useNotify';
 import { useSearch } from '../../../../hooks/useSearch';
-import { getUploadUrl } from '../../../../utils/getUploadUrl';
+import { getStaticAsset } from '../../../../utils/getStaticAsset';
 import { withBreakpoint } from '../../../../utils/withBreakpoint';
 
 const query = gql`
@@ -38,7 +38,6 @@ const query = gql`
       id
       model
       brand
-      image
       type
       interactions {
         ...InteractionFragment
@@ -61,7 +60,6 @@ const updateMutation = gql`
       id
       model
       brand
-      image
       type
       interactions {
         ...InteractionFragment
@@ -136,14 +134,14 @@ export default function Device() {
                   name="image"
                   label="Productafbeelding"
                   accept="image/*"
-                  default={getUploadUrl(data.device.image)}
+                  default={getStaticAsset(data.device.id, 'full')}
                 />
               </Column>
               <Column sizes={{ phone: 12 }}>
                 <Editor
                   name="interactions"
                   image="image"
-                  imageOverride={getUploadUrl(data.device.image)}
+                  imageOverride={getStaticAsset(data.device.id, 'full')}
                   type="type"
                   typeOverride={data.device.type}
                 />

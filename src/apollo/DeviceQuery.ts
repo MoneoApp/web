@@ -37,7 +37,6 @@ export interface DeviceQuery_device {
   id: string;
   model: string;
   brand: string;
-  image: string;
   type: DeviceType;
   interactions: DeviceQuery_device_interactions[];
   manuals: DeviceQuery_device_manuals[];

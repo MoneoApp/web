@@ -25,7 +25,6 @@ export interface DeviceMutation_updateDevice {
   id: string;
   model: string;
   brand: string;
-  image: string;
   type: DeviceType;
   interactions: DeviceMutation_updateDevice_interactions[];
 }

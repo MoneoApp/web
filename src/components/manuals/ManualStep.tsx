@@ -17,13 +17,13 @@ import { Input } from '../forms/Input';
 type Props = {
   id: string,
   name: string,
+  deviceId: string,
   order: number,
-  image: string,
   interactions: InteractionFragment[]
   remove: () => void
 };
 
-export function ManualStep({ id, name, order, image, interactions, remove }: Props) {
+export function ManualStep({ id, name, deviceId, order, interactions, remove }: Props) {
   const [, { open }] = useDialoog();
   const { control, watch, setValue } = useFormContext();
 
@@ -53,7 +53,7 @@ export function ManualStep({ id, name, order, image, interactions, remove }: Pro
               onClick={open.c((props) => (
                 <SelectInteractions
                   name={interactionsName}
-                  image={image}
+                  id={deviceId}
                   interactions={interactions}
                   initialValue={interactionsData}
                   control={array}

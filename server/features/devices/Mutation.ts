@@ -37,21 +37,7 @@ export const DeviceMutation = extendType({
 
         const imageName = await storeFile(image, 'image/');
 
-        if (anchors) {
-          const zipName = await storeFile(mlImages, 'application/zip');
-          const admins = await db.user.findMany({
-            where: { role: UserRole.ADMIN },
-            select: { email: true }
-          });
-
-          await mail({
-            to: Object.values(admins).map((a) => a.email),
-            subject: 'Nieuw ML apparaat aangemaakt',
-            html: `Een klant heeft een zip geüpload voor ${brand}/${model}. Klik <a href="${process.env.PUBLIC_URL}/uploads/${zipName}">hier</a> om de zip te downloaden.`
-          });
-        }
-
-        return await db.device.create({
+        const device = await db.device.create({
           data: {
             model,
             brand,
@@ -67,6 +53,23 @@ export const DeviceMutation = extendType({
             }
           }
         });
+
+        if (anchors) {
+          await storeFile(mlImages, 'application/zip', `ml-${device.id}`);
+
+          const admins = await db.user.findMany({
+            where: { role: UserRole.ADMIN },
+            select: { email: true }
+          });
+
+          await mail({
+            to: Object.values(admins).map((a) => a.email),
+            subject: 'Nieuw ML apparaat aangemaakt',
+            html: `Een klant heeft een zip geüpload voor ${brand}/${model}. Klik <a href="${process.env.PUBLIC_URL}/api/${device.id}/ml">hier</a> om de zip te downloaden.`
+          });
+        }
+
+        return device;
       }
     });
 
