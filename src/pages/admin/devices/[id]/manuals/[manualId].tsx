@@ -17,6 +17,7 @@ import { Row } from '../../../../../components/layout/Row';
 import { ManualSteps } from '../../../../../components/manuals/ManualSteps';
 import { Heading } from '../../../../../components/navigation/Heading';
 import { Spinner } from '../../../../../components/Spinner';
+import { interactionFragment } from '../../../../../fragments';
 import { useAuthGuard } from '../../../../../hooks/useAuthGuard';
 import { useNotify } from '../../../../../hooks/useNotify';
 
@@ -30,17 +31,19 @@ const query = gql`
         order
         interactions {
           id
+          color
         }
       }
       device {
+        id
+        image
         interactions {
-          id
-          title
-          type
+          ...InteractionFragment
         }
       }
     }
   }
+  ${interactionFragment}
 `;
 
 const updateMutation = gql`
@@ -80,7 +83,7 @@ export default function Manual() {
     update: (cache) => cache.modify({
       id: `Device:${id}`,
       fields: {
-        devices: (devices: any[] = [], { readField }) => devices.filter((device) => readField('id', device) !== id)
+        manuals: (manuals: any[] = [], { readField }) => manuals.filter((manual) => readField('id', manual) !== id)
       }
     })
   });
@@ -96,7 +99,11 @@ export default function Manual() {
             title: data.manual.title,
             steps: [...data.manual.steps].sort((a, b) => a.order - b.order).map((step) => ({
               text: step.text,
-              interactionIds: step.interactions.map((interaction) => interaction.id)
+              order: step.order,
+              interactions: step.interactions.map((interaction) => ({
+                id: interaction.id,
+                color: interaction.color!
+              }))
             }))
           }}
           onSubmit={(variables) => mutateUpdate({ variables })}
@@ -108,6 +115,7 @@ export default function Manual() {
           </Row>
           <ManualSteps
             name="steps"
+            image={data.manual.device.image}
             interactions={data.manual.device.interactions.filter((interaction) => interaction.type !== InteractionType.ANCHOR)}
           />
           <StyledActions>
@@ -117,7 +125,7 @@ export default function Manual() {
               palette={['red-200', 'gray-0']}
               onClick={open.c((props) => (
                 <Confirm
-                  text="Weet je zeker dat je dize handleiding wil verwijderen?"
+                  text="Weet je zeker dat je deze handleiding wil verwijderen?"
                   onConfirm={() => mutateDelete({
                     variables: { id: manualId as string }
                   })}

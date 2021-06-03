@@ -25,6 +25,7 @@ import { Row } from '../../../../components/layout/Row';
 import { Heading } from '../../../../components/navigation/Heading';
 import { Spinner } from '../../../../components/Spinner';
 import { Table } from '../../../../components/users/Table';
+import { interactionFragment } from '../../../../fragments';
 import { useAuthGuard } from '../../../../hooks/useAuthGuard';
 import { useNotify } from '../../../../hooks/useNotify';
 import { useSearch } from '../../../../hooks/useSearch';
@@ -40,15 +41,7 @@ const query = gql`
       image
       type
       interactions {
-        id
-        title
-        description
-        type
-        x
-        y
-        rotation
-        width
-        height
+        ...InteractionFragment
       }
       manuals {
         id
@@ -59,6 +52,7 @@ const query = gql`
       }
     }
   }
+  ${interactionFragment}
 `;
 
 const updateMutation = gql`
@@ -70,18 +64,11 @@ const updateMutation = gql`
       image
       type
       interactions {
-        id
-        title
-        description
-        type
-        x
-        y
-        rotation
-        width
-        height
+        ...InteractionFragment
       }
     }
   }
+  ${interactionFragment}
 `;
 
 const deleteMutation = gql`

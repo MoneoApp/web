@@ -1,104 +1,50 @@
-import styled from '@emotion/styled';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { DialoogProps } from 'dialoog';
 import { useState } from 'react';
+import { UseFieldArrayReturn } from 'react-hook-form';
+import useImage from 'use-image';
 
-import { useSearch } from '../../hooks/useSearch';
+import { InteractionFragment } from '../../apollo/InteractionFragment';
+import { InteractionConfig } from '../../types';
+import { getUploadUrl } from '../../utils/getUploadUrl';
 import { Dialog } from '../Dialog';
-import { Button } from '../forms/Button';
-import { FieldForm } from '../forms/FieldForm';
-import { Input } from '../forms/Input';
+import { DeviceInteractions } from '../manuals/DeviceInteractions';
 
 type Props = {
-  interactions: { id: string, title: string }[],
-  interactionIds: string[],
-  setValue: (value: string[]) => void
+  name: string,
+  image: string,
+  interactions: InteractionFragment[],
+  initialValue: InteractionConfig[],
+  control: UseFieldArrayReturn,
+  update: (name: string, value: unknown) => void
 };
 
-export function SelectInteractions({ interactions, interactionIds, setValue, ...props }: Props & DialoogProps) {
-  const [ids, setIds] = useState(interactionIds);
-  const [results, setSearch] = useSearch(interactions, ['title']);
+export function SelectInteractions({ name, image, interactions, initialValue, control, update, ...props }: Props & DialoogProps) {
+  const [data] = useImage(getUploadUrl(image));
+  const [value, setValue] = useState(initialValue);
 
   return (
-    <StyledDialog strict={true} {...props}>
-      <StyledTitle>Interacties</StyledTitle>
-      <FieldForm name="search" onChange={setSearch}>
-        <Input name="search" label="Zoeken"/>
-      </FieldForm>
-      <StyledInteractions>
-        {results?.map(({ id, title }) => {
-          const active = ids.indexOf(id) !== -1;
-
-          return (
-            <StyledInteraction key={id}>
-              <Button
-                text="Toggle"
-                palette={['gray-500', active ? 'yellow-200' : 'gray-200']}
-                onClick={() => setIds([
-                  ...ids.filter((i) => i !== id),
-                  ...active ? [] : [id]
-                ])}
-              >
-                <FontAwesomeIcon icon={active ? faCheck : faTimes} fixedWidth={true}/>
-              </Button>
-              {title}
-            </StyledInteraction>
-          );
-        })}
-      </StyledInteractions>
-      <StyledButton
-        text="Opslaan"
-        onClick={() => {
-          setValue(ids);
-          props.close();
-        }}
-      />
-    </StyledDialog>
+    <>
+      {data && (
+        <Dialog {...props}>
+          <DeviceInteractions
+            image={data}
+            interactions={interactions}
+            value={value}
+            add={(v) => {
+              control.append(v);
+              setValue([...value, v]);
+            }}
+            update={(index, v) => {
+              update(`${name}.${index}`, v);
+              setValue(value.map((_, i) => i === index ? v : _));
+            }}
+            remove={(index) => {
+              control.remove(index);
+              setValue(value.filter((_, i) => i !== index));
+            }}
+          />
+        </Dialog>
+      )}
+    </>
   );
 }
-
-const StyledDialog = styled(Dialog)`
-  display: flex;
-  flex-direction: column;
-  min-width: 20rem;
-  height: 25rem;
-`;
-
-const StyledTitle = styled.h2`
-  font-weight: bold;
-  margin-bottom: .75rem;
-`;
-
-const StyledInteractions = styled.div`
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  padding: 3px;
-  overflow-y: scroll;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--gray-300);
-    border-radius: 3px;
-  }
-`;
-
-const StyledInteraction = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
-
-const StyledButton = styled(Button)`
-  align-self: flex-end;
-`;

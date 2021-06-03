@@ -12,14 +12,12 @@ import { UpsertInteraction, DeviceType, InteractionType } from "./globalTypes";
 export interface DeviceMutation_updateDevice_interactions {
   __typename: "Interaction";
   id: string;
-  title: string;
-  description: string;
   type: InteractionType;
   x: number;
   y: number;
-  rotation: number;
   width: number;
   height: number;
+  rotation: number;
 }
 
 export interface DeviceMutation_updateDevice {
