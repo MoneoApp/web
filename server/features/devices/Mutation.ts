@@ -1,8 +1,8 @@
 import { DeviceType, InteractionType, UserRole } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 import extract from 'extract-zip';
-import { extendType, list, nullable } from 'nexus';
 import { rmdir } from 'fs/promises';
+import { extendType, list, nullable } from 'nexus';
 import { join } from 'path';
 
 import { Error } from '../../../shared/constants';
