@@ -8,7 +8,7 @@ RUN npm run build
 
 FROM nikolaik/python-nodejs:python3.9-nodejs14-alpine AS run
 
-RUN pip install "tensorflow" "tensorflow-hub[make_image_classifier]" "tflite-support-nightly" "absl-py"
+RUN pip install -r requirements.txt
 
 ENV NODE_ENV production
 EXPOSE 3000
