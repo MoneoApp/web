@@ -3,7 +3,7 @@ import React, { ComponentType, createElement, useEffect, useRef } from 'react';
 import { Group, Transformer } from 'react-konva';
 
 import { InteractionType } from '../../apollo/globalTypes';
-import { shapes, transformSettings } from '../../constants';
+import { colors, shapes, transformSettings } from '../../constants';
 import { ShapeConfig } from '../../types';
 
 type Props = {
@@ -81,7 +81,7 @@ export function Shape({ config, setConfig, selected, setSelected, deleteShape }:
           anchorStrokeWidth={0}
           borderStroke="#707070"
           ignoreStroke={true}
-          anchorFill="#ffba05"
+          anchorFill={colors.yellow['200']![0]}
           boundBoxFunc={(previous, next) => {
             const moved = previous.x !== next.x || previous.y !== next.y;
             const rotated = previous.rotation !== next.rotation;
