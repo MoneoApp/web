@@ -1,10 +1,12 @@
+import styled from '@emotion/styled';
 import Konva from 'konva';
 import { ComponentType, createElement, useState } from 'react';
 import { Group, Image, Layer, Stage } from 'react-konva';
 
 import { InteractionFragment } from '../../apollo/InteractionFragment';
-import { shapes } from '../../constants';
+import { colors, shapes } from '../../constants';
 import { InteractionConfig, ShapeConfig } from '../../types';
+import { getRem } from '../../utils/getRem';
 
 import { ColorPicker } from './ColorPicker';
 
@@ -20,9 +22,24 @@ type Props = {
 export function DeviceInteractions({ image, interactions, value, add, update, remove }: Props) {
   const [picker, setPicker] = useState<[number, Konva.Vector2d]>();
 
+  const getRatio = (current: number, wanted: number) => {
+    const max = wanted - getRem(5);
+    const actual = Math.min(current, max);
+
+    return 1 / current * actual;
+  }
+
+  const heightRatio = getRatio(image.height, innerHeight);
+  const widthRatio = getRatio(image.width, innerWidth);
+  const ratio = Math.min(heightRatio, widthRatio);
+
   return (
     <>
-      <Stage width={image.width} height={image.height}>
+      <StyledStage
+        width={image.width * ratio}
+        height={image.height * ratio}
+        scale={{ x: ratio, y: ratio }}
+      >
         <Layer>
           <Image image={image}/>
           {interactions.map((interaction) => {
@@ -35,7 +52,7 @@ export function DeviceInteractions({ image, interactions, value, add, update, re
                 x={interaction.x}
                 y={interaction.y}
                 rotation={interaction.rotation}
-                onDblClick={({ target }) => {
+                onClick={({ target }) => {
                   if (active) {
                     return remove(activeIndex);
                   }
@@ -46,7 +63,7 @@ export function DeviceInteractions({ image, interactions, value, add, update, re
                     return;
                   }
 
-                  add({ id: interaction.id, color: '#ffba05' });
+                  add({ id: interaction.id, color: colors.yellow['200']![0] });
                   setPicker([value.length, { x: pointer.x, y: pointer.y }]);
                 }}
               >
@@ -58,8 +75,8 @@ export function DeviceInteractions({ image, interactions, value, add, update, re
             );
           })}
         </Layer>
-      </Stage>
-      {picker && (
+      </StyledStage>
+      {picker && value[picker[0]] && (
         <ColorPicker
           x={picker[1].x + 16}
           y={picker[1].y + 16}
@@ -78,3 +95,8 @@ export function DeviceInteractions({ image, interactions, value, add, update, re
     </>
   );
 }
+
+const StyledStage = styled(Stage)`
+  border-radius: 8px;
+  overflow: hidden;
+`;

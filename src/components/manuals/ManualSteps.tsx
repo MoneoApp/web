@@ -10,11 +10,11 @@ import { ManualStep } from './ManualStep';
 
 type Props = {
   name: string,
-  image: string,
+  id: string,
   interactions: InteractionFragment[]
 };
 
-export function ManualSteps({ name, image, interactions }: Props) {
+export function ManualSteps({ name, id, interactions }: Props) {
   const { control, formState: { errors: formErrors } } = useFormContext();
   const { fields, append, move, remove } = useFieldArray({
     control,
@@ -43,8 +43,8 @@ export function ManualSteps({ name, image, interactions }: Props) {
                   key={step.id}
                   id={step.id}
                   name={name}
+                  deviceId={id}
                   order={index}
-                  image={image}
                   interactions={interactions}
                   remove={() => remove(index)}
                 />

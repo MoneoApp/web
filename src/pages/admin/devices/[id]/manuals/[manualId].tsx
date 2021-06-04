@@ -36,7 +36,6 @@ const query = gql`
       }
       device {
         id
-        image
         interactions {
           ...InteractionFragment
         }
@@ -115,7 +114,7 @@ export default function Manual() {
           </Row>
           <ManualSteps
             name="steps"
-            image={data.manual.device.image}
+            id={data.manual.device.id}
             interactions={data.manual.device.interactions.filter((interaction) => interaction.type !== InteractionType.ANCHOR)}
           />
           <StyledActions>

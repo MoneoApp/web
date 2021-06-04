@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { DialoogProps } from 'dialoog';
 import { useState } from 'react';
 import { UseFieldArrayReturn } from 'react-hook-form';
@@ -5,27 +6,27 @@ import useImage from 'use-image';
 
 import { InteractionFragment } from '../../apollo/InteractionFragment';
 import { InteractionConfig } from '../../types';
-import { getUploadUrl } from '../../utils/getUploadUrl';
+import { getStaticAsset } from '../../utils/getStaticAsset';
 import { Dialog } from '../Dialog';
 import { DeviceInteractions } from '../manuals/DeviceInteractions';
 
 type Props = {
   name: string,
-  image: string,
+  id: string,
   interactions: InteractionFragment[],
   initialValue: InteractionConfig[],
   control: UseFieldArrayReturn,
   update: (name: string, value: unknown) => void
 };
 
-export function SelectInteractions({ name, image, interactions, initialValue, control, update, ...props }: Props & DialoogProps) {
-  const [data] = useImage(getUploadUrl(image));
+export function SelectInteractions({ name, id, interactions, initialValue, control, update, ...props }: Props & DialoogProps) {
+  const [data] = useImage(getStaticAsset(id, 'full'));
   const [value, setValue] = useState(initialValue);
 
   return (
     <>
       {data && (
-        <Dialog {...props}>
+        <StyledDialog {...props}>
           <DeviceInteractions
             image={data}
             interactions={interactions}
@@ -43,8 +44,12 @@ export function SelectInteractions({ name, image, interactions, initialValue, co
               setValue(value.filter((_, i) => i !== index));
             }}
           />
-        </Dialog>
+        </StyledDialog>
       )}
     </>
   );
 }
+
+const StyledDialog = styled(Dialog)`
+  overflow: visible;
+`;
