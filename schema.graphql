@@ -75,6 +75,7 @@ type Mutation {
   deleteUser(id: ID!): User
   inviteUser(email: String!): Boolean!
   login(email: String!, password: String!): Authentication!
+  retrain: Boolean!
   updateDevice(brand: String!, id: ID!, image: Upload, interactions: [UpsertInteraction!]!, model: String!): Device
   updateManual(id: ID!, steps: [UpsertManualStep!]!, title: String!): Manual
   updateUser(email: String!, id: ID!, role: UserRole!): User
