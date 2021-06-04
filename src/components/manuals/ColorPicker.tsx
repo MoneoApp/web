@@ -23,5 +23,6 @@ export function ColorPicker({ x, y, color, setColor, onClose }: Props) {
 
 const StyledPicker = styled.div`
   position: fixed;
+  box-shadow: 0 0 4rem var(--gray-300);
   z-index: 2500;
 `;
