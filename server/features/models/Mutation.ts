@@ -21,20 +21,31 @@ export const ModelMutation = extendType({
           return false;
         }
 
-        const file = join(process.cwd(), 'work', 'moneo.tflite');
-        const sub = execa('make_image_classifier', [
+        busy = true;
+
+        const modelFile = join(process.cwd(), 'work', 'moneo.tflite');
+        const labelFile = join(process.cwd(), 'work', 'moneo.txt');
+        const outputFile = join(process.cwd(), 'work', 'moneo_populated.tflite');
+
+        execa('make_image_classifier', [
           '--image_dir',
           join(process.cwd(), 'work'),
           '--tflite_output_file',
-          file,
+          modelFile,
           '--labels_output_file',
-          join(process.cwd(), 'work', 'moneo.txt')
-        ]);
-
-        busy = true;
-
-        sub.stdout?.pipe(process.stdout);
-        sub.then(() => updateModel(process.env.ML_ID ?? '', file)).finally(() => busy = false);
+          labelFile
+        ]).then(() => execa('python', [
+          join(process.cwd(), 'scripts', 'populateMetadata.py'),
+          '--model_file',
+          modelFile,
+          '--label_file',
+          labelFile,
+          '--output_file',
+          outputFile
+        ])).then(() => updateModel(process.env.ML_ID ?? '', outputFile))
+          .then(() => console.log('Successfully retrained model'))
+          .catch((e) => console.error('Something went wrong', e))
+          .finally(() => busy = false);
 
         return true;
       }
