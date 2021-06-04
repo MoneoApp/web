@@ -1,3 +1,4 @@
+/* tslint:disable:no-console */
 import { UserRole } from '@prisma/client';
 import execa from 'execa';
 import { extendType } from 'nexus';
@@ -26,6 +27,8 @@ export const ModelMutation = extendType({
         const modelFile = join(process.cwd(), 'work', 'moneo.tflite');
         const labelFile = join(process.cwd(), 'work', 'moneo.txt');
         const outputFile = join(process.cwd(), 'work', 'moneo_populated.tflite');
+
+        console.log('Retraining model...')
 
         execa('make_image_classifier', [
           '--image_dir',

@@ -1,3 +1,4 @@
+/* tslint:disable:no-console */
 import admin from 'firebase-admin';
 
 if (!admin.apps.length) {
@@ -22,7 +23,7 @@ const storageBucket = admin.storage().bucket();
 const ml = admin.machineLearning();
 
 export async function updateModel(modelId: string, tflite: string) {
-  console.log('Updating existing model in Cloud Storage...');
+  console.log('Uploading model...');
 
   const model = await ml.getModel(modelId);
   const files = await storageBucket.upload(tflite);
@@ -36,6 +37,5 @@ export async function updateModel(modelId: string, tflite: string) {
     }
   });
 
-  console.log('Model updated:');
-  console.log(`${model.displayName}\t${model.modelId}`);
+  console.log('Successfully uploaded model');
 }
