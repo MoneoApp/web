@@ -2,6 +2,7 @@ import { DeviceType, InteractionType, UserRole } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 import extract from 'extract-zip';
 import { extendType, list, nullable } from 'nexus';
+import { rmdir } from 'fs/promises';
 import { join } from 'path';
 
 import { Error } from '../../../shared/constants';
@@ -157,6 +158,8 @@ export const DeviceMutation = extendType({
             where: { id }
           })
         ]);
+
+        await rmdir(join(process.cwd(), 'work', id), { recursive: true });
 
         return transaction[3];
       }
