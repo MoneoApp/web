@@ -1,6 +1,8 @@
 import { DeviceType, InteractionType, UserRole } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
+import extract from 'extract-zip';
 import { extendType, list, nullable } from 'nexus';
+import { join } from 'path';
 
 import { Error } from '../../../shared/constants';
 import { CreateDevice } from '../../../shared/structs/CreateDevice';
@@ -9,8 +11,6 @@ import { authorized } from '../../guards/authorized';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
 import { storeFile } from '../../utils/storeFile';
-import extract from 'extract-zip';
-import { join } from 'path';
 
 export const DeviceMutation = extendType({
   type: 'Mutation',
