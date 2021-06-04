@@ -25,13 +25,11 @@ const ml = admin.machineLearning();
 export async function updateModel(modelId: string, tflite: string) {
   console.log('Uploading model...');
 
-  const model = await ml.getModel(modelId);
-  const files = await storageBucket.upload(tflite);
+  const [{ metadata: { bucket, name } }] = await storageBucket.upload(tflite, {
+    destination: `moneo-${Date.now()}.tflite`
+  });
 
-  const bucket = files[0].metadata.bucket;
-  const name = files[0].metadata.name;
-
-  await ml.updateModel(model.modelId, {
+  await ml.updateModel(modelId, {
     tfliteModel: {
       gcsTfliteUri: `gs://${bucket}/${name}`
     }
