@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { DialoogProps } from 'dialoog';
 import { useState } from 'react';
 import { UseFieldArrayReturn } from 'react-hook-form';
@@ -25,7 +26,7 @@ export function SelectInteractions({ name, id, interactions, initialValue, contr
   return (
     <>
       {data && (
-        <Dialog {...props}>
+        <StyledDialog {...props}>
           <DeviceInteractions
             image={data}
             interactions={interactions}
@@ -43,8 +44,12 @@ export function SelectInteractions({ name, id, interactions, initialValue, contr
               setValue(value.filter((_, i) => i !== index));
             }}
           />
-        </Dialog>
+        </StyledDialog>
       )}
     </>
   );
 }
+
+const StyledDialog = styled(Dialog)`
+  overflow: visible;
+`;
