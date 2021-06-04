@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { faLifeRing, faMobileAlt, faTachometerAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faDumbbell, faLifeRing, faMobileAlt, faTachometerAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { UserRole } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
@@ -32,6 +32,11 @@ const items = [{
   href: '/admin/users',
   text: 'Gebruikers',
   icon: faUser,
+  role: UserRole.ADMIN
+}, {
+  href: '/admin/retrain',
+  text: 'Model trainen',
+  icon: faDumbbell,
   role: UserRole.ADMIN
 }];
 
