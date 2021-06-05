@@ -30,6 +30,11 @@ const query = gql`
         email
         type
       }
+      devices {
+        id
+        model
+        brand
+      }
     }
   }
 `;
@@ -81,6 +86,20 @@ export default function Customer() {
         />
       ) : (
         <Spinner text="Gebruikers ophalen..."/>
+      )}
+      {data?.customer?.devices && (
+        <Table
+          data={data.customer.devices}
+          keyBy="id"
+          href={(value) => `/admin/devices/${value.id}`}
+          columns={{
+            model: { title: 'Model' },
+            brand: {
+              title: 'Merk',
+              size: '10rem'
+            }
+          }}
+        />
       )}
     </>
   );

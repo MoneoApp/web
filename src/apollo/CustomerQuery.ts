@@ -16,10 +16,18 @@ export interface CustomerQuery_customer_users {
   type: UserType;
 }
 
+export interface CustomerQuery_customer_devices {
+  __typename: "Device";
+  id: string;
+  model: string;
+  brand: string;
+}
+
 export interface CustomerQuery_customer {
   __typename: "Customer";
   id: string;
   users: CustomerQuery_customer_users[];
+  devices: CustomerQuery_customer_devices[];
 }
 
 export interface CustomerQuery {
