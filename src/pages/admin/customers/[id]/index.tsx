@@ -5,6 +5,7 @@ import { useDialoog } from 'dialoog';
 import { useRouter } from 'next/router';
 
 import { CustomerQuery, CustomerQueryVariables } from '../../../../apollo/CustomerQuery';
+import { UserType } from '../../../../apollo/globalTypes';
 import { InviteUser } from '../../../../components/dialogs/InviteUser';
 import { Heading } from '../../../../components/navigation/Heading';
 import { Spinner } from '../../../../components/Spinner';
@@ -14,7 +15,6 @@ import { userTypes } from '../../../../constants';
 import { useAuthGuard } from '../../../../hooks/useAuthGuard';
 import { useSearch } from '../../../../hooks/useSearch';
 import { useAuthentication } from '../../../../states/authentication';
-import { UserType } from '../../../../apollo/globalTypes';
 
 const query = gql`
   query CustomerQuery($id: ID!) {
