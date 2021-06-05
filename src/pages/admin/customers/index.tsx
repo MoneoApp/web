@@ -1,10 +1,12 @@
 import { gql, useQuery } from '@apollo/client';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useDialoog } from 'dialoog';
 import { useRouter } from 'next/router';
 
 import { ContactQuery } from '../../../apollo/ContactQuery';
 import { CustomersQuery } from '../../../apollo/CustomersQuery';
 import { UserType } from '../../../apollo/globalTypes';
+import { CreateCustomer } from '../../../components/dialogs/CreateCustomer';
 import { Spinner } from '../../../components/Spinner';
 import { ListActions } from '../../../components/users/ListActions';
 import { Table } from '../../../components/users/Table';
@@ -46,6 +48,7 @@ export default function Customers() {
     skip: skip || type === UserType.CONTACT
   });
   const [results, setSearch] = useSearch(data?.customers, ['name']);
+  const [, { open }] = useDialoog();
 
   useQuery<ContactQuery>(contactQuery, {
     skip: skip || type === UserType.ADMIN,
@@ -57,6 +60,9 @@ export default function Customers() {
       <ListActions
         text="Aanmaken"
         icon={faPlus}
+        onClick={open.c((props) => (
+          <CreateCustomer {...props}/>
+        ))}
         setSearch={setSearch}
       />
       {results ? (

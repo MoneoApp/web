@@ -36,6 +36,7 @@ model Invite {
   email      String   @unique
   customerId String
   customer   Customer @relation(fields: [customerId], references: [id])
+  type       UserType @default(USER)
   createdAt  DateTime @default(now())
 }
 

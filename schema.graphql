@@ -74,7 +74,7 @@ input ManualStepInteraction {
 }
 
 type Mutation {
-  createCustomer(name: String!): Customer!
+  createCustomer(email: String!, name: String!): Customer!
   createDevice(brand: String!, image: Upload!, interactions: [UpsertInteraction!]!, mlImages: Upload, model: String!, type: DeviceType!): Device!
   createManual(deviceId: ID!, steps: [UpsertManualStep!]!, title: String!): Manual!
   createUser(inviteId: ID!, password: String!): User!

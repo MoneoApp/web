@@ -7,6 +7,7 @@ import { authorized } from '../../guards/authorized';
 import { customer } from '../../guards/customer';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
+import { mail } from '../../utils/mail';
 
 export const CustomerMutation = extendType({
   type: 'Mutation',
@@ -14,15 +15,36 @@ export const CustomerMutation = extendType({
     t.field('createCustomer', {
       type: 'Customer',
       args: {
-        name: 'String'
+        name: 'String',
+        email: 'String'
       },
       authorize: guard(
         authorized(UserType.ADMIN),
         validated(CreateCustomer)
       ),
-      resolve: async (parent, { name }, { db }) => db.customer.create({
-        data: { name }
-      })
+      resolve: async (parent, { name, email }, { db }) => {
+        const data = await db.customer.create({
+          data: { name }
+        });
+
+        const invite = await db.invite.create({
+          data: {
+            customer: {
+              connect: { id: data.id }
+            },
+            email,
+            type: UserType.CONTACT
+          }
+        });
+
+        await mail({
+          to: email,
+          subject: 'Uitnodiging Moneo',
+          html: `U bent uitgenodigd voor Moneo. Klik <a href="${process.env.PUBLIC_URL}/?invite=${invite.id}">hier</a> om te registreren.`
+        });
+
+        return data;
+      }
     });
 
     t.field('updateCustomer', {

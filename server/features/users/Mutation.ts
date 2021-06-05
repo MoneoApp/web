@@ -103,6 +103,7 @@ export const UserMutation = extendType({
           data: {
             email: invite.email,
             password: hashed,
+            type: invite.type,
             customer: {
               connect: { id: invite.customerId }
             }
