@@ -4,9 +4,9 @@ import { ApolloError } from 'apollo-server-micro';
 import { Error } from '../../shared/constants';
 import { Guard } from '../types';
 
-export function authorized(type?: UserType): Guard {
+export function authorized(...types: UserType[]): Guard {
   return (args, { user }) => {
-    if (type ? user?.type !== type : !user) {
+    if (types.length ? !types.includes(user!.type) : !user) {
       throw new ApolloError('unauthorized', Error.Unauthorized);
     }
   };

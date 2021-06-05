@@ -98,6 +98,7 @@ type Query {
   devices(search: String): [Device!]!
   manual(id: ID!): Manual
   manuals(search: String): [Manual!]!
+  me: User!
   user(id: ID!): User
   users: [User!]!
 }

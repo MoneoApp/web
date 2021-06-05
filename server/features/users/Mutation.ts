@@ -14,6 +14,7 @@ import { UpdateUser } from '../../../shared/structs/UpdateUser';
 import { secret } from '../../constants';
 import { authorized } from '../../guards/authorized';
 import { current } from '../../guards/current';
+import { customer } from '../../guards/customer';
 import { or } from '../../guards/or';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
@@ -29,8 +30,11 @@ export const UserMutation = extendType({
         email: 'String'
       },
       authorize: guard(
-        authorized(UserType.ADMIN),
-        validated(InviteUser)
+        authorized(UserType.ADMIN, UserType.CONTACT),
+        validated(InviteUser),
+        customer(({ customerId }) => ({
+          id: customerId
+        }))
       ),
       resolve: async (parent, { customerId, email }, { db }) => {
         try {
@@ -115,8 +119,13 @@ export const UserMutation = extendType({
         type: 'UserType'
       },
       authorize: guard(
-        authorized(UserType.ADMIN),
-        validated(UpdateUser)
+        authorized(UserType.ADMIN, UserType.CONTACT),
+        validated(UpdateUser),
+        customer(({ id }) => ({
+          users: {
+            some: { id }
+          }
+        }))
       ),
       resolve: (parent, { id, email, type }, { db }) => db.user.update({
         where: { id },
@@ -133,7 +142,12 @@ export const UserMutation = extendType({
         id: 'ID'
       },
       authorize: guard(
-        or(current(), authorized(UserType.ADMIN))
+        or(current(), authorized(UserType.ADMIN, UserType.CONTACT)),
+        customer(({ id }) => ({
+          users: {
+            some: { id }
+          }
+        }))
       ),
       resolve: async (parent, { id }, { db }) => db.user.delete({
         where: { id }

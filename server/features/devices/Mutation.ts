@@ -9,6 +9,7 @@ import { Error } from '../../../shared/constants';
 import { CreateDevice } from '../../../shared/structs/CreateDevice';
 import { UpdateDevice } from '../../../shared/structs/UpdateDevice';
 import { authorized } from '../../guards/authorized';
+import { customer } from '../../guards/customer';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
 import { storeFile } from '../../utils/storeFile';
@@ -37,11 +38,11 @@ export const DeviceMutation = extendType({
           throw new ApolloError('invalid interactions', Error.InvalidInteractions);
         }
 
-        const customer = await db.user.findUnique({
+        const data = await db.user.findUnique({
           where: { id: user!.id }
         }).customer();
 
-        if (!customer) {
+        if (!data) {
           throw new ApolloError('unknown', Error.Unknown);
         }
 
@@ -54,7 +55,7 @@ export const DeviceMutation = extendType({
             image: imageName,
             type,
             customer: {
-              connect: { id: customer.id }
+              connect: { id: data.id }
             },
             interactions: {
               createMany: {
@@ -68,7 +69,7 @@ export const DeviceMutation = extendType({
           const zipName = await storeFile(mlImages, 'application/zip', `ml-${device.id}`);
           await extract(join(process.cwd(), 'public', 'uploads', zipName), {
             dir: join(process.cwd(), 'work', device.id)
-          })
+          });
         }
 
         return device;
@@ -86,7 +87,12 @@ export const DeviceMutation = extendType({
       },
       authorize: guard(
         authorized(),
-        validated(UpdateDevice)
+        validated(UpdateDevice),
+        customer(({ id }) => ({
+          devices: {
+            some: { id }
+          }
+        }))
       ),
       resolve: async (parent, { id, model, brand, image, interactions }, { db }) => {
         const device = await db.device.findUnique({
@@ -149,7 +155,12 @@ export const DeviceMutation = extendType({
         id: 'ID'
       },
       authorize: guard(
-        authorized(UserType.ADMIN)
+        authorized(UserType.ADMIN, UserType.CONTACT),
+        customer(({ id }) => ({
+          devices: {
+            some: { id }
+          }
+        }))
       ),
       resolve: async (parent, { id }, { db, user }) => {
         const transaction = await db.$transaction([

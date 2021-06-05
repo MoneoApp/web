@@ -30,6 +30,11 @@ const items = [{
   icon: faLifeRing
 }, {
   href: '/admin/customers',
+  text: 'Gebruikers',
+  icon: faUser,
+  type: UserType.CONTACT
+},{
+  href: '/admin/customers',
   text: 'Klanten',
   icon: faUser,
   type: UserType.ADMIN

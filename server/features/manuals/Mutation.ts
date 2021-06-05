@@ -1,8 +1,10 @@
+import { UserType } from '@prisma/client';
 import { extendType, list, nullable } from 'nexus';
 
 import { CreateManual } from '../../../shared/structs/CreateManual';
 import { UpdateManual } from '../../../shared/structs/UpdateManual';
 import { authorized } from '../../guards/authorized';
+import { customer } from '../../guards/customer';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
 
@@ -18,7 +20,12 @@ export const ManualMutation = extendType({
       },
       authorize: guard(
         authorized(),
-        validated(CreateManual)
+        validated(CreateManual),
+        customer(({ deviceId }) => ({
+          devices: {
+            some: { id: deviceId }
+          }
+        }))
       ),
       resolve: async (parent, { deviceId, title, steps }, { db }) => {
         const manual = await db.manual.create({
@@ -61,7 +68,16 @@ export const ManualMutation = extendType({
       },
       authorize: guard(
         authorized(),
-        validated(UpdateManual)
+        validated(UpdateManual),
+        customer(({ id }) => ({
+          devices: {
+            some: {
+              manuals: {
+                some: { id }
+              }
+            }
+          }
+        }))
       ),
       resolve: async (parent, { id, title, steps }, { db }) => {
         const manual = await db.manual.update({
@@ -108,6 +124,18 @@ export const ManualMutation = extendType({
       args: {
         id: 'ID'
       },
+      authorize: guard(
+        authorized(UserType.ADMIN, UserType.CONTACT),
+        customer(({ id }) => ({
+          devices: {
+            some: {
+              manuals: {
+                some: { id }
+              }
+            }
+          }
+        }))
+      ),
       resolve: async (parent, { id }, { db }) => {
         const transaction = await db.$transaction([
           db.manualStepInteraction.deleteMany({

@@ -2,6 +2,7 @@ import { UserType } from '@prisma/client';
 import { extendType, list, nullable } from 'nexus';
 
 import { authorized } from '../../guards/authorized';
+import { customer } from '../../guards/customer';
 import { guard } from '../../utils/guard';
 
 export const CustomerQuery = extendType({
@@ -21,7 +22,10 @@ export const CustomerQuery = extendType({
         id: 'ID'
       },
       authorize: guard(
-        authorized(UserType.ADMIN)
+        authorized(),
+        customer(({ id }) => ({
+          id
+        }))
       ),
       resolve: (parent, { id }, { db }) => db.customer.findUnique({
         where: { id }
