@@ -29,8 +29,8 @@ const items = [{
   text: 'Ondersteuning',
   icon: faLifeRing
 }, {
-  href: '/admin/users',
-  text: 'Gebruikers',
+  href: '/admin/customers',
+  text: 'Klanten',
   icon: faUser,
   type: UserType.ADMIN
 }, {
