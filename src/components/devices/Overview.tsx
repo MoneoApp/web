@@ -38,6 +38,11 @@ export function Overview<T>({ data, keyBy, groupBy, children }: Props<T>) {
           </Hideable>
         </StyledValue>
       ))}
+      {!data.length && (
+        <StyledEmpty>
+          Geen gegevens gevonden
+        </StyledEmpty>
+      )}
     </>
   );
 }
@@ -77,4 +82,9 @@ const StyledItems = styled(Row)`
   padding: .5rem;
   background-color: var(--gray-200);
   border-radius: 16px;
+`;
+
+const StyledEmpty = styled.div`
+  padding: 0 1rem;
+  color: var(--gray-400);
 `;
