@@ -29,7 +29,7 @@ export default function Devices() {
   return (
     <>
       <ListActions
-        text="Nieuw"
+        text="Aanmaken"
         icon={faPlus}
         href="/admin/devices/new"
         setSearch={setSearch}
