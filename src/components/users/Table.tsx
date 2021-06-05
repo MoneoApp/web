@@ -116,6 +116,6 @@ const StyledIcon = styled(FontAwesomeIcon)`
 `;
 
 const StyledEmpty = styled.div`
-  padding: 0 1rem;
+  margin: 0 1rem 1rem;
   color: var(--gray-400);
 `;

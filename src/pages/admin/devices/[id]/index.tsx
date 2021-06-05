@@ -217,7 +217,7 @@ export default function Device() {
 const StyledActions = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin: 1rem 0;
+  margin: 1rem 0 4rem;
 
   & > *:not(:last-child) {
     margin-right: 1rem;

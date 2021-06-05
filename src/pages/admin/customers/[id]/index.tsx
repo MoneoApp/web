@@ -13,6 +13,8 @@ import { Table } from '../../../../components/users/Table';
 import { userTypes } from '../../../../constants';
 import { useAuthGuard } from '../../../../hooks/useAuthGuard';
 import { useSearch } from '../../../../hooks/useSearch';
+import { useAuthentication } from '../../../../states/authentication';
+import { UserType } from '../../../../apollo/globalTypes';
 
 const query = gql`
   query CustomerQuery($id: ID!) {
@@ -34,6 +36,7 @@ const query = gql`
 
 export default function Customer() {
   const { query: { id } } = useRouter();
+  const [{ type }] = useAuthentication();
   const skip = useAuthGuard();
   const { data } = useQuery<CustomerQuery, CustomerQueryVariables>(query, {
     skip: skip || typeof id !== 'string',
@@ -70,7 +73,7 @@ export default function Customer() {
       ) : (
         <Spinner text="Gebruikers ophalen..."/>
       )}
-      {data?.customer?.devices && (
+      {type === UserType.ADMIN && data?.customer?.devices && (
         <StyledTable>
           <Table
             data={data.customer.devices}
