@@ -2,7 +2,7 @@ import { gql, useQuery } from '@apollo/client';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 
-import { ContactQuery, ContactQueryVariables } from '../../../apollo/ContactQuery';
+import { ContactQuery } from '../../../apollo/ContactQuery';
 import { CustomersQuery } from '../../../apollo/CustomersQuery';
 import { UserType } from '../../../apollo/globalTypes';
 import { Spinner } from '../../../components/Spinner';
