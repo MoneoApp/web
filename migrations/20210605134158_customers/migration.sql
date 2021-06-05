@@ -5,10 +5,11 @@
   - You are about to drop the column `role` on the `User` table. All the data in the column will be lost.
   - Added the required column `customerId` to the `Device` table without a default value. This is not possible if the table is not empty.
   - Added the required column `customerId` to the `Invite` table without a default value. This is not possible if the table is not empty.
+  - Added the required column `customerId` to the `User` table without a default value. This is not possible if the table is not empty.
 
 */
 -- CreateEnum
-CREATE TYPE "UserType" AS ENUM ('ADMIN', 'USER');
+CREATE TYPE "UserType" AS ENUM ('USER', 'CONTACT', 'ADMIN');
 
 -- DropForeignKey
 ALTER TABLE "Device" DROP CONSTRAINT "Device_userId_fkey";
@@ -22,7 +23,7 @@ ALTER TABLE "Invite" ADD COLUMN     "customerId" TEXT NOT NULL;
 
 -- AlterTable
 ALTER TABLE "User" DROP COLUMN "role",
-ADD COLUMN     "customerId" TEXT,
+ADD COLUMN     "customerId" TEXT NOT NULL,
 ADD COLUMN     "type" "UserType" NOT NULL DEFAULT E'USER';
 
 -- DropEnum
@@ -36,11 +37,14 @@ CREATE TABLE "Customer" (
     PRIMARY KEY ("id")
 );
 
--- AddForeignKey
-ALTER TABLE "User" ADD FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "Customer.name_unique" ON "Customer"("name");
 
 -- AddForeignKey
-ALTER TABLE "Device" ADD FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "User" ADD FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Invite" ADD FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Device" ADD FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
