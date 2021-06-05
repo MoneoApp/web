@@ -3,7 +3,9 @@ import styled from '@emotion/styled';
 import { useDialoog } from 'dialoog';
 import { useRouter } from 'next/router';
 
+import { userElevation } from '../../../../../shared/constants';
 import { DeleteUserMutation, DeleteUserMutationVariables } from '../../../../apollo/DeleteUserMutation';
+import { UserType } from '../../../../apollo/globalTypes';
 import { UserMutation, UserMutationVariables } from '../../../../apollo/UserMutation';
 import { UserQuery, UserQueryVariables } from '../../../../apollo/UserQuery';
 import { Confirm } from '../../../../components/dialogs/Confirm';
@@ -17,6 +19,7 @@ import { Spinner } from '../../../../components/Spinner';
 import { userTypes } from '../../../../constants';
 import { useAuthGuard } from '../../../../hooks/useAuthGuard';
 import { useNotify } from '../../../../hooks/useNotify';
+import { useAuthentication } from '../../../../states/authentication';
 
 const query = gql`
   query UserQuery($id: ID!) {
@@ -50,6 +53,7 @@ export default function User() {
   const skip = useAuthGuard();
   const { push, query: { id, userId } } = useRouter();
   const [, { open }] = useDialoog();
+  const [{ type }] = useAuthentication();
   const notify = useNotify();
   const { data } = useQuery<UserQuery, UserQueryVariables>(query, {
     skip: skip || typeof userId !== 'string',
@@ -85,11 +89,13 @@ export default function User() {
               >
                 <Input name="email" label="E-mail"/>
                 <Input as="select" name="type" label="Rol">
-                  {Object.entries(userTypes).map(([key, value]) => (
-                    <option key={key} value={key}>
-                      {value}
-                    </option>
-                  ))}
+                  {Object.entries(userTypes)
+                    .filter(([key]) => userElevation[key as UserType] <= userElevation[type ?? UserType.USER])
+                    .map(([key, value]) => (
+                      <option key={key} value={key}>
+                        {value}
+                      </option>
+                    ))}
                 </Input>
                 <StyledActions>
                   <Button

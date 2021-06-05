@@ -6,7 +6,7 @@ import { sign } from 'jsonwebtoken';
 import { extendType, nullable } from 'nexus';
 import { Infer } from 'superstruct';
 
-import { Error } from '../../../shared/constants';
+import { Error, userElevation } from '../../../shared/constants';
 import { CreateUser } from '../../../shared/structs/CreateUser';
 import { InviteUser } from '../../../shared/structs/InviteUser';
 import { Login } from '../../../shared/structs/Login';
@@ -128,13 +128,19 @@ export const UserMutation = extendType({
           }
         }))
       ),
-      resolve: (parent, { id, email, type }, { db }) => db.user.update({
-        where: { id },
-        data: {
-          email,
-          type
+      resolve: (parent, { id, email, type }, { db, user }) => {
+        if (userElevation[type] > userElevation[user!.type]) {
+          throw new ApolloError('unauthorized', Error.Unauthorized);
         }
-      })
+
+        return db.user.update({
+          where: { id },
+          data: {
+            email,
+            type
+          }
+        });
+      }
     });
 
     t.field('deleteUser', {
