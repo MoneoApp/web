@@ -1,6 +1,9 @@
 import { DeviceType, InteractionType, UserType } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
+import extract from 'extract-zip';
+import { rmdir } from 'fs/promises';
 import { extendType, list, nullable } from 'nexus';
+import { join } from 'path';
 
 import { Error } from '../../../shared/constants';
 import { CreateDevice } from '../../../shared/structs/CreateDevice';
@@ -8,7 +11,6 @@ import { UpdateDevice } from '../../../shared/structs/UpdateDevice';
 import { authorized } from '../../guards/authorized';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
-import { mail } from '../../utils/mail';
 import { storeFile } from '../../utils/storeFile';
 
 export const DeviceMutation = extendType({
@@ -63,18 +65,10 @@ export const DeviceMutation = extendType({
         });
 
         if (anchors) {
-          await storeFile(mlImages, 'application/zip', `ml-${device.id}`);
-
-          const admins = await db.user.findMany({
-            where: { role: UserRole.ADMIN },
-            select: { email: true }
-          });
-
-          await mail({
-            to: Object.values(admins).map((a) => a.email),
-            subject: 'Nieuw ML apparaat aangemaakt',
-            html: `Een klant heeft een zip geüpload voor ${brand}/${model}. Klik <a href="${process.env.PUBLIC_URL}/api/${device.id}/ml">hier</a> om de zip te downloaden.`
-          });
+          const zipName = await storeFile(mlImages, 'application/zip', `ml-${device.id}`);
+          await extract(join(process.cwd(), 'public', 'uploads', zipName), {
+            dir: join(process.cwd(), 'work', device.id)
+          })
         }
 
         return device;
@@ -172,6 +166,8 @@ export const DeviceMutation = extendType({
             where: { id }
           })
         ]);
+
+        await rmdir(join(process.cwd(), 'work', id), { recursive: true });
 
         return transaction[3];
       }

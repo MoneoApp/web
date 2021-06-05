@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { faLifeRing, faMobileAlt, faTachometerAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faDumbbell, faLifeRing, faMobileAlt, faTachometerAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 
@@ -32,7 +32,12 @@ const items = [{
   href: '/admin/users',
   text: 'Gebruikers',
   icon: faUser,
-  type: UserType.ADMIN
+  role: UserType.ADMIN
+}, {
+  href: '/admin/retrain',
+  text: 'Model trainen',
+  icon: faDumbbell,
+  role: UserType.ADMIN
 }];
 
 export function Sidebar({ children }: Props) {

@@ -15,7 +15,7 @@ export async function storeFile(file: any, mimeStart: string, name = nanoid()) {
   const fileName = `${name}.${extension}`;
 
   await new Promise((resolve, reject) => createReadStream()
-    .pipe(createWriteStream(join(process.cwd(), 'public/uploads', fileName)))
+    .pipe(createWriteStream(join(process.cwd(), 'public', 'uploads', fileName)))
     .on('close', resolve)
     .on('error', reject));
 
