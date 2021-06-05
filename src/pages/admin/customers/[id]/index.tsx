@@ -88,18 +88,20 @@ export default function Customer() {
         <Spinner text="Gebruikers ophalen..."/>
       )}
       {data?.customer?.devices && (
-        <Table
-          data={data.customer.devices}
-          keyBy="id"
-          href={(value) => `/admin/devices/${value.id}`}
-          columns={{
-            model: { title: 'Model' },
-            brand: {
-              title: 'Merk',
-              size: '10rem'
-            }
-          }}
-        />
+        <StyledTable>
+          <Table
+            data={data.customer.devices}
+            keyBy="id"
+            href={(value) => `/admin/devices/${value.id}`}
+            columns={{
+              model: { title: 'Model' },
+              brand: {
+                title: 'Merk',
+                size: '10rem'
+              }
+            }}
+          />
+        </StyledTable>
       )}
     </>
   );
@@ -116,4 +118,8 @@ const StyledButtonText = styled.span`
   ${withBreakpoint('tabletLandscape', css`
     display: inline-block;
   `)};
+`;
+
+const StyledTable = styled.div`
+  margin-top: 4rem;
 `;
