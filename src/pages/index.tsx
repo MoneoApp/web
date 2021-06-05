@@ -48,6 +48,7 @@ export default function Index() {
   return (
     <StyledRoot>
       <Form<any>
+        key={invite as string | undefined}
         struct={invite ? CreateUser : Login}
         values={invite ? {
           inviteId: invite

@@ -36,6 +36,7 @@ export function InviteUser({ customerId, ...props }: Props & DialoogProps) {
       </StyledTitle>
       <Form
         struct={InviteUserStruct}
+        values={{ customerId }}
         onSubmit={({ email }) => mutate({
           variables: {
             customerId,
