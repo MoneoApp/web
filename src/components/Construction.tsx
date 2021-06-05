@@ -9,7 +9,7 @@ export function Construction() {
   return (
     <StyledConstruction>
       <StyledIcon icon={faTools}/>
-      Under construction, check back later
+      Onder constructie
     </StyledConstruction>
   );
 }
