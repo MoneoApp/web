@@ -14,7 +14,6 @@ import { Column } from '../../../../components/layout/Column';
 import { Row } from '../../../../components/layout/Row';
 import { Heading } from '../../../../components/navigation/Heading';
 import { Spinner } from '../../../../components/Spinner';
-import { Table } from '../../../../components/users/Table';
 import { userTypes } from '../../../../constants';
 import { useAuthGuard } from '../../../../hooks/useAuthGuard';
 import { useNotify } from '../../../../hooks/useNotify';
@@ -25,14 +24,6 @@ const query = gql`
       id
       email
       type
-      customer {
-        id
-        devices {
-          id
-          model
-          brand
-        }
-      }
     }
   }
 `;
@@ -57,12 +48,12 @@ const deleteMutation = gql`
 
 export default function User() {
   const skip = useAuthGuard();
-  const { push, query: { id } } = useRouter();
+  const { push, query: { id, userId } } = useRouter();
   const [, { open }] = useDialoog();
   const notify = useNotify();
   const { data } = useQuery<UserQuery, UserQueryVariables>(query, {
-    skip: skip || typeof id !== 'string',
-    variables: { id: id as string }
+    skip: skip || typeof userId !== 'string',
+    variables: { id: userId as string }
   });
   const [mutateUpdate] = useMutation<UserMutation, UserMutationVariables>(updateMutation, {
     onCompleted: () => notify('Successvol gebruiker bijgewerkt')
@@ -70,8 +61,9 @@ export default function User() {
   const [mutateDelete] = useMutation<DeleteUserMutation, DeleteUserMutationVariables>(deleteMutation, {
     onCompleted: () => push('/admin/users').then(() => notify('Successvol gebruiker verwijderd')),
     update: (cache) => cache.modify({
+      id: `Customer:${id}`,
       fields: {
-        users: (users: any[] = [], { readField }) => users.filter((user) => readField('id', user) !== id)
+        users: (users: any[] = [], { readField }) => users.filter((user) => readField('id', user) !== userId)
       }
     })
   });
@@ -108,7 +100,7 @@ export default function User() {
                       <Confirm
                         text="Weet je zeker dat je deze gebruiker wil verwijderen?"
                         onConfirm={() => mutateDelete({
-                          variables: { id: id as string }
+                          variables: { id: userId as string }
                         })}
                         {...props}
                       />
@@ -119,18 +111,6 @@ export default function User() {
               </Form>
             </Column>
           </Row>
-          <Table
-            data={data.user.customer.devices}
-            keyBy="id"
-            href={(value) => `/admin/devices/${value.id}`}
-            columns={{
-              model: { title: 'Model' },
-              brand: {
-                title: 'Merk',
-                size: '10rem'
-              }
-            }}
-          />
         </>
       ) : (
         <Spinner text="Gebruiker ophalen..."/>

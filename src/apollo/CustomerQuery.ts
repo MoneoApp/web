@@ -6,20 +6,26 @@
 import { UserType } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: UserQuery
+// GraphQL query operation: CustomerQuery
 // ====================================================
 
-export interface UserQuery_user {
+export interface CustomerQuery_customer_users {
   __typename: "User";
   id: string;
   email: string;
   type: UserType;
 }
 
-export interface UserQuery {
-  user: UserQuery_user | null;
+export interface CustomerQuery_customer {
+  __typename: "Customer";
+  id: string;
+  users: CustomerQuery_customer_users[];
 }
 
-export interface UserQueryVariables {
+export interface CustomerQuery {
+  customer: CustomerQuery_customer | null;
+}
+
+export interface CustomerQueryVariables {
   id: string;
 }

@@ -4,14 +4,16 @@ import styled from '@emotion/styled';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDialoog } from 'dialoog';
+import { useRouter } from 'next/router';
 
-import { UsersQuery } from '../../../../apollo/UsersQuery';
+import { CustomerQuery, CustomerQueryVariables } from '../../../../apollo/CustomerQuery';
 import { InviteUser } from '../../../../components/dialogs/InviteUser';
 import { Button } from '../../../../components/forms/Button';
 import { FieldForm } from '../../../../components/forms/FieldForm';
 import { Input } from '../../../../components/forms/Input';
 import { Column } from '../../../../components/layout/Column';
 import { Row } from '../../../../components/layout/Row';
+import { Heading } from '../../../../components/navigation/Heading';
 import { Spinner } from '../../../../components/Spinner';
 import { Table } from '../../../../components/users/Table';
 import { userTypes } from '../../../../constants';
@@ -20,29 +22,31 @@ import { useSearch } from '../../../../hooks/useSearch';
 import { withBreakpoint } from '../../../../utils/withBreakpoint';
 
 const query = gql`
-  query UsersQuery {
-    users {
+  query CustomerQuery($id: ID!) {
+    customer(id: $id) {
       id
-      email
-      type
-      customer {
+      users {
         id
-        devices {
-          id
-        }
+        email
+        type
       }
     }
   }
 `;
 
 export default function Customer() {
+  const { query: { id } } = useRouter();
   const skip = useAuthGuard();
-  const { data } = useQuery<UsersQuery>(query, { skip });
-  const [results, setSearch] = useSearch(data?.users, ['email']);
+  const { data } = useQuery<CustomerQuery, CustomerQueryVariables>(query, {
+    skip: skip || typeof id !== 'string',
+    variables: { id: id as string }
+  });
+  const [results, setSearch] = useSearch(data?.customer?.users, ['email']);
   const [, { open }] = useDialoog();
 
   return (
     <>
+      <Heading text="Gebruikers"/>
       <Row spacing={{ phone: 1 }}>
         <Column sizes={{ phone: 9 }}>
           <FieldForm name="search" onChange={setSearch}>
@@ -65,18 +69,13 @@ export default function Customer() {
         <Table
           data={results}
           keyBy="id"
-          href={(value) => `/admin/users/${value.id}`}
+          href={(value) => `/admin/customers/${id}/${value.id}`}
           columns={{
             email: { title: 'E-mail' },
             type: {
               title: 'Rol',
               size: '10rem',
               render: (value) => userTypes[value]
-            },
-            customer: {
-              title: 'Apparaten',
-              size: '7.5rem',
-              render: (value) => value.devices.length
             }
           }}
         />
