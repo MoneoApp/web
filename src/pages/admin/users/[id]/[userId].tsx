@@ -3,21 +3,21 @@ import styled from '@emotion/styled';
 import { useDialoog } from 'dialoog';
 import { useRouter } from 'next/router';
 
-import { DeleteUserMutation, DeleteUserMutationVariables } from '../../../apollo/DeleteUserMutation';
-import { UserMutation, UserMutationVariables } from '../../../apollo/UserMutation';
-import { UserQuery, UserQueryVariables } from '../../../apollo/UserQuery';
-import { Confirm } from '../../../components/dialogs/Confirm';
-import { Button } from '../../../components/forms/Button';
-import { Form } from '../../../components/forms/Form';
-import { Input } from '../../../components/forms/Input';
-import { Column } from '../../../components/layout/Column';
-import { Row } from '../../../components/layout/Row';
-import { Heading } from '../../../components/navigation/Heading';
-import { Spinner } from '../../../components/Spinner';
-import { Table } from '../../../components/users/Table';
-import { userTypes } from '../../../constants';
-import { useAuthGuard } from '../../../hooks/useAuthGuard';
-import { useNotify } from '../../../hooks/useNotify';
+import { DeleteUserMutation, DeleteUserMutationVariables } from '../../../../apollo/DeleteUserMutation';
+import { UserMutation, UserMutationVariables } from '../../../../apollo/UserMutation';
+import { UserQuery, UserQueryVariables } from '../../../../apollo/UserQuery';
+import { Confirm } from '../../../../components/dialogs/Confirm';
+import { Button } from '../../../../components/forms/Button';
+import { Form } from '../../../../components/forms/Form';
+import { Input } from '../../../../components/forms/Input';
+import { Column } from '../../../../components/layout/Column';
+import { Row } from '../../../../components/layout/Row';
+import { Heading } from '../../../../components/navigation/Heading';
+import { Spinner } from '../../../../components/Spinner';
+import { Table } from '../../../../components/users/Table';
+import { userTypes } from '../../../../constants';
+import { useAuthGuard } from '../../../../hooks/useAuthGuard';
+import { useNotify } from '../../../../hooks/useNotify';
 
 const query = gql`
   query UserQuery($id: ID!) {
