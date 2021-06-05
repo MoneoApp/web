@@ -1,13 +1,12 @@
 import { gql, useQuery } from '@apollo/client';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { CustomersQuery } from '../../../apollo/CustomersQuery';
 import { Spinner } from '../../../components/Spinner';
+import { ListActions } from '../../../components/users/ListActions';
 import { Table } from '../../../components/users/Table';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 import { useSearch } from '../../../hooks/useSearch';
-import { ListActions } from '../../../components/users/ListActions';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { InviteUser } from '../../../components/dialogs/InviteUser';
 
 const query = gql`
   query CustomersQuery {
