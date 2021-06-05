@@ -10,13 +10,17 @@ import { Button } from '../forms/Button';
 import { Form } from '../forms/Form';
 import { Input } from '../forms/Input';
 
+type Props = {
+  customerId: string
+};
+
 const mutation = gql`
-  mutation InviteUserMutation($email: String!) {
-    inviteUser(email: $email)
+  mutation InviteUserMutation($customerId: ID!, $email: String!) {
+    inviteUser(customerId: $customerId, email: $email)
   }
 `;
 
-export function InviteUser(props: DialoogProps) {
+export function InviteUser({ customerId, ...props }: Props & DialoogProps) {
   const notify = useNotify();
   const [mutate] = useMutation<InviteUserMutation, InviteUserMutationVariables>(mutation, {
     onCompleted: () => {
@@ -30,7 +34,15 @@ export function InviteUser(props: DialoogProps) {
       <StyledTitle>
         Nodig een gebruiker uit
       </StyledTitle>
-      <Form struct={InviteUserStruct} onSubmit={(variables) => mutate({ variables })}>
+      <Form
+        struct={InviteUserStruct}
+        onSubmit={({ email }) => mutate({
+          variables: {
+            customerId,
+            email
+          }
+        })}
+      >
         <StyledContent>
           <Input name="email" label="E-Mail"/>
           <StyledButton text="Nodig uit"/>

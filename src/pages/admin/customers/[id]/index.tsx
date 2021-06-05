@@ -57,7 +57,7 @@ export default function Customer() {
           <StyledButton
             text="Uitnodigen"
             onClick={open.c((props) => (
-              <InviteUser {...props}/>
+              <InviteUser customerId={id as string} {...props}/>
             ))}
           >
             <StyledButtonText>Uitnodigen</StyledButtonText>
