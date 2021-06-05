@@ -32,12 +32,12 @@ const items = [{
   href: '/admin/users',
   text: 'Gebruikers',
   icon: faUser,
-  role: UserType.ADMIN
+  type: UserType.ADMIN
 }, {
   href: '/admin/retrain',
   text: 'Model trainen',
   icon: faDumbbell,
-  role: UserType.ADMIN
+  type: UserType.ADMIN
 }];
 
 export function Sidebar({ children }: Props) {
