@@ -9,15 +9,15 @@ export async function seed() {
       users: {
         create: [{
           email: 'admin@moneo.ml',
-          password: '$2a$10$c9WRXiAl2szjWwIggA8SP.Qogu4RqUJgFKUBfQMR..WT7IqpjTrzu',
+          password: '$2a$10$23OzImzTNsqoI8w7s9nHzuj86G/m7MZ33Dy5fteXSoPp/T6mNKXju',
           type: UserType.ADMIN
         }, {
-          email: 'contect@moneo.ml',
-          password: '$2a$10$c9WRXiAl2szjWwIggA8SP.Qogu4RqUJgFKUBfQMR..WT7IqpjTrzu',
+          email: 'contact@moneo.ml',
+          password: '$2a$10$23OzImzTNsqoI8w7s9nHzuj86G/m7MZ33Dy5fteXSoPp/T6mNKXju',
           type: UserType.CONTACT
         }, {
           email: 'user@moneo.ml',
-          password: '$2a$10$c9WRXiAl2szjWwIggA8SP.Qogu4RqUJgFKUBfQMR..WT7IqpjTrzu',
+          password: '$2a$10$23OzImzTNsqoI8w7s9nHzuj86G/m7MZ33Dy5fteXSoPp/T6mNKXju',
           type: UserType.USER
         }]
       }
