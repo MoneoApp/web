@@ -13,6 +13,7 @@
     "prepare": "prisma generate",
     "test": "tslint --project tsconfig.json && jest",
     "migrate": "prisma migrate dev",
+    "seed": "prisma db seed --preview-feature",
     "preinstall": "npx npm-force-resolutions"
   },
   "dependencies": {
