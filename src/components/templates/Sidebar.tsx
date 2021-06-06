@@ -76,7 +76,7 @@ export function Sidebar({ children }: Props) {
           <SidebarItem key={href} href={href} text={text} icon={icon}/>
         ))}
         <StyledSpacer/>
-        <SidebarItem href="/logout" text="uitloggen" icon={faChevronLeft}/>
+        <SidebarItem href="/logout" text="Uitloggen" icon={faChevronLeft}/>
       </StyledSidebar>
       <StyledMain>
         {current && (
