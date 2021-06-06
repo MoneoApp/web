@@ -19,7 +19,8 @@ const loginMutation = gql`
     login(email: $email, password: $password) {
       token
       user {
-        role
+        id
+        type
       }
     }
   }
@@ -38,7 +39,7 @@ export default function Index() {
   const { push, query: { invite } } = useRouter();
   const [, { login }] = useAuthentication();
   const [mutateLogin] = useMutation<LoginMutation, LoginMutationVariables>(loginMutation, {
-    onCompleted: ({ login: { token, user: { role } } }) => login(token, role).then(() => push('/admin'))
+    onCompleted: ({ login: { token, user: { type } } }) => login(token, type).then(() => push('/admin'))
   });
   const [mutateRegister] = useMutation<RegisterMutation, RegisterMutationVariables>(registerMutation, {
     onCompleted: () => push('/').then(() => notify('Succesvol geregistreerd'))
@@ -47,6 +48,7 @@ export default function Index() {
   return (
     <StyledRoot>
       <Form<any>
+        key={invite as string | undefined}
         struct={invite ? CreateUser : Login}
         values={invite ? {
           inviteId: invite

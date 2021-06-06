@@ -52,6 +52,11 @@ export function Table<T>({ data, keyBy, href, columns }: Props<T>) {
           </StyledRow>
         </Link>
       ))}
+      {!data.length && (
+        <StyledEmpty>
+          Geen gegevens gevonden
+        </StyledEmpty>
+      )}
     </>
   );
 }
@@ -108,4 +113,9 @@ const StyledRow = styled.a`
 
 const StyledIcon = styled(FontAwesomeIcon)`
   margin-left: .75rem;
+`;
+
+const StyledEmpty = styled.div`
+  margin: 0 1rem 1rem;
+  color: var(--gray-400);
 `;

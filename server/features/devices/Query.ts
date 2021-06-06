@@ -1,3 +1,4 @@
+import { UserType } from '@prisma/client';
 import { extendType, list, nullable } from 'nexus';
 
 import { whereSearch } from '../../utils/whereSearch';
@@ -10,8 +11,17 @@ export const DeviceQuery = extendType({
       args: {
         search: nullable('String')
       },
-      resolve: (parent, { search }, { db }) => db.device.findMany({
-        where: whereSearch(search, 'model', 'brand')
+      resolve: (parent, { search }, { db, user }) => db.device.findMany({
+        where: {
+          ...whereSearch(search, 'model', 'brand'),
+          ...!user || user.type === UserType.ADMIN ? {} : {
+            customer: {
+              users: {
+                some: { id: user.id }
+              }
+            }
+          }
+        }
       })
     });
 

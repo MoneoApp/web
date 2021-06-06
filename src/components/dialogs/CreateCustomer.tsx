@@ -2,29 +2,28 @@ import { gql, useMutation } from '@apollo/client';
 import styled from '@emotion/styled';
 import { DialoogProps } from 'dialoog';
 
-import { InviteUser as InviteUserStruct } from '../../../shared/structs/InviteUser';
-import { InviteUserMutation, InviteUserMutationVariables } from '../../apollo/InviteUserMutation';
+import { CreateCustomer as CreateCustomerStruct } from '../../../shared/structs/CreateCustomer';
+import { CreateCustomerMutation, CreateCustomerMutationVariables } from '../../apollo/CreateCustomerMutation';
 import { useNotify } from '../../hooks/useNotify';
 import { Dialog } from '../Dialog';
 import { Button } from '../forms/Button';
 import { Form } from '../forms/Form';
 import { Input } from '../forms/Input';
 
-type Props = {
-  customerId: string
-};
-
 const mutation = gql`
-  mutation InviteUserMutation($customerId: ID!, $email: String!) {
-    inviteUser(customerId: $customerId, email: $email)
+  mutation CreateCustomerMutation($name: String!, $email: String!) {
+    createCustomer(name: $name, email: $email) {
+      id
+      name
+    }
   }
 `;
 
-export function InviteUser({ customerId, ...props }: Props & DialoogProps) {
+export function CreateCustomer(props: DialoogProps) {
   const notify = useNotify();
-  const [mutate] = useMutation<InviteUserMutation, InviteUserMutationVariables>(mutation, {
+  const [mutate] = useMutation<CreateCustomerMutation, CreateCustomerMutationVariables>(mutation, {
     onCompleted: () => {
-      notify('Succesvol gebruiker uitgenodigd');
+      notify('Succesvol klant aangemaakt');
       setTimeout(props.close);
     }
   });
@@ -32,21 +31,16 @@ export function InviteUser({ customerId, ...props }: Props & DialoogProps) {
   return (
     <Dialog {...props}>
       <StyledTitle>
-        Nodig een gebruiker uit
+        Voeg aan klant toe
       </StyledTitle>
       <Form
-        struct={InviteUserStruct}
-        values={{ customerId }}
-        onSubmit={({ email }) => mutate({
-          variables: {
-            customerId,
-            email
-          }
-        })}
+        struct={CreateCustomerStruct}
+        onSubmit={(variables) => mutate({ variables })}
       >
         <StyledContent>
+          <Input name="name" label="Naam"/>
           <Input name="email" label="E-Mail"/>
-          <StyledButton text="Nodig uit"/>
+          <StyledButton text="Aanmaken"/>
         </StyledContent>
       </Form>
     </Dialog>

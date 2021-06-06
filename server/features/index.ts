@@ -1,3 +1,5 @@
+export * from './customers/Query';
+export * from './customers/Mutation';
 export * from './devices/Query';
 export * from './devices/Mutation';
 export * from './manuals/Query';

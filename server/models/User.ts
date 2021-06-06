@@ -1,4 +1,6 @@
-import { list, objectType } from 'nexus';
+import { objectType } from 'nexus';
+
+import { ensure } from '../utils/ensure';
 
 export const User = objectType({
   name: 'User',
@@ -6,15 +8,15 @@ export const User = objectType({
     t.id('id');
     t.string('email');
 
-    t.field('role', {
-      type: 'UserRole'
+    t.field('type', {
+      type: 'UserType'
     });
 
-    t.field('devices', {
-      type: list('Device'),
-      resolve: ({ id }, args, { db }) => db.user.findUnique({
+    t.field('customer', {
+      type: 'Customer',
+      resolve: ({ id }, args, { db }) => ensure(db.user.findUnique({
         where: { id }
-      }).devices()
+      }).customer())
     });
   }
 });

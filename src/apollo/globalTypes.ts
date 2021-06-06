@@ -18,8 +18,9 @@ export enum InteractionType {
   SQUARE = "SQUARE",
 }
 
-export enum UserRole {
+export enum UserType {
   ADMIN = "ADMIN",
+  CONTACT = "CONTACT",
   USER = "USER",
 }
 

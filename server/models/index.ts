@@ -1,4 +1,5 @@
 export * from './Authentication';
+export * from './Customer';
 export * from './Device';
 export * from './Interaction';
 export * from './Manual';

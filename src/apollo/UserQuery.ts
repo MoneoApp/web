@@ -3,25 +3,17 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UserRole } from "./globalTypes";
+import { UserType } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: UserQuery
 // ====================================================
 
-export interface UserQuery_user_devices {
-  __typename: "Device";
-  id: string;
-  model: string;
-  brand: string;
-}
-
 export interface UserQuery_user {
   __typename: "User";
   id: string;
   email: string;
-  role: UserRole;
-  devices: UserQuery_user_devices[];
+  type: UserType;
 }
 
 export interface UserQuery {

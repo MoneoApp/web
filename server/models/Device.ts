@@ -11,11 +11,11 @@ export const Device = objectType({
     t.string('image');
     t.field('type', { type: 'DeviceType' });
 
-    t.field('user', {
-      type: 'User',
+    t.field('customer', {
+      type: 'Customer',
       resolve: ({ id }, args, { db }) => ensure(db.device.findUnique({
         where: { id }
-      }).user())
+      }).customer())
     });
 
     t.field('interactions', {

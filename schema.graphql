@@ -7,15 +7,22 @@ type Authentication {
   user: User!
 }
 
+type Customer {
+  devices: [Device!]!
+  id: ID!
+  name: String!
+  users: [User!]!
+}
+
 type Device {
   brand: String!
+  customer: Customer!
   id: ID!
   image: String!
   interactions: [Interaction!]!
   manuals: [Manual!]!
   model: String!
   type: DeviceType!
-  user: User!
 }
 
 enum DeviceType {
@@ -67,25 +74,31 @@ input ManualStepInteraction {
 }
 
 type Mutation {
+  createCustomer(email: String!, name: String!): Customer!
   createDevice(brand: String!, image: Upload!, interactions: [UpsertInteraction!]!, mlImages: Upload, model: String!, type: DeviceType!): Device!
   createManual(deviceId: ID!, steps: [UpsertManualStep!]!, title: String!): Manual!
   createUser(inviteId: ID!, password: String!): User!
+  deleteCustomer(id: ID!): Customer
   deleteDevice(id: ID!): Device
   deleteManual(id: ID!): Manual
   deleteUser(id: ID!): User
-  inviteUser(email: String!): Boolean!
+  inviteUser(customerId: ID!, email: String!): Boolean!
   login(email: String!, password: String!): Authentication!
   retrain: Boolean!
+  updateCustomer(id: ID!, name: String!): Customer
   updateDevice(brand: String!, id: ID!, image: Upload, interactions: [UpsertInteraction!]!, model: String!): Device
   updateManual(id: ID!, steps: [UpsertManualStep!]!, title: String!): Manual
-  updateUser(email: String!, id: ID!, role: UserRole!): User
+  updateUser(email: String!, id: ID!, type: UserType!): User
 }
 
 type Query {
+  customer(id: ID!): Customer
+  customers: [Customer!]!
   device(id: ID!): Device
   devices(search: String): [Device!]!
   manual(id: ID!): Manual
   manuals(search: String): [Manual!]!
+  me: User!
   user(id: ID!): User
   users: [User!]!
 }
@@ -109,13 +122,14 @@ input UpsertManualStep {
 }
 
 type User {
-  devices: [Device!]!
+  customer: Customer!
   email: String!
   id: ID!
-  role: UserRole!
+  type: UserType!
 }
 
-enum UserRole {
+enum UserType {
   ADMIN
+  CONTACT
   USER
 }

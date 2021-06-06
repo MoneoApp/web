@@ -1,4 +1,4 @@
-import { DeviceType, InteractionType, UserRole } from '@prisma/client';
+import { DeviceType, InteractionType, UserType } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 import extract from 'extract-zip';
 import { rmdir } from 'fs/promises';
@@ -9,6 +9,7 @@ import { Error } from '../../../shared/constants';
 import { CreateDevice } from '../../../shared/structs/CreateDevice';
 import { UpdateDevice } from '../../../shared/structs/UpdateDevice';
 import { authorized } from '../../guards/authorized';
+import { customer } from '../../guards/customer';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
 import { storeFile } from '../../utils/storeFile';
@@ -37,6 +38,14 @@ export const DeviceMutation = extendType({
           throw new ApolloError('invalid interactions', Error.InvalidInteractions);
         }
 
+        const data = await db.user.findUnique({
+          where: { id: user!.id }
+        }).customer();
+
+        if (!data) {
+          throw new ApolloError('unknown', Error.Unknown);
+        }
+
         const imageName = await storeFile(image, 'image/');
 
         const device = await db.device.create({
@@ -45,8 +54,8 @@ export const DeviceMutation = extendType({
             brand,
             image: imageName,
             type,
-            user: {
-              connect: { id: user!.id }
+            customer: {
+              connect: { id: data.id }
             },
             interactions: {
               createMany: {
@@ -60,7 +69,7 @@ export const DeviceMutation = extendType({
           const zipName = await storeFile(mlImages, 'application/zip', `ml-${device.id}`);
           await extract(join(process.cwd(), 'public', 'uploads', zipName), {
             dir: join(process.cwd(), 'work', device.id)
-          })
+          });
         }
 
         return device;
@@ -78,7 +87,12 @@ export const DeviceMutation = extendType({
       },
       authorize: guard(
         authorized(),
-        validated(UpdateDevice)
+        validated(UpdateDevice),
+        customer(({ id }) => ({
+          devices: {
+            some: { id }
+          }
+        }))
       ),
       resolve: async (parent, { id, model, brand, image, interactions }, { db }) => {
         const device = await db.device.findUnique({
@@ -141,7 +155,12 @@ export const DeviceMutation = extendType({
         id: 'ID'
       },
       authorize: guard(
-        authorized(UserRole.ADMIN)
+        authorized(UserType.ADMIN, UserType.CONTACT),
+        customer(({ id }) => ({
+          devices: {
+            some: { id }
+          }
+        }))
       ),
       resolve: async (parent, { id }, { db, user }) => {
         const transaction = await db.$transaction([

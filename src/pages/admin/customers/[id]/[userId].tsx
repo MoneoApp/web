@@ -3,43 +3,40 @@ import styled from '@emotion/styled';
 import { useDialoog } from 'dialoog';
 import { useRouter } from 'next/router';
 
-import { DeleteUserMutation, DeleteUserMutationVariables } from '../../../apollo/DeleteUserMutation';
-import { UserMutation, UserMutationVariables } from '../../../apollo/UserMutation';
-import { UserQuery, UserQueryVariables } from '../../../apollo/UserQuery';
-import { Confirm } from '../../../components/dialogs/Confirm';
-import { Button } from '../../../components/forms/Button';
-import { Form } from '../../../components/forms/Form';
-import { Input } from '../../../components/forms/Input';
-import { Column } from '../../../components/layout/Column';
-import { Row } from '../../../components/layout/Row';
-import { Heading } from '../../../components/navigation/Heading';
-import { Spinner } from '../../../components/Spinner';
-import { Table } from '../../../components/users/Table';
-import { roles } from '../../../constants';
-import { useAuthGuard } from '../../../hooks/useAuthGuard';
-import { useNotify } from '../../../hooks/useNotify';
+import { userElevation } from '../../../../../shared/constants';
+import { DeleteUserMutation, DeleteUserMutationVariables } from '../../../../apollo/DeleteUserMutation';
+import { UserType } from '../../../../apollo/globalTypes';
+import { UserMutation, UserMutationVariables } from '../../../../apollo/UserMutation';
+import { UserQuery, UserQueryVariables } from '../../../../apollo/UserQuery';
+import { Confirm } from '../../../../components/dialogs/Confirm';
+import { Button } from '../../../../components/forms/Button';
+import { Form } from '../../../../components/forms/Form';
+import { Input } from '../../../../components/forms/Input';
+import { Column } from '../../../../components/layout/Column';
+import { Row } from '../../../../components/layout/Row';
+import { Heading } from '../../../../components/navigation/Heading';
+import { Spinner } from '../../../../components/Spinner';
+import { userTypes } from '../../../../constants';
+import { useAuthGuard } from '../../../../hooks/useAuthGuard';
+import { useNotify } from '../../../../hooks/useNotify';
+import { useAuthentication } from '../../../../states/authentication';
 
 const query = gql`
   query UserQuery($id: ID!) {
     user(id: $id) {
       id
       email
-      role
-      devices {
-        id
-        model
-        brand
-      }
+      type
     }
   }
 `;
 
 const updateMutation = gql`
-  mutation UserMutation($id: ID!, $email: String!, $role: UserRole!) {
-    updateUser(id: $id, email: $email, role: $role) {
+  mutation UserMutation($id: ID!, $email: String!, $type: UserType!) {
+    updateUser(id: $id, email: $email, type: $type) {
       id
       email
-      role
+      type
     }
   }
 `;
@@ -54,12 +51,13 @@ const deleteMutation = gql`
 
 export default function User() {
   const skip = useAuthGuard();
-  const { push, query: { id } } = useRouter();
+  const { push, query: { id, userId } } = useRouter();
   const [, { open }] = useDialoog();
+  const [{ type }] = useAuthentication();
   const notify = useNotify();
   const { data } = useQuery<UserQuery, UserQueryVariables>(query, {
-    skip: skip || typeof id !== 'string',
-    variables: { id: id as string }
+    skip: skip || typeof userId !== 'string',
+    variables: { id: userId as string }
   });
   const [mutateUpdate] = useMutation<UserMutation, UserMutationVariables>(updateMutation, {
     onCompleted: () => notify('Successvol gebruiker bijgewerkt')
@@ -67,8 +65,9 @@ export default function User() {
   const [mutateDelete] = useMutation<DeleteUserMutation, DeleteUserMutationVariables>(deleteMutation, {
     onCompleted: () => push('/admin/users').then(() => notify('Successvol gebruiker verwijderd')),
     update: (cache) => cache.modify({
+      id: `Customer:${id}`,
       fields: {
-        users: (users: any[] = [], { readField }) => users.filter((user) => readField('id', user) !== id)
+        users: (users: any[] = [], { readField }) => users.filter((user) => readField('id', user) !== userId)
       }
     })
   });
@@ -84,17 +83,19 @@ export default function User() {
                 values={{
                   id: data.user.id,
                   email: data.user.email,
-                  role: data.user.role
+                  type: data.user.type
                 }}
                 onSubmit={(variables) => mutateUpdate({ variables })}
               >
                 <Input name="email" label="E-mail"/>
-                <Input as="select" name="role" label="Rol">
-                  {Object.entries(roles).map(([key, value]) => (
-                    <option key={key} value={key}>
-                      {value}
-                    </option>
-                  ))}
+                <Input as="select" name="type" label="Rol">
+                  {Object.entries(userTypes)
+                    .filter(([key]) => userElevation[key as UserType] <= userElevation[type ?? UserType.USER])
+                    .map(([key, value]) => (
+                      <option key={key} value={key}>
+                        {value}
+                      </option>
+                    ))}
                 </Input>
                 <StyledActions>
                   <Button
@@ -105,7 +106,7 @@ export default function User() {
                       <Confirm
                         text="Weet je zeker dat je deze gebruiker wil verwijderen?"
                         onConfirm={() => mutateDelete({
-                          variables: { id: id as string }
+                          variables: { id: userId as string }
                         })}
                         {...props}
                       />
@@ -116,18 +117,6 @@ export default function User() {
               </Form>
             </Column>
           </Row>
-          <Table
-            data={data.user.devices}
-            keyBy="id"
-            href={(value) => `/admin/devices/${value.id}`}
-            columns={{
-              model: { title: 'Model' },
-              brand: {
-                title: 'Merk',
-                size: '10rem'
-              }
-            }}
-          />
         </>
       ) : (
         <Spinner text="Gebruiker ophalen..."/>

@@ -1,21 +1,15 @@
 import { gql, useQuery } from '@apollo/client';
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 
 import { DevicesQuery } from '../../../apollo/DevicesQuery';
 import { Overview } from '../../../components/devices/Overview';
-import { Button } from '../../../components/forms/Button';
-import { FieldForm } from '../../../components/forms/FieldForm';
-import { Input } from '../../../components/forms/Input';
 import { Column } from '../../../components/layout/Column';
-import { Row } from '../../../components/layout/Row';
 import { Spinner } from '../../../components/Spinner';
+import { ListActions } from '../../../components/users/ListActions';
 import { useAuthGuard } from '../../../hooks/useAuthGuard';
 import { useSearch } from '../../../hooks/useSearch';
-import { withBreakpoint } from '../../../utils/withBreakpoint';
 
 const query = gql`
   query DevicesQuery {
@@ -34,23 +28,12 @@ export default function Devices() {
 
   return (
     <>
-      <Row spacing={{ phone: 1 }}>
-        <Column sizes={{ phone: 9 }}>
-          <FieldForm name="search" onChange={setSearch}>
-            <Input name="search" label="Zoeken"/>
-          </FieldForm>
-        </Column>
-        <Column sizes={{ phone: 3 }}>
-          <Link href="/admin/devices/new" passHref={true}>
-            <StyledButton as="a" text="Nieuw">
-              <StyledButtonText>
-                Nieuw
-              </StyledButtonText>
-              <FontAwesomeIcon icon={faPlus}/>
-            </StyledButton>
-          </Link>
-        </Column>
-      </Row>
+      <ListActions
+        text="Aanmaken"
+        icon={faPlus}
+        href="/admin/devices/new"
+        setSearch={setSearch}
+      />
       {results ? (
         <Overview data={results} keyBy="id" groupBy="brand">
           {(value) => (
@@ -69,19 +52,6 @@ export default function Devices() {
     </>
   );
 }
-
-const StyledButton = styled(Button)`
-  height: calc(100% - 1rem);
-`;
-
-const StyledButtonText = styled.span`
-  display: none;
-  margin-right: .5rem;
-
-  ${withBreakpoint('tabletLandscape', css`
-    display: inline-block;
-  `)};
-`;
 
 const StyledDevice = styled.a`
   margin: .5rem;

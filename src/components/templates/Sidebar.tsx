@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { faDumbbell, faLifeRing, faMobileAlt, faTachometerAlt, faUser } from '@fortawesome/free-solid-svg-icons';
-import { UserRole } from '@prisma/client';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 
+import { UserType } from '../../apollo/globalTypes';
 import { useAuthentication } from '../../states/authentication';
 import { withBreakpoint } from '../../utils/withBreakpoint';
 import { Container } from '../layout/Container';
@@ -29,29 +29,34 @@ const items = [{
   text: 'Ondersteuning',
   icon: faLifeRing
 }, {
-  href: '/admin/users',
+  href: '/admin/customers',
+  text: 'Klanten',
+  icon: faUser,
+  type: UserType.ADMIN
+}, {
+  href: '/admin/customers',
   text: 'Gebruikers',
   icon: faUser,
-  role: UserRole.ADMIN
+  type: UserType.CONTACT
 }, {
   href: '/admin/retrain',
   text: 'Model trainen',
   icon: faDumbbell,
-  role: UserRole.ADMIN
+  type: UserType.ADMIN
 }];
 
 export function Sidebar({ children }: Props) {
   const { pathname } = useRouter();
-  const [{ role }] = useAuthentication();
-  const [actualRole, setRole] = useState<UserRole>(UserRole.USER);
+  const [{ type }] = useAuthentication();
+  const [actualType, setType] = useState<UserType>(UserType.USER);
 
   const current = items.find(({ href }) => pathname === href)?.text;
 
   useEffect(() => {
-    if (role) {
-      setRole(role);
+    if (type) {
+      setType(type);
     }
-  }, [role, setRole]);
+  }, [type, setType]);
 
   return (
     <StyledContainer>
@@ -59,7 +64,7 @@ export function Sidebar({ children }: Props) {
         <StyledBrand>
           <StyledLogo/>
         </StyledBrand>
-        {items.filter((i) => !i.role || i.role === actualRole).map(({ href, text, icon }) => (
+        {items.filter((i) => !i.type || i.type === actualType).map(({ href, text, icon }) => (
           <SidebarItem key={href} href={href} text={text} icon={icon}/>
         ))}
       </StyledSidebar>

@@ -12,5 +12,6 @@ export interface InviteUserMutation {
 }
 
 export interface InviteUserMutationVariables {
+  customerId: string;
   email: string;
 }

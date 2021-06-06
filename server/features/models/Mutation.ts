@@ -1,5 +1,5 @@
 /* tslint:disable:no-console */
-import { UserRole } from '@prisma/client';
+import { UserType } from '@prisma/client';
 import execa from 'execa';
 import { extendType } from 'nexus';
 import { join } from 'path';
@@ -15,7 +15,7 @@ export const ModelMutation = extendType({
   definition: (t) => {
     t.boolean('retrain', {
       authorize: guard(
-        authorized(UserRole.ADMIN)
+        authorized(UserType.ADMIN)
       ),
       resolve: async () => {
         if (busy) {

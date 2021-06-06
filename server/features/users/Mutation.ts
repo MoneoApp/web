@@ -1,4 +1,4 @@
-import { UserRole } from '@prisma/client';
+import { UserType } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 import { compare, hash } from 'bcryptjs';
 import { addDays, isAfter } from 'date-fns';
@@ -6,7 +6,7 @@ import { sign } from 'jsonwebtoken';
 import { extendType, nullable } from 'nexus';
 import { Infer } from 'superstruct';
 
-import { Error } from '../../../shared/constants';
+import { Error, userElevation } from '../../../shared/constants';
 import { CreateUser } from '../../../shared/structs/CreateUser';
 import { InviteUser } from '../../../shared/structs/InviteUser';
 import { Login } from '../../../shared/structs/Login';
@@ -14,6 +14,7 @@ import { UpdateUser } from '../../../shared/structs/UpdateUser';
 import { secret } from '../../constants';
 import { authorized } from '../../guards/authorized';
 import { current } from '../../guards/current';
+import { customer } from '../../guards/customer';
 import { or } from '../../guards/or';
 import { validated } from '../../guards/validated';
 import { guard } from '../../utils/guard';
@@ -25,13 +26,17 @@ export const UserMutation = extendType({
   definition: (t) => {
     t.boolean('inviteUser', {
       args: {
+        customerId: 'ID',
         email: 'String'
       },
       authorize: guard(
-        authorized(UserRole.ADMIN),
-        validated(InviteUser)
+        authorized(UserType.ADMIN, UserType.CONTACT),
+        validated(InviteUser),
+        customer(({ customerId }) => ({
+          id: customerId
+        }))
       ),
-      resolve: async (parent, { email }, { db }) => {
+      resolve: async (parent, { customerId, email }, { db }) => {
         try {
           const count = await db.user.count({
             where: { email }
@@ -42,7 +47,12 @@ export const UserMutation = extendType({
           }
 
           const invite = await db.invite.create({
-            data: { email }
+            data: {
+              customer: {
+                connect: { id: customerId }
+              },
+              email
+            }
           });
 
           await mail({
@@ -92,7 +102,11 @@ export const UserMutation = extendType({
         return await db.user.create({
           data: {
             email: invite.email,
-            password: hashed
+            password: hashed,
+            type: invite.type,
+            customer: {
+              connect: { id: invite.customerId }
+            }
           }
         });
       }
@@ -103,19 +117,30 @@ export const UserMutation = extendType({
       args: {
         id: 'ID',
         email: 'String',
-        role: 'UserRole'
+        type: 'UserType'
       },
       authorize: guard(
-        authorized(UserRole.ADMIN),
-        validated(UpdateUser)
+        authorized(UserType.ADMIN, UserType.CONTACT),
+        validated(UpdateUser),
+        customer(({ id }) => ({
+          users: {
+            some: { id }
+          }
+        }))
       ),
-      resolve: (parent, { id, email, role }, { db }) => db.user.update({
-        where: { id },
-        data: {
-          email,
-          role
+      resolve: (parent, { id, email, type }, { db, user }) => {
+        if (userElevation[type] > userElevation[user!.type]) {
+          throw new ApolloError('unauthorized', Error.Unauthorized);
         }
-      })
+
+        return db.user.update({
+          where: { id },
+          data: {
+            email,
+            type
+          }
+        });
+      }
     });
 
     t.field('deleteUser', {
@@ -124,29 +149,16 @@ export const UserMutation = extendType({
         id: 'ID'
       },
       authorize: guard(
-        or(current(), authorized(UserRole.ADMIN))
+        or(current(), authorized(UserType.ADMIN, UserType.CONTACT)),
+        customer(({ id }) => ({
+          users: {
+            some: { id }
+          }
+        }))
       ),
-      resolve: async (parent, { id }, { db }) => {
-        const transaction = await db.$transaction([
-          db.manualStep.deleteMany({
-            where: { manual: { device: { user: { id } } } }
-          }),
-          db.manual.deleteMany({
-            where: { device: { user: { id } } }
-          }),
-          db.interaction.deleteMany({
-            where: { device: { user: { id } } }
-          }),
-          db.device.deleteMany({
-            where: { user: { id } }
-          }),
-          db.user.delete({
-            where: { id }
-          })
-        ]);
-
-        return transaction[4];
-      }
+      resolve: async (parent, { id }, { db }) => db.user.delete({
+        where: { id }
+      })
     });
 
     t.field('login', {
@@ -173,7 +185,7 @@ export const UserMutation = extendType({
         return {
           token: sign({
             id: user.id,
-            role: user.role
+            type: user.type
           }, secret),
           user
         };

@@ -8,23 +8,36 @@ generator client {
   previewFeatures = ["nApi"]
 }
 
-model User {
-  id       String   @id @default(cuid())
-  email    String   @unique
-  password String
-  role     UserRole @default(USER)
-  devices  Device[]
+model Customer {
+  id      String   @id @default(cuid())
+  name    String   @unique
+  users   User[]
+  devices Device[]
+  invites Invite[]
 }
 
-enum UserRole {
+model User {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  password   String
+  type       UserType @default(USER)
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+}
+
+enum UserType {
   USER
+  CONTACT
   ADMIN
 }
 
 model Invite {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  email      String   @unique
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  type       UserType @default(USER)
+  createdAt  DateTime @default(now())
 }
 
 model Device {
@@ -33,8 +46,8 @@ model Device {
   brand        String
   image        String
   type         DeviceType    @default(STATIC)
-  userId       String
-  user         User          @relation(fields: [userId], references: [id])
+  customerId   String
+  customer     Customer      @relation(fields: [customerId], references: [id])
   interactions Interaction[]
   manuals      Manual[]
 }
