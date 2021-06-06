@@ -14,7 +14,8 @@ export function PreviewQr({ id, ...props }: Props & DialoogProps) {
     <StyledDialog {...props}>
       <StyledQRCode renderAs="svg" includeMargin={true} size={256} value={id}/>
       <StyledTitle>
-        Open de app en scan deze QR code om dit apparaat weer te geven
+        Open de app en scan deze QR code om dit apparaat weer te geven.
+        Dit werkt met de laatst opgeslagen data.
       </StyledTitle>
       <StyledActions>
         <Button text="Sluit" onClick={props.close}/>
