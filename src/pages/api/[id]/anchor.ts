@@ -1,4 +1,4 @@
-import { InteractionType, PrismaClient } from '@prisma/client';
+import { InteractionType } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { resolve } from 'path';
 import Sharp from 'sharp';
@@ -30,8 +30,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   x = Math.max(0, x);
   y = Math.max(0, y);
-  width = Math.min(width, metadata.width ?? 0 - x);
-  height = Math.min(height, metadata.height ?? 0 - y);
+  width = Math.min(width, (metadata.width ?? 0) - x);
+  height = Math.min(height, width, (metadata.height ?? 0) - y);
 
   const image = await sharp
     .extract({
