@@ -19,7 +19,9 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
   const ref = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
   const [preview, setPreview] = useState<string>();
-  const { setValue, formState: { isSubmitting } } = useFormContext();
+  const { setValue, watch, formState: { isSubmitting } } = useFormContext();
+
+  const value = watch(props.name);
 
   const setFile = (files: FileList | null) => {
     const file = files?.[0];
@@ -32,7 +34,10 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
       URL.revokeObjectURL(preview);
     }
 
-    setPreview(URL.createObjectURL(file));
+    if ((props.accept?.indexOf('image') ?? 0) >= 0) {
+      setPreview(URL.createObjectURL(file));
+    }
+
     setValue(props.name, file, {
       shouldDirty: true
     });
@@ -80,7 +85,7 @@ export function FileInput(props: Props & ComponentPropsWithoutRef<'input'>) {
           />
         ) : (
           <StyledHint over={over} preview={preview !== undefined}>
-            Sleep hier een bestand of klik om er een te selecteren
+            {value?.name ?? 'Sleep hier een bestand of klik om er een te selecteren'}
           </StyledHint>
         )}
       </StyledDrop>

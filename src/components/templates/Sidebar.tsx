@@ -8,7 +8,6 @@ import {
   faTachometerAlt,
   faUser
 } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 

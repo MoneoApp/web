@@ -2,9 +2,7 @@ import { gql, useMutation, useQuery } from '@apollo/client';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDialoog } from 'dialoog';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { UpdateDevice } from '../../../../../shared/structs/UpdateDevice';
@@ -16,7 +14,6 @@ import { Confirm } from '../../../../components/dialogs/Confirm';
 import { PreviewQr } from '../../../../components/dialogs/ViewQr';
 import { Editor } from '../../../../components/editor/Editor';
 import { Button } from '../../../../components/forms/Button';
-import { FieldForm } from '../../../../components/forms/FieldForm';
 import { FileInput } from '../../../../components/forms/FileInput';
 import { Form } from '../../../../components/forms/Form';
 import { Input } from '../../../../components/forms/Input';
@@ -24,6 +21,7 @@ import { Column } from '../../../../components/layout/Column';
 import { Row } from '../../../../components/layout/Row';
 import { Heading } from '../../../../components/navigation/Heading';
 import { Spinner } from '../../../../components/Spinner';
+import { ListActions } from '../../../../components/users/ListActions';
 import { Table } from '../../../../components/users/Table';
 import { interactionFragment } from '../../../../fragments';
 import { useAuthGuard } from '../../../../hooks/useAuthGuard';
@@ -176,23 +174,12 @@ export default function Device() {
               </Column>
             </Row>
           </Form>
-          <Row spacing={{ phone: 1 }}>
-            <Column sizes={{ phone: 9 }}>
-              <FieldForm name="search" onChange={setSearch}>
-                <Input name="search" label="Zoeken"/>
-              </FieldForm>
-            </Column>
-            <Column sizes={{ phone: 3 }}>
-              <Link href={`/admin/devices/${id}/manuals/new`} passHref={true}>
-                <StyledButton as="a" text="Nieuw">
-                  <StyledButtonText>
-                    Nieuw
-                  </StyledButtonText>
-                  <FontAwesomeIcon icon={faPlus}/>
-                </StyledButton>
-              </Link>
-            </Column>
-          </Row>
+          <ListActions
+            text="Aanmaken"
+            icon={faPlus}
+            setSearch={setSearch}
+            href={`/admin/devices/${id}/manuals/new`}
+          />
           <Table
             data={results ?? []}
             keyBy="id"
