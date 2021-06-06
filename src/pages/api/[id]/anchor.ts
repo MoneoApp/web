@@ -18,7 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }));
 
-  if (!device) {
+  if (!device || !device.interactions.length) {
     return;
   }
 
@@ -26,19 +26,26 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const sharp = await Sharp(path);
   const metadata = await sharp.metadata();
 
-  let { x, y, width, height } = device.interactions[0];
+  let { x, y, width } = device.interactions[0];
+  const totalWidth = metadata.width ?? 1;
+  const totalHeight = metadata.height ?? 1;
 
   x = Math.max(0, x);
   y = Math.max(0, y);
-  width = Math.min(width, (metadata.width ?? 0) - x);
-  height = Math.min(height, width, (metadata.height ?? 0) - y);
+  width = Math.min(width, totalWidth - x, totalHeight - y);
+
+  if (width < 0) {
+    x = 0;
+    y = 0;
+    width = Math.min(totalWidth, totalHeight);
+  }
 
   const image = await sharp
     .extract({
       left: Math.round(x),
       top: Math.round(y),
       width: Math.round(width),
-      height: Math.round(height)
+      height: Math.round(width)
     })
     .resize(300)
     .png()
