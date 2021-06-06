@@ -96,6 +96,7 @@ export function Shape({ config, setConfig, selected, setSelected, deleteShape }:
               height: Math.max(16, next.height)
             };
           }}
+          rotateEnabled={false}
           {...transformSettings[config.type]}
         />
       )}
