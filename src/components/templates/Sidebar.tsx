@@ -1,6 +1,14 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { faDumbbell, faLifeRing, faMobileAlt, faTachometerAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronLeft,
+  faDumbbell,
+  faLifeRing,
+  faMobileAlt,
+  faTachometerAlt,
+  faUser
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 
@@ -67,6 +75,8 @@ export function Sidebar({ children }: Props) {
         {items.filter((i) => !i.type || i.type === actualType).map(({ href, text, icon }) => (
           <SidebarItem key={href} href={href} text={text} icon={icon}/>
         ))}
+        <StyledSpacer/>
+        <SidebarItem href="/logout" text="Uitloggen" icon={faChevronLeft}/>
       </StyledSidebar>
       <StyledMain>
         {current && (
@@ -132,4 +142,8 @@ const StyledMain = styled.main`
   ${withBreakpoint('tabletLandscape', css`
     padding-left: 3rem;
   `)};
+`;
+
+const StyledSpacer = styled.div`
+  flex: 1;
 `;
