@@ -29,7 +29,7 @@ services:
   web:
     build: .
     ports:
-      - 3001:3000
+      - 3000:3000
     environment:
       DATABASE_URL:
       SECRET:
@@ -68,6 +68,7 @@ To access the API documentation, start the application and navigate to the follo
 ```
 http://localhost:3000/api
 ```
+The documentation can be found on the right side of the website, behind the `DOCS` tab.
 
 ### Structure
 ```
