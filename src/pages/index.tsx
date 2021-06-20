@@ -13,6 +13,7 @@ import { Logo } from '../components/Logo';
 import { Empty } from '../components/templates/Empty';
 import { useNotify } from '../hooks/useNotify';
 import { useAuthentication } from '../states/authentication';
+import { useAuthGuard } from '../hooks/useAuthGuard';
 
 const loginMutation = gql`
   mutation LoginMutation($email: String!, $password: String!) {
@@ -44,6 +45,8 @@ export default function Index() {
   const [mutateRegister] = useMutation<RegisterMutation, RegisterMutationVariables>(registerMutation, {
     onCompleted: () => push('/').then(() => notify('Succesvol geregistreerd'))
   });
+
+  useAuthGuard(false, '/admin');
 
   return (
     <StyledRoot>
