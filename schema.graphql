@@ -74,32 +74,238 @@ input ManualStepInteraction {
 }
 
 type Mutation {
-  createCustomer(email: String!, name: String!): Customer!
-  createDevice(brand: String!, image: Upload!, interactions: [UpsertInteraction!]!, mlImages: Upload, model: String!, type: DeviceType!): Device!
-  createManual(deviceId: ID!, steps: [UpsertManualStep!]!, title: String!): Manual!
-  createUser(inviteId: ID!, password: String!): User!
-  deleteCustomer(id: ID!): Customer
-  deleteDevice(id: ID!): Device
-  deleteManual(id: ID!): Manual
-  deleteUser(id: ID!): User
-  inviteUser(customerId: ID!, email: String!): Boolean!
-  login(email: String!, password: String!): Authentication!
+  """
+  Create a customer. Invites the specified email as CONTACT user. Only accessible by roles: ADMIN.
+  """
+  createCustomer(
+    """
+    The email address of the contact that should receive the invite. Must be a valid email.
+    """
+    email: String!
+
+    """The name of the customer. Must be 3 to 70 characters long."""
+    name: String!
+  ): Customer!
+
+  """
+  Create a device with the specified details. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.
+  """
+  createDevice(
+    """The name of the device brand. Must be 3 to 70 characters long."""
+    brand: String!
+
+    """The thumbnail image of the device. Must be a .PNG or .JPG."""
+    image: Upload!
+
+    """The list of interactions associated with the device."""
+    interactions: [UpsertInteraction!]!
+
+    """The training images of the device. Must be a .ZIP."""
+    mlImages: Upload
+
+    """The name of the device model. Must be 3 to 70 characters long."""
+    model: String!
+
+    """The type of learning used for device recognition."""
+    type: DeviceType!
+  ): Device!
+
+  """
+  Create a manual with the specified steps. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.
+  """
+  createManual(
+    """The ID of the device this manual associates with. Must be a valid ID."""
+    deviceId: ID!
+
+    """A list of manual steps. Must have at least 1 step."""
+    steps: [UpsertManualStep!]!
+
+    """The title of the manual. Must be 3 to 70 characters long."""
+    title: String!
+  ): Manual!
+
+  """
+  Create a user with the specified invite. Attaches the user to the customer associated with the invite.
+  """
+  createUser(
+    """The ID of the invite. Must be a valid ID."""
+    inviteId: ID!
+
+    """
+    The password of the new user. Must be at least 8 characters long, contain 1 capital letter and 1 number.
+    """
+    password: String!
+  ): User!
+
+  """
+  Delete the specified customer. Only accessible by roles: ADMIN, CONTACT, CURRENT. If CONTACT, must be part of the same customer network.
+  """
+  deleteCustomer(
+    """The ID of the customer. Must be a valid ID."""
+    id: ID!
+  ): Customer
+
+  """
+  Delete the specified device. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.
+  """
+  deleteDevice(
+    """The ID of the device. Must be a valid ID."""
+    id: ID!
+  ): Device
+
+  """
+  Delete the specified manual. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.
+  """
+  deleteManual(
+    """The ID of the manual. Must be a valid ID."""
+    id: ID!
+  ): Manual
+
+  """
+  Delete the specified user. Only accessible by roles: ADMIN, CONTACT, CURRENT. If CONTACT, must be part of the same customer network.
+  """
+  deleteUser(
+    """The ID of the user. Must be a valid ID."""
+    id: ID!
+  ): User
+
+  """
+  Create an invite for the specified customer. Sends an email to the specified email address. Only accessible by roles: ADMIN, CONTACT.
+  """
+  inviteUser(
+    """The ID of the customer. Must be a valid ID."""
+    customerId: ID!
+
+    """
+    The email address of the user that should receive the invite. Must be a valid email.
+    """
+    email: String!
+  ): Boolean!
+
+  """Login as the specified user."""
+  login(
+    """The email of the user. Must be a valid email."""
+    email: String!
+
+    """
+    The password of the user. Must be at least 8 characters long, contain 1 capital letter and 1 number.
+    """
+    password: String!
+  ): Authentication!
+
+  """
+  Start the retraining process of the model. This can take up to an hour. Will return false if already busy, otherwise true. Only accessible by roles: ADMIN.
+  """
   retrain: Boolean!
-  updateCustomer(id: ID!, name: String!): Customer
-  updateDevice(brand: String!, id: ID!, image: Upload, interactions: [UpsertInteraction!]!, model: String!): Device
-  updateManual(id: ID!, steps: [UpsertManualStep!]!, title: String!): Manual
-  updateUser(email: String!, id: ID!, type: UserType!): User
+
+  """
+  Update the specified customer. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.
+  """
+  updateCustomer(
+    """The ID of the customer. Must be a valid ID."""
+    id: ID!
+
+    """The name of the customer. Must be 3 to 70 characters long."""
+    name: String!
+  ): Customer
+
+  """
+  Update the specified device. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.
+  """
+  updateDevice(
+    """The name of the device brand. Must be 3 to 70 characters long."""
+    brand: String!
+
+    """The ID of the device. Must be a valid ID."""
+    id: ID!
+
+    """The thumbnail images of the device. If set, must be a .PNG or .JPG."""
+    image: Upload
+
+    """The list of interactions associated with the device."""
+    interactions: [UpsertInteraction!]!
+
+    """The name of the device model. Must be 3 to 70 characters long."""
+    model: String!
+  ): Device
+
+  """
+  Update the specified manual. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.
+  """
+  updateManual(
+    """The ID of the manual. Must be a valid ID."""
+    id: ID!
+
+    """A list of manual steps. Must have at least 1 step."""
+    steps: [UpsertManualStep!]!
+
+    """The title of the manual. Must be 3 to 70 characters long."""
+    title: String!
+  ): Manual
+
+  """
+  Update the specified user. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.
+  """
+  updateUser(
+    """The email of the user. Must be a valid email."""
+    email: String!
+
+    """The ID of the user. Must be a valid ID."""
+    id: ID!
+
+    """The new role of the user."""
+    type: UserType!
+  ): User
 }
 
 type Query {
-  customer(id: ID!): Customer
+  """
+  Get the details of the specified customer. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.
+  """
+  customer(
+    """The ID of the customer. Must be a valid ID."""
+    id: ID!
+  ): Customer
+
+  """Get all registered customers. Only accessible by roles: ADMIN."""
   customers: [Customer!]!
-  device(id: ID!): Device
-  devices(search: String): [Device!]!
-  manual(id: ID!): Manual
-  manuals(search: String): [Manual!]!
+
+  """Get the details of the specified device."""
+  device(
+    """The ID of the device. Must be a valid ID."""
+    id: ID!
+  ): Device
+
+  """Get all created devices."""
+  devices(
+    """If set, will filter the result on the brand or model field."""
+    search: String
+  ): [Device!]!
+
+  """Get the details of the specified manual."""
+  manual(
+    """The ID of the manual. Must be a valid ID."""
+    id: ID!
+  ): Manual
+
+  """Get all created manuals."""
+  manuals(
+    """If set, will filter the result on the title field."""
+    search: String
+  ): [Manual!]!
+
+  """Get the current authenticated user object."""
   me: User!
-  user(id: ID!): User
+
+  """
+  Get the details of the specified user. Only accessible by roles: ADMIN, CONTACT, CURRENT.
+  """
+  user(
+    """The ID of the user. Must be a valid ID."""
+    id: ID!
+  ): User
+
+  """Get all registered users. Only accessible by roles: ADMIN."""
   users: [User!]!
 }
 

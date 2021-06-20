@@ -1,5 +1,5 @@
 import { UserType } from '@prisma/client';
-import { extendType, nullable } from 'nexus';
+import { extendType, idArg, nullable, stringArg } from 'nexus';
 
 import { CreateCustomer } from '../../../shared/structs/CreateCustomer';
 import { UpdateCustomer } from '../../../shared/structs/UpdateCustomer';
@@ -13,10 +13,15 @@ export const CustomerMutation = extendType({
   type: 'Mutation',
   definition: (t) => {
     t.field('createCustomer', {
+      description: 'Create a customer. Invites the specified email as CONTACT user. Only accessible by roles: ADMIN.',
       type: 'Customer',
       args: {
-        name: 'String',
-        email: 'String'
+        name: stringArg({
+          description: 'The name of the customer. Must be 3 to 70 characters long.'
+        }),
+        email: stringArg({
+          description: 'The email address of the contact that should receive the invite. Must be a valid email.'
+        })
       },
       authorize: guard(
         authorized(UserType.ADMIN),
@@ -49,9 +54,14 @@ export const CustomerMutation = extendType({
 
     t.field('updateCustomer', {
       type: nullable('Customer'),
+      description: 'Update the specified customer. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.',
       args: {
-        id: 'ID',
-        name: 'String'
+        id: idArg({
+          description: 'The ID of the customer. Must be a valid ID.'
+        }),
+        name: stringArg({
+          description: 'The name of the customer. Must be 3 to 70 characters long.'
+        })
       },
       authorize: guard(
         authorized(UserType.ADMIN, UserType.CONTACT),
@@ -68,8 +78,11 @@ export const CustomerMutation = extendType({
 
     t.field('deleteCustomer', {
       type: nullable('Customer'),
+      description: 'Delete the specified customer. Only accessible by roles: ADMIN, CONTACT, CURRENT. If CONTACT, must be part of the same customer network.',
       args: {
-        id: 'ID'
+        id: idArg({
+          description: 'The ID of the customer. Must be a valid ID.'
+        })
       },
       authorize: guard(
         authorized(UserType.ADMIN, UserType.CONTACT),
