@@ -1,5 +1,5 @@
 import { UserType } from '@prisma/client';
-import { extendType, list, nullable } from 'nexus';
+import { extendType, idArg, list, nullable } from 'nexus';
 
 import { authorized } from '../../guards/authorized';
 import { current } from '../../guards/current';
@@ -13,6 +13,7 @@ export const UserQuery = extendType({
   definition: (t) => {
     t.field('me', {
       type: 'User',
+      description: 'Get the current authenticated user object.',
       authorize: guard(
         authorized()
       ),
@@ -23,6 +24,7 @@ export const UserQuery = extendType({
 
     t.field('users', {
       type: list('User'),
+      description: 'Get all registered users. Only accessible by roles: ADMIN.',
       authorize: guard(
         authorized(UserType.ADMIN)
       ),
@@ -31,8 +33,11 @@ export const UserQuery = extendType({
 
     t.field('user', {
       type: nullable('User'),
+      description: 'Get the details of the specified user. Only accessible by roles: ADMIN, CONTACT, CURRENT.',
       args: {
-        id: 'ID'
+        id: idArg({
+          description: 'The ID of the user. Must be a valid ID.'
+        })
       },
       authorize: guard(
         or(current(), authorized(UserType.ADMIN, UserType.CONTACT)),

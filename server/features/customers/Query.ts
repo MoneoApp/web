@@ -1,5 +1,5 @@
 import { UserType } from '@prisma/client';
-import { extendType, list, nullable } from 'nexus';
+import { extendType, idArg, list, nullable } from 'nexus';
 
 import { authorized } from '../../guards/authorized';
 import { customer } from '../../guards/customer';
@@ -10,6 +10,7 @@ export const CustomerQuery = extendType({
   definition: (t) => {
     t.field('customers', {
       type: list('Customer'),
+      description: 'Get all registered customers. Only accessible by roles: ADMIN.',
       authorize: guard(
         authorized(UserType.ADMIN)
       ),
@@ -18,8 +19,11 @@ export const CustomerQuery = extendType({
 
     t.field('customer', {
       type: nullable('Customer'),
+      description: 'Get the details of the specified customer. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.',
       args: {
-        id: 'ID'
+        id: idArg({
+          description: 'The ID of the customer. Must be a valid ID.'
+        })
       },
       authorize: guard(
         authorized(),
