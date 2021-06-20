@@ -2,7 +2,7 @@ import { DeviceType, InteractionType, UserType } from '@prisma/client';
 import { ApolloError } from 'apollo-server-micro';
 import extract from 'extract-zip';
 import { rmdir } from 'fs/promises';
-import { extendType, list, nullable } from 'nexus';
+import { arg, extendType, idArg, list, nullable, stringArg } from 'nexus';
 import { join } from 'path';
 
 import { Error } from '../../../shared/constants';
@@ -19,13 +19,30 @@ export const DeviceMutation = extendType({
   definition: (t) => {
     t.field('createDevice', {
       type: 'Device',
+      description: 'Create a device with the specified details. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.',
       args: {
-        model: 'String',
-        brand: 'String',
-        image: 'Upload',
-        type: 'DeviceType',
-        mlImages: nullable('Upload'),
-        interactions: list('UpsertInteraction')
+        model: stringArg({
+          description: 'The name of the device model. Must be 3 to 70 characters long.'
+        }),
+        brand: stringArg({
+          description: 'The name of the device brand. Must be 3 to 70 characters long.'
+        }),
+        image: arg({
+          type: 'Upload',
+          description: 'The thumbnail image of the device. Must be a .PNG or .JPG.'
+        }),
+        type: arg({
+          type: 'DeviceType',
+          description: 'The type of learning used for device recognition.'
+        }),
+        mlImages: nullable(arg({
+          type: 'Upload',
+          description: 'The training images of the device. Must be a .ZIP.'
+        })),
+        interactions: list(arg({
+          type: 'UpsertInteraction',
+          description: 'The list of interactions associated with the device.'
+        }))
       },
       authorize: guard(
         authorized(),
@@ -78,12 +95,25 @@ export const DeviceMutation = extendType({
 
     t.field('updateDevice', {
       type: nullable('Device'),
+      description: 'Update the specified device. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.',
       args: {
-        id: 'ID',
-        model: 'String',
-        brand: 'String',
-        image: nullable('Upload'),
-        interactions: list('UpsertInteraction')
+        id: idArg({
+          description: 'The ID of the device. Must be a valid ID.'
+        }),
+        model: stringArg({
+          description: 'The name of the device model. Must be 3 to 70 characters long.'
+        }),
+        brand: stringArg({
+          description: 'The name of the device brand. Must be 3 to 70 characters long.'
+        }),
+        image: nullable(arg({
+          type: 'Upload',
+          description: 'The thumbnail images of the device. If set, must be a .PNG or .JPG.'
+        })),
+        interactions: list(arg({
+          type: 'UpsertInteraction',
+          description: 'The list of interactions associated with the device.'
+        }))
       },
       authorize: guard(
         authorized(),
@@ -151,8 +181,11 @@ export const DeviceMutation = extendType({
 
     t.field('deleteDevice', {
       type: nullable('Device'),
+      description: 'Delete the specified device. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.',
       args: {
-        id: 'ID'
+        id: idArg({
+          description: 'The ID of the device. Must be a valid ID.'
+        })
       },
       authorize: guard(
         authorized(UserType.ADMIN, UserType.CONTACT),

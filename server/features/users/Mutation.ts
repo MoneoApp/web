@@ -3,7 +3,7 @@ import { ApolloError } from 'apollo-server-micro';
 import { compare, hash } from 'bcryptjs';
 import { addDays, isAfter } from 'date-fns';
 import { sign } from 'jsonwebtoken';
-import { extendType, nullable } from 'nexus';
+import { arg, extendType, idArg, nullable, stringArg } from 'nexus';
 import { Infer } from 'superstruct';
 
 import { Error, userElevation } from '../../../shared/constants';
@@ -25,9 +25,14 @@ export const UserMutation = extendType({
   type: 'Mutation',
   definition: (t) => {
     t.boolean('inviteUser', {
+      description: 'Create an invite for the specified customer. Sends an email to the specified email address. Only accessible by roles: ADMIN, CONTACT.',
       args: {
-        customerId: 'ID',
-        email: 'String'
+        customerId: idArg({
+          description: 'The ID of the customer. Must be a valid ID.'
+        }),
+        email: stringArg({
+          description: 'The email address of the user that should receive the invite. Must be a valid email.'
+        })
       },
       authorize: guard(
         authorized(UserType.ADMIN, UserType.CONTACT),
@@ -73,9 +78,14 @@ export const UserMutation = extendType({
 
     t.field('createUser', {
       type: 'User',
+      description: 'Create a user with the specified invite. Attaches the user to the customer associated with the invite.',
       args: {
-        inviteId: 'ID',
-        password: 'String'
+        inviteId: idArg({
+          description: 'The ID of the invite. Must be a valid ID.'
+        }),
+        password: stringArg({
+          description: 'The password of the new user. Must be at least 8 characters long, contain 1 capital letter and 1 number.'
+        })
       },
       authorize: guard(
         validated(CreateUser)
@@ -114,10 +124,18 @@ export const UserMutation = extendType({
 
     t.field('updateUser', {
       type: nullable('User'),
+      description: 'Update the specified user. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.',
       args: {
-        id: 'ID',
-        email: 'String',
-        type: 'UserType'
+        id: idArg({
+          description: 'The ID of the user. Must be a valid ID.'
+        }),
+        email: stringArg({
+          description: 'The email of the user. Must be a valid email.'
+        }),
+        type: arg({
+          type: 'UserType',
+          description: 'The new role of the user.'
+        })
       },
       authorize: guard(
         authorized(UserType.ADMIN, UserType.CONTACT),
@@ -145,8 +163,11 @@ export const UserMutation = extendType({
 
     t.field('deleteUser', {
       type: nullable('User'),
+      description: 'Delete the specified user. Only accessible by roles: ADMIN, CONTACT, CURRENT. If CONTACT, must be part of the same customer network.',
       args: {
-        id: 'ID'
+        id: idArg({
+          description: 'The ID of the user. Must be a valid ID.'
+        })
       },
       authorize: guard(
         or(current(), authorized(UserType.ADMIN, UserType.CONTACT)),
@@ -163,9 +184,14 @@ export const UserMutation = extendType({
 
     t.field('login', {
       type: 'Authentication',
+      description: 'Login as the specified user.',
       args: {
-        email: 'String',
-        password: 'String'
+        email: stringArg({
+          description: 'The email of the user. Must be a valid email.'
+        }),
+        password: stringArg({
+          description: 'The password of the user. Must be at least 8 characters long, contain 1 capital letter and 1 number.'
+        })
       },
       authorize: guard(
         validated(Login)

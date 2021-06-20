@@ -1,5 +1,5 @@
 import { UserType } from '@prisma/client';
-import { extendType, list, nullable } from 'nexus';
+import { arg, extendType, idArg, list, nullable, stringArg } from 'nexus';
 
 import { CreateManual } from '../../../shared/structs/CreateManual';
 import { UpdateManual } from '../../../shared/structs/UpdateManual';
@@ -13,10 +13,18 @@ export const ManualMutation = extendType({
   definition: (t) => {
     t.field('createManual', {
       type: 'Manual',
+      description: 'Create a manual with the specified steps. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.',
       args: {
-        deviceId: 'ID',
-        title: 'String',
-        steps: list('UpsertManualStep')
+        deviceId: idArg({
+          description: 'The ID of the device this manual associates with. Must be a valid ID.'
+        }),
+        title: stringArg({
+          description: 'The title of the manual. Must be 3 to 70 characters long.'
+        }),
+        steps: list(arg({
+          type: 'UpsertManualStep',
+          description: 'A list of manual steps. Must have at least 1 step.'
+        }))
       },
       authorize: guard(
         authorized(),
@@ -61,10 +69,18 @@ export const ManualMutation = extendType({
 
     t.field('updateManual', {
       type: nullable('Manual'),
+      description: 'Update the specified manual. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.',
       args: {
-        id: 'ID',
-        title: 'String',
-        steps: list('UpsertManualStep')
+        id: idArg({
+          description: 'The ID of the manual. Must be a valid ID.'
+        }),
+        title: stringArg({
+          description: 'The title of the manual. Must be 3 to 70 characters long.'
+        }),
+        steps: list(arg({
+          type: 'UpsertManualStep',
+          description: 'A list of manual steps. Must have at least 1 step.'
+        }))
       },
       authorize: guard(
         authorized(),
@@ -121,8 +137,11 @@ export const ManualMutation = extendType({
 
     t.field('deleteManual', {
       type: nullable('Manual'),
+      description: 'Delete the specified manual. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.',
       args: {
-        id: 'ID'
+        id: idArg({
+          description: 'The ID of the manual. Must be a valid ID.'
+        })
       },
       authorize: guard(
         authorized(UserType.ADMIN, UserType.CONTACT),
