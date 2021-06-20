@@ -7,10 +7,22 @@
 // GraphQL mutation operation: CreateCustomerMutation
 // ====================================================
 
+export interface CreateCustomerMutation_createCustomer_users {
+  __typename: "User";
+  id: string;
+}
+
+export interface CreateCustomerMutation_createCustomer_devices {
+  __typename: "Device";
+  id: string;
+}
+
 export interface CreateCustomerMutation_createCustomer {
   __typename: "Customer";
   id: string;
   name: string;
+  users: CreateCustomerMutation_createCustomer_users[];
+  devices: CreateCustomerMutation_createCustomer_devices[];
 }
 
 export interface CreateCustomerMutation {

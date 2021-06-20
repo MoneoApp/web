@@ -15,6 +15,12 @@ const mutation = gql`
     createCustomer(name: $name, email: $email) {
       id
       name
+      users {
+        id
+      }
+      devices {
+        id
+      }
     }
   }
 `;
@@ -25,7 +31,15 @@ export function CreateCustomer(props: DialoogProps) {
     onCompleted: () => {
       notify('Succesvol klant aangemaakt');
       setTimeout(props.close);
-    }
+    },
+    update: (cache, { data }) => data?.createCustomer && cache.modify({
+      fields: {
+        customers: (customers: any[] = []) => [
+          ...customers,
+          data.createCustomer
+        ]
+      }
+    })
   });
 
   return (
