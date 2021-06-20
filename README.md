@@ -18,6 +18,57 @@ moneo
 
 - To apply or create a new migration, run the following command:  
   `$ npm run migrate`
+  
+### Testing
+- `$ npm test`
+
+### Deploying
+Docker handles the deployment of Moneo. An example docker-compose config can be found below:
+```yml
+services:
+  web:
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      DATABASE_URL:
+      SECRET:
+      PUBLIC_URL:
+      SMTP_HOST:
+      SMTP_USERNAME:
+      SMTP_PASSWORD:
+      PRIVATE_KEY_ID:
+      PRIVATE_KEY:
+      CLIENT_EMAIL:
+      CLIENT_ID:
+      CLIENT_x509_CERT_URL:
+      ML_ID:
+    volumes:
+      - moneo_uploads:/app/public/uploads
+      - moneo_work:/app/work
+    depends_on:
+      - db
+  db:
+    image: postgres:13-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    volumes:
+      - moneo_data:/var/lib/postgresql/data
+volumes:
+  moneo_data:
+  moneo_uploads:
+  moneo_work:
+```
+
+### API Documentation
+To access the API documentation, start the application and navigate to the following page:
+```
+http://localhost:3000/api
+```
+The documentation can be found on the right side of the website, behind the `DOCS` tab.
 
 ### Structure
 ```
