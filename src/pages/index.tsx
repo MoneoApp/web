@@ -11,9 +11,9 @@ import { Form } from '../components/forms/Form';
 import { Input } from '../components/forms/Input';
 import { Logo } from '../components/Logo';
 import { Empty } from '../components/templates/Empty';
+import { useAuthGuard } from '../hooks/useAuthGuard';
 import { useNotify } from '../hooks/useNotify';
 import { useAuthentication } from '../states/authentication';
-import { useAuthGuard } from '../hooks/useAuthGuard';
 
 const loginMutation = gql`
   mutation LoginMutation($email: String!, $password: String!) {
