@@ -11,6 +11,7 @@ import { Form } from '../components/forms/Form';
 import { Input } from '../components/forms/Input';
 import { Logo } from '../components/Logo';
 import { Empty } from '../components/templates/Empty';
+import { useAuthGuard } from '../hooks/useAuthGuard';
 import { useNotify } from '../hooks/useNotify';
 import { useAuthentication } from '../states/authentication';
 
@@ -44,6 +45,8 @@ export default function Index() {
   const [mutateRegister] = useMutation<RegisterMutation, RegisterMutationVariables>(registerMutation, {
     onCompleted: () => push('/').then(() => notify('Succesvol geregistreerd'))
   });
+
+  useAuthGuard(false, '/admin');
 
   return (
     <StyledRoot>

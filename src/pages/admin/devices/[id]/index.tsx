@@ -1,5 +1,4 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useDialoog } from 'dialoog';
@@ -28,7 +27,6 @@ import { useAuthGuard } from '../../../../hooks/useAuthGuard';
 import { useNotify } from '../../../../hooks/useNotify';
 import { useSearch } from '../../../../hooks/useSearch';
 import { getStaticAsset } from '../../../../utils/getStaticAsset';
-import { withBreakpoint } from '../../../../utils/withBreakpoint';
 
 const query = gql`
   query DeviceQuery($id: ID!) {
@@ -174,25 +172,28 @@ export default function Device() {
               </Column>
             </Row>
           </Form>
+          <Heading text="Handleidingen"/>
           <ListActions
             text="Aanmaken"
             icon={faPlus}
             setSearch={setSearch}
             href={`/admin/devices/${id}/manuals/new`}
           />
-          <Table
-            data={results ?? []}
-            keyBy="id"
-            href={(value) => `/admin/devices/${id}/manuals/${value.id}`}
-            columns={{
-              title: { title: 'Titel' },
-              steps: {
-                title: 'Stappen',
-                size: '7.5rem',
-                render: (value) => value.length
-              }
-            }}
-          />
+          <StyledTableWrapper>
+            <Table
+              data={results ?? []}
+              keyBy="id"
+              href={(value) => `/admin/devices/${id}/manuals/${value.id}`}
+              columns={{
+                title: { title: 'Titel' },
+                steps: {
+                  title: 'Stappen',
+                  size: '7.5rem',
+                  render: (value) => value.length
+                }
+              }}
+            />
+          </StyledTableWrapper>
         </>
       ) : (
         <Spinner text="Apparaat ophalen..."/>
@@ -204,22 +205,13 @@ export default function Device() {
 const StyledActions = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin: 1rem 0 4rem;
+  margin-top: 1rem;
 
   & > *:not(:last-child) {
     margin-right: 1rem;
   }
 `;
 
-const StyledButton = styled(Button)`
-  height: calc(100% - 1rem);
-`;
-
-const StyledButtonText = styled.span`
-  display: none;
-  margin-right: .5rem;
-
-  ${withBreakpoint('tabletLandscape', css`
-    display: inline-block;
-  `)};
+const StyledTableWrapper = styled.div`
+  margin-bottom: 4rem;
 `;
