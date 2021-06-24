@@ -21,5 +21,6 @@ COPY --from=build /app/.next ./.next
 COPY --from=build /app/requirements.txt ./requirements.txt
 
 RUN pip install -r requirements.txt
+RUN mkdir temp
 
 CMD npm start

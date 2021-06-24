@@ -27,7 +27,7 @@ export function DeviceInteractions({ image, interactions, value, add, update, re
     const actual = Math.min(current, max);
 
     return 1 / current * actual;
-  }
+  };
 
   const heightRatio = getRatio(image.height, innerHeight);
   const widthRatio = getRatio(image.width, innerWidth);
@@ -64,7 +64,7 @@ export function DeviceInteractions({ image, interactions, value, add, update, re
                   }
 
                   add({ id: interaction.id, color: colors.yellow['200']![0] });
-                  setPicker([value.length, { x: pointer.x, y: pointer.y }]);
+                  setTimeout(() => setPicker([value.length, { x: pointer.x, y: pointer.y }]));
                 }}
               >
                 {createElement(shapes[interaction.type] as ComponentType<ShapeConfig>, {
@@ -89,7 +89,7 @@ export function DeviceInteractions({ image, interactions, value, add, update, re
               color
             });
           }}
-          onClose={() => setPicker((p) => p === picker ? undefined : p)}
+          onClose={() => setPicker(undefined)}
         />
       )}
     </>
