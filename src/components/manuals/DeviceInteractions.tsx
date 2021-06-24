@@ -89,7 +89,7 @@ export function DeviceInteractions({ image, interactions, value, add, update, re
               color
             });
           }}
-          onClose={() => setPicker(undefined)}
+          onClose={() => setPicker((p) => p === picker ? undefined : p)}
         />
       )}
     </>
