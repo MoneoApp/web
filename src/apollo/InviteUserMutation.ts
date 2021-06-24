@@ -8,6 +8,9 @@
 // ====================================================
 
 export interface InviteUserMutation {
+  /**
+   * Create an invite for the specified customer. Sends an email to the specified email address. Only accessible by roles: ADMIN, CONTACT.
+   */
   inviteUser: boolean;
 }
 

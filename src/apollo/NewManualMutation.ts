@@ -22,6 +22,9 @@ export interface NewManualMutation_createManual {
 }
 
 export interface NewManualMutation {
+  /**
+   * Create a manual with the specified steps. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.
+   */
   createManual: NewManualMutation_createManual;
 }
 

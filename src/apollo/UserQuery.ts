@@ -17,6 +17,9 @@ export interface UserQuery_user {
 }
 
 export interface UserQuery {
+  /**
+   * Get the details of the specified user. Only accessible by roles: ADMIN, CONTACT, CURRENT.
+   */
   user: UserQuery_user | null;
 }
 

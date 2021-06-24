@@ -26,5 +26,8 @@ export interface CustomersQuery_customers {
 }
 
 export interface CustomersQuery {
+  /**
+   * Get all registered customers. Only accessible by roles: ADMIN.
+   */
   customers: CustomersQuery_customers[];
 }

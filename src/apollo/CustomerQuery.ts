@@ -31,6 +31,9 @@ export interface CustomerQuery_customer {
 }
 
 export interface CustomerQuery {
+  /**
+   * Get the details of the specified customer. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.
+   */
   customer: CustomerQuery_customer | null;
 }
 

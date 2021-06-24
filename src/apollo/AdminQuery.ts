@@ -24,5 +24,8 @@ export interface AdminQuery_me {
 }
 
 export interface AdminQuery {
+  /**
+   * Get the current authenticated user object.
+   */
   me: AdminQuery_me;
 }

@@ -15,5 +15,8 @@ export interface DevicesQuery_devices {
 }
 
 export interface DevicesQuery {
+  /**
+   * Get all created devices.
+   */
   devices: DevicesQuery_devices[];
 }

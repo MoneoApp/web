@@ -17,6 +17,9 @@ export interface NewDeviceMutation_createDevice {
 }
 
 export interface NewDeviceMutation {
+  /**
+   * Create a device with the specified details. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.
+   */
   createDevice: NewDeviceMutation_createDevice;
 }
 

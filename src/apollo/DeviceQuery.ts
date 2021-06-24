@@ -43,6 +43,9 @@ export interface DeviceQuery_device {
 }
 
 export interface DeviceQuery {
+  /**
+   * Get the details of the specified device.
+   */
   device: DeviceQuery_device | null;
 }
 

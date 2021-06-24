@@ -153,7 +153,10 @@ function EditorInternal({ name, image, imageOverride, type, typeOverride }: Prop
           </Layer>
         </Stage>
       )}
-      <Toolbox/>
+      <Toolbox
+        image={imageData}
+        interaction={shapes.find((s) => s.type === InteractionType.ANCHOR)}
+      />
     </StyledWrapper>
   );
 }
