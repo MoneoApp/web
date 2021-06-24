@@ -1,13 +1,34 @@
+import { gql, useMutation } from '@apollo/client';
 import styled from '@emotion/styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { ScoreMutation, ScoreMutationVariables } from '../../apollo/ScoreMutation';
 import { shapeIcons } from '../../constants';
+import { useNotify } from '../../hooks/useNotify';
+import { ShapeConfig } from '../../types';
+import { Button } from '../forms/Button';
 
-export function Toolbox() {
+const mutation = gql`
+  mutation ScoreMutation($image: Upload!, $interaction: UpsertInteraction!) {
+    score(image: $image, interaction: $interaction)
+  }
+`;
+
+type Props = {
+  image?: File,
+  interaction?: ShapeConfig
+};
+
+export function Toolbox({ image, interaction }: Props) {
+  const notify = useNotify();
+  const [mutate] = useMutation<ScoreMutation, ScoreMutationVariables>(mutation, {
+    onCompleted: ({ score }) => notify(`De score is ${score}. ${score >= 75 ? 'Ziet er goed uit!' : 'Probeer meer unieke eigenschappen er in te krijgen.'}`, 5000)
+  });
+
   return (
     <StyledToolbox>
       <StyledLabel>
-        toolbox
+        Toolbox
       </StyledLabel>
       <StyledShapes>
         {Object.entries(shapeIcons).map(([shape, icon]) => (
@@ -20,6 +41,17 @@ export function Toolbox() {
           </StyledShape>
         ))}
       </StyledShapes>
+      {image && interaction && (
+        <Button
+          text="Controlleer anker"
+          onClick={() => mutate({
+            variables: {
+              image,
+              interaction
+            }
+          })}
+        />
+      )}
     </StyledToolbox>
   );
 }
@@ -43,6 +75,7 @@ const StyledLabel = styled.span`
 const StyledShapes = styled.div`
   display: flex;
   gap: .5rem;
+  margin-bottom: .5rem;
   padding-top: .5rem;
 `;
 

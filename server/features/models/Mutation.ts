@@ -1,12 +1,15 @@
 /* tslint:disable:no-console */
 import { UserType } from '@prisma/client';
 import execa from 'execa';
-import { extendType } from 'nexus';
+import { arg, extendType } from 'nexus';
 import { join } from 'path';
 
 import { authorized } from '../../guards/authorized';
 import { guard } from '../../utils/guard';
 import { updateModel } from '../../utils/updateModel';
+import { storeFile } from '../../utils/storeFile';
+import { nanoid } from 'nanoid';
+import Sharp from 'sharp';
 
 let busy = false;
 
@@ -52,6 +55,51 @@ export const ModelMutation = extendType({
           .finally(() => busy = false);
 
         return true;
+      }
+    });
+
+    t.int('score', {
+      description: 'Get the score of the specified anchor image. A score of at least 75 is recommended. Only accessible by roles: ADMIN, CONTACT, USER.',
+      args: {
+        image: arg({
+          type: 'Upload',
+          description: 'The thumbnail image of the device. Must be a .PNG or .JPG.'
+        }),
+        interaction: arg({
+          type: 'UpsertInteraction',
+          description: 'The interaction of the anchor.'
+        })
+      },
+      authorize: guard(
+        authorized()
+      ),
+      resolve: async (parent, { image, interaction }) => {
+        try {
+          const temp = join(process.cwd(), 'temp');
+          const imageName = await storeFile(image, 'image/', nanoid(), temp);
+          const { x, y, width, height } = interaction;
+
+          const sharp = await Sharp(join(temp, imageName))
+            .extract({
+              left: Math.round(x),
+              top: Math.round(y),
+              width: Math.round(width),
+              height: Math.round(width)
+            })
+            .resize(300)
+            .toFile(join(temp, `resized-${imageName}`))
+
+          const { stdout } = await execa(join(process.cwd(), 'scripts', 'arcoreimg'), [
+            'eval-img',
+            '--input_image_path',
+            join(temp, `resized-${imageName}`)
+          ]);
+
+          return Number(stdout) || 0;
+        } catch (e) {
+          console.log(e);
+          return 0;
+        }
       }
     });
   }

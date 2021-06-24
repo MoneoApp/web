@@ -27,6 +27,9 @@ export interface NewManualQuery_device {
 }
 
 export interface NewManualQuery {
+  /**
+   * Get the details of the specified device.
+   */
   device: NewManualQuery_device | null;
 }
 

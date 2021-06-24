@@ -13,6 +13,9 @@ export interface DeleteDeviceMutation_deleteDevice {
 }
 
 export interface DeleteDeviceMutation {
+  /**
+   * Delete the specified device. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.
+   */
   deleteDevice: DeleteDeviceMutation_deleteDevice | null;
 }
 

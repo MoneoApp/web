@@ -22,6 +22,9 @@ export interface LoginMutation_login {
 }
 
 export interface LoginMutation {
+  /**
+   * Login as the specified user.
+   */
   login: LoginMutation_login;
 }
 

@@ -5,7 +5,7 @@ import { join } from 'path';
 
 import { Error } from '../../shared/constants';
 
-export async function storeFile(file: any, mimeStart: string, name = nanoid()) {
+export async function storeFile(file: any, mimeStart: string, name = nanoid(), path = join(process.cwd(), 'public', 'uploads')) {
   const { createReadStream, extension, mime } = await file;
 
   if (!mime.startsWith(mimeStart)) {
@@ -15,7 +15,7 @@ export async function storeFile(file: any, mimeStart: string, name = nanoid()) {
   const fileName = `${name}.${extension}`;
 
   await new Promise((resolve, reject) => createReadStream()
-    .pipe(createWriteStream(join(process.cwd(), 'public', 'uploads', fileName)))
+    .pipe(createWriteStream(join(path, fileName)))
     .on('close', resolve)
     .on('error', reject));
 

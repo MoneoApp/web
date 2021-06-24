@@ -199,6 +199,17 @@ type Mutation {
   retrain: Boolean!
 
   """
+  Get the score of the specified anchor image. A score of at least 75 is recommended. Only accessible by roles: ADMIN, CONTACT, USER.
+  """
+  score(
+    """The thumbnail image of the device. Must be a .PNG or .JPG."""
+    image: Upload!
+
+    """The interaction of the anchor."""
+    interaction: UpsertInteraction!
+  ): Int!
+
+  """
   Update the specified customer. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.
   """
   updateCustomer(

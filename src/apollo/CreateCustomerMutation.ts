@@ -26,6 +26,9 @@ export interface CreateCustomerMutation_createCustomer {
 }
 
 export interface CreateCustomerMutation {
+  /**
+   * Create a customer. Invites the specified email as CONTACT user. Only accessible by roles: ADMIN.
+   */
   createCustomer: CreateCustomerMutation_createCustomer;
 }
 

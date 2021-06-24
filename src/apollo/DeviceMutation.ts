@@ -30,6 +30,9 @@ export interface DeviceMutation_updateDevice {
 }
 
 export interface DeviceMutation {
+  /**
+   * Update the specified device. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.
+   */
   updateDevice: DeviceMutation_updateDevice | null;
 }
 

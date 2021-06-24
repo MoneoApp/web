@@ -22,6 +22,9 @@ export interface ManualMutation_updateManual {
 }
 
 export interface ManualMutation {
+  /**
+   * Update the specified manual. Only accessible by roles: ADMIN, CONTACT, USER. If CONTACT or USER, must be part of the same customer network.
+   */
   updateManual: ManualMutation_updateManual | null;
 }
 

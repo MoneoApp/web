@@ -13,6 +13,9 @@ export interface DeleteUserMutation_deleteUser {
 }
 
 export interface DeleteUserMutation {
+  /**
+   * Delete the specified user. Only accessible by roles: ADMIN, CONTACT, CURRENT. If CONTACT, must be part of the same customer network.
+   */
   deleteUser: DeleteUserMutation_deleteUser | null;
 }
 

@@ -13,6 +13,9 @@ export interface RegisterMutation_createUser {
 }
 
 export interface RegisterMutation {
+  /**
+   * Create a user with the specified invite. Attaches the user to the customer associated with the invite.
+   */
   createUser: RegisterMutation_createUser;
 }
 

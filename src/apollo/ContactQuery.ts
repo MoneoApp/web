@@ -19,5 +19,8 @@ export interface ContactQuery_me {
 }
 
 export interface ContactQuery {
+  /**
+   * Get the current authenticated user object.
+   */
   me: ContactQuery_me;
 }

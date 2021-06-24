@@ -13,6 +13,9 @@ export interface DeleteManualMutation_deleteManual {
 }
 
 export interface DeleteManualMutation {
+  /**
+   * Delete the specified manual. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.
+   */
   deleteManual: DeleteManualMutation_deleteManual | null;
 }
 

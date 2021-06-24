@@ -17,6 +17,9 @@ export interface UserMutation_updateUser {
 }
 
 export interface UserMutation {
+  /**
+   * Update the specified user. Only accessible by roles: ADMIN, CONTACT. If CONTACT, must be part of the same customer network.
+   */
   updateUser: UserMutation_updateUser | null;
 }
 

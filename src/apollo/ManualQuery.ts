@@ -48,6 +48,9 @@ export interface ManualQuery_manual {
 }
 
 export interface ManualQuery {
+  /**
+   * Get the details of the specified manual.
+   */
   manual: ManualQuery_manual | null;
 }
 
