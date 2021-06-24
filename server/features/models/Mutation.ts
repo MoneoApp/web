@@ -1,15 +1,15 @@
 /* tslint:disable:no-console */
 import { UserType } from '@prisma/client';
 import execa from 'execa';
+import { nanoid } from 'nanoid';
 import { arg, extendType } from 'nexus';
 import { join } from 'path';
+import Sharp from 'sharp';
 
 import { authorized } from '../../guards/authorized';
 import { guard } from '../../utils/guard';
-import { updateModel } from '../../utils/updateModel';
 import { storeFile } from '../../utils/storeFile';
-import { nanoid } from 'nanoid';
-import Sharp from 'sharp';
+import { updateModel } from '../../utils/updateModel';
 
 let busy = false;
 
@@ -32,7 +32,7 @@ export const ModelMutation = extendType({
         const labelFile = join(process.cwd(), 'work', 'moneo.txt');
         const outputFile = join(process.cwd(), 'work', 'moneo_populated.tflite');
 
-        console.log('Retraining model...')
+        console.log('Retraining model...');
 
         execa('make_image_classifier', [
           '--image_dir',
@@ -77,9 +77,9 @@ export const ModelMutation = extendType({
         try {
           const temp = join(process.cwd(), 'temp');
           const imageName = await storeFile(image, 'image/', nanoid(), temp);
-          const { x, y, width, height } = interaction;
+          const { x, y, width } = interaction;
 
-          const sharp = await Sharp(join(temp, imageName))
+          await Sharp(join(temp, imageName))
             .extract({
               left: Math.round(x),
               top: Math.round(y),
@@ -87,7 +87,7 @@ export const ModelMutation = extendType({
               height: Math.round(width)
             })
             .resize(300)
-            .toFile(join(temp, `resized-${imageName}`))
+            .toFile(join(temp, `resized-${imageName}`));
 
           const { stdout } = await execa(join(process.cwd(), 'scripts', 'arcoreimg'), [
             'eval-img',

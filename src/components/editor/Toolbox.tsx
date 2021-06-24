@@ -44,6 +44,7 @@ export function Toolbox({ image, interaction }: Props) {
       {image && interaction && (
         <Button
           text="Controlleer anker"
+          type="button"
           onClick={() => mutate({
             variables: {
               image,
