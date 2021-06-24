@@ -45,6 +45,7 @@ export function ManualStep({ id, name, deviceId, order, interactions, remove }: 
       {(provided) => (
         <StyledRow ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
           <FontAwesomeIcon icon={faGripLines}/>
+          <span>{order + 1}</span>
           <Input name={`${name}.${order}.text`} label="Tekst" defaultValue={defaultText}/>
           <ErrorHandler name={interactionsName} big={false}>
             <Button
